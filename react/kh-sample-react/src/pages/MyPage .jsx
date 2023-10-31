@@ -8,6 +8,7 @@ import { InputBox } from "../components/MyPageComp";
 // 1. css 스타일
 // a. 레이어 배치
 // 2. 컨트롤러
+// 수정
 
 // a.
 // 기본 컨테이너: 전체 레이어
