@@ -8,7 +8,8 @@ import { InputBox } from "../components/MyPageComp";
 // 1. css 스타일
 // a. 레이어 배치
 // 2. 컨트롤러
-// 수정
+
+// 할일 컴포넌트 쪼개기, 데이터 정확히 입력 시 입력 창 등장 컨트롤
 
 // a.
 // 기본 컨테이너: 전체 레이어
@@ -363,7 +364,6 @@ const ControllInfo = () => {
     }
   };
   // 비밀번호 제약 조건
-  // tnwjd
   const onChangePw = (e) => {
     const inputPw = e.target.value;
     if (
