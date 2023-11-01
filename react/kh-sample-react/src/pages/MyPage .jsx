@@ -1,268 +1,22 @@
 import { useState, useReducer, useEffect } from "react";
-import styled, { css } from "styled-components";
-import { ResetButton } from "../components/MyPageComp";
-import { CloseButton } from "../components/MyPageComp";
-import { InputBox } from "../components/MyPageComp";
+import {
+  Container,
+  ResetButton,
+  CloseButton,
+  InputBox,
+  Left,
+  LeftTop,
+  Imagine,
+  InfoBox,
+  InfoName,
+  LeftBottom,
+  LeftButton,
+  Right,
+  RightInfo,
+} from "../components/MyPageComp";
+import AxiosApi from "../api/AxiosApi";
 
-// 목차
-// 1. css 스타일
-// a. 레이어 배치
-// 2. 컨트롤러
-
-// 할일 컴포넌트 쪼개기, 데이터 정확히 입력 시 입력 창 등장 컨트롤
-
-// a.
-// 기본 컨테이너: 전체 레이어
-const Container = styled.div`
-  // PC
-  @media (min-width: 450px) {
-    margin: 0 auto;
-    padding: 0;
-    box-sizing: border-box;
-    width: 1500px;
-    height: 50vh;
-    flex-wrap: wrap;
-    display: flex;
-    min-height: 1000px;
-    justify-content: space-evenly;
-    background-color: #fff;
-  }
-  // 모바일
-  @media (max-width: 450px) {
-    box-sizing: border-box;
-    width: 450px;
-    height: 800px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #fff;
-  }
-`;
-
-// 좌측 레이어, 모바일은 전체
-// 좌측(이미지 및 정보보여주기, 정보 출력)
-const Left = styled.div`
-  // PC
-  @media (min-width: 450px) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 30%;
-    height: 98%;
-    margin-top: 5px;
-    border-radius: 10px;
-    box-shadow: -5px -5px 10px #fff, 5px 5px 10px #babebc;
-    background: #ebecf0;
-  }
-  // 모바일
-  @media (max-width: 450px) {
-    width: 100%;
-    height: 100%;
-    min-height: 380px;
-    border-radius: 10px;
-    box-shadow: -5px -5px 10px #fff, 5px 5px 10px #babebc;
-    background: #ebecf0;
-  }
-`;
-// 좌측 상단 이미지 및 정보 부모 레이어, 모바일은 최상단
-const LeftTop = styled.div`
-  //pc
-  @media (min-width: 450px) {
-    width: 100%;
-    height: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  // 모바일
-  @media (max-width: 450px) {
-    width: 100%;
-    height: 50%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-  }
-`;
-// 이미지 레이어
-const Imagine = styled.div`
-  @media (min-width: 450px) {
-    box-shadow: inset 7px 2px 10px #babebc, inset -5px -5px 12px #fff;
-    border-radius: 50%;
-    width: 50%;
-    height: 50%;
-    margin-bottom: 50px;
-    background-image: url("/태연.jpg");
-  }
-  @media (max-width: 450px) {
-    margin-top: 30px;
-    margin-bottom: 30px;
-    box-shadow: inset 7px 2px 10px #babebc, inset -5px -5px 12px #fff;
-    border-radius: 50%;
-    width: 50%;
-    height: 50%;
-  }
-`;
-// 정보 레이어
-const InfoBox = styled.div`
-  @media (min-width: 450px) {
-    width: 80%;
-    height: 30%;
-    display: flex;
-    flex-wrap: wrap;
-    box-shadow: inset 7px 2px 10px #babebc, inset -5px -5px 12px #fff;
-    justify-content: space-around;
-  }
-  @media (max-width: 450px) {
-    width: 80%;
-    height: 30%;
-    display: flex;
-    box-shadow: inset 7px 2px 10px #babebc, inset -5px -5px 12px #fff;
-    align-items: center;
-    justify-content: space-around;
-  }
-`;
-// 정보의 이름 레이어
-const InfoName = styled.div`
-  @media (min-width: 450px) {
-    width: 100px;
-    margin-top: 1%;
-    margin-bottom: 10px;
-  }
-  @media (max-width: 450px) {
-    margin: 0;
-  }
-`;
-// 정보의 결과 레이어
-const InfoResult = styled.div`
-  @media (min-width: 450px) {
-    margin-top: 1%;
-  }
-  @media (max-width: 450px) {
-  }
-`;
-
-// 좌측 하단 전체 레이어
-const LeftBottom = styled.div`
-  @media (min-width: 450px) {
-    width: 80%;
-    height: 40%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: inset 7px 2px 10px #babebc, inset -5px -5px 12px #fff;
-  }
-  @media (max-width: 450px) {
-    width: 100%;
-    height: 40%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-`;
-// 좌측 하단 버튼들의 레이어
-const LeftButton = styled.div`
-  @media (min-width: 450px) {
-    width: 80%;
-    height: 80%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-    border: 1px solid red;
-  }
-  @media (max-width: 450px) {
-    width: 80%;
-    height: 50%;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    border: 1px solid red;
-    flex-wrap: wrap;
-  }
-`;
-
-// 우측 레이어, 모바일시 어퍼 레이어
-// 우측 실제로 정보를 변경하는 레이어
-const Right = styled.div`
-  // PC
-  @media (min-width: 450px) {
-    background-color: #ff4b2b;
-    border-radius: 10px;
-    width: 50%;
-    height: 98%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    text-align: center;
-    margin-top: 5px;
-    box-shadow: -5px -5px 10px #fff, 5px 5px 10px #babebc;
-  }
-  @media (max-width: 450px) {
-    position: absolute;
-    width: 80%;
-    min-width: 300px;
-    height: 80%;
-    border-radius: 5%;
-    background-color: #ff4b2b;
-    border-radius: 10px;
-    color: white;
-    box-shadow: -5px -5px 10px #fff, 5px 5px 10px #babebc;
-    display: ${(props) => (props.isVisible ? "flex" : "none")};
-  }
-`;
-// 우측 정보 창 등장
-// 처음은 그냥 평범한 애니메이션
-
-// 정보 수정창
-const RightInfo = styled.div`
-  @media (min-width: 450px) {
-    box-shadow: -5px -5px 1px #fff, 5px 5px 1px #babebc;
-    border-radius: 10px;
-    width: 80%;
-    height: 80%;
-    animation-name: Info-animation;
-    animation-duration: 0.3s;
-    color: white;
-  }
-  @media (max-width: 450px) {
-    box-shadow: -5px -5px 1px #fff, 5px 5px 1px #babebc;
-    border-radius: 10px;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-content: space-evenly;
-    text-align: center;
-    animation-name: Info-animation;
-    animation-duration: 0.3s;
-  }
-  @keyframes Info-animation {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-`;
-
-// 제약조건 확인
-const Rst = styled.p`
-  @media (min-width: 450px) {
-    margin: 0;
-    padding: 0;
-    font-size: 20px;
-    color: black;
-  }
-  @media (max-width: 450px) {
-    margin: 0;
-    padding: 0;
-  }
-`;
-
-// 2.
-// a. 입력받은 정보를 객체로 저장하는 함수 reducer
+// 입력받은 정보를 객체로 저장하는 함수 reducer
 const reducer = (data, action) => {
   switch (action.type) {
     case "Name":
@@ -393,23 +147,33 @@ const ControllInfo = () => {
       setCheckEmail(false);
     }
   };
+
   // 기본 이름 아이디 등 입력하고 난후 입력 조건이 적절하면 등장하는 정보 수정 입력창
+  // 체크
   const [checkName, setCheckName] = useState(false);
   const [checkId, setCheckId] = useState(false);
   const [checkPw, setCheckPw] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
-  let check = false;
-  // 입력한 정보를 체크
-  if (
-    checkName === true &&
-    checkId === true &&
-    checkPw === true &&
-    checkEmail === true
-  ) {
-    check = true;
-  } else {
-    check = false;
-  }
+
+  // 백엔드 이후 체크된 정보를 토대로 true or false
+
+  const onClickCheck = async () => {
+    const checked = await AxiosApi.memberCheck(
+      data.name,
+      data.id,
+      data.pw,
+      data.email
+    );
+    console.log("온 클릭 체크 이후 결과가 잘 찍혔습니다.");
+    console.log(data.name, data.id, data.pw, data.email);
+    if (checked === true) {
+      setCheckedInfo(true);
+    } else {
+      setCheckedInfo(false);
+    }
+  };
+
+  const [checkedInfo, setCheckedInfo] = useState(false);
   // 체크가 완료되면 정보 변경
   // 변경 아이디 제약 조건
   const [ID, setID] = useState("");
@@ -449,15 +213,15 @@ const ControllInfo = () => {
             <img src="/태연.jpg" alt="사진" />
           </Imagine>
           <InfoBox>
-            <InfoName>
+            <div>
               <InfoName>회원 이름</InfoName>
               <InfoName>이메일</InfoName>
               <InfoName>전화번호</InfoName>
               <InfoName>소지금액</InfoName>
-            </InfoName>
-            <InfoResult>
+            </div>
+            <div>
               <p style={{ marginTop: "0" }}>결과 출력</p>
-            </InfoResult>
+            </div>
           </InfoBox>
         </LeftTop>
         <LeftBottom>
@@ -475,24 +239,21 @@ const ControllInfo = () => {
           <RightInfo>
             <h1>아이디 변경</h1>
             <InputBox placeholder="이름" type="text" onChange={onChangeName} />
-            <Rst>{msgName}</Rst>
+            <p>{msgName}</p>
             <InputBox placeholder="ID" type="text" onChange={onChangeId} />
-            <Rst>{msgId}</Rst>
+            <p>{msgId}</p>
             <InputBox placeholder="PW" type="text" onChange={onChangePw} />
-            <Rst>{msgPw}</Rst>
+            <p>{msgPw}</p>
             <InputBox
               placeholder="EMAIL"
               type="text"
               onChange={onChangeEmail}
             />
-            <Rst>{msgEmail}</Rst>
-            {check && (
-              <div>
-                <InputBox placeholder="변경할 아이디 입력" onChange={onId} />
-                {msg && <div>{msg}</div>}
-              </div>
+            <p>{msgEmail}</p>
+            {checkName && checkId && checkPw && checkEmail && (
+              <button onClick={onClickCheck}>체크</button>
             )}
-
+            {checkedInfo && <InputBox />}
             <CloseButton onClick={onClckCloseRight}>닫기버튼</CloseButton>
           </RightInfo>
         )}
@@ -501,23 +262,17 @@ const ControllInfo = () => {
           <RightInfo>
             <h1>비밀번호 변경</h1>
             <InputBox placeholder="이름" type="text" onChange={onChangeName} />
-            <Rst>{msgName}</Rst>
+            <p>{msgName}</p>
             <InputBox placeholder="ID" type="text" onChange={onChangeId} />
-            <Rst>{msgId}</Rst>
+            <p>{msgId}</p>
             <InputBox placeholder="PW" type="text" onChange={onChangePw} />
-            <Rst>{msgPw}</Rst>
+            <p>{msgPw}</p>
             <InputBox
               placeholder="EMAIL"
               type="text"
               onChange={onChangeEmail}
             />
-            <Rst>{msgEmail}</Rst>
-            {check && (
-              <div>
-                <InputBox placeholder="변경할 비밀번호 입력" onChange={onPw} />
-                {msg && <div>{msg}</div>}
-              </div>
-            )}
+            <p>{msgEmail}</p>
 
             <CloseButton onClick={onClckCloseRight}>닫기버튼</CloseButton>
           </RightInfo>
@@ -525,8 +280,7 @@ const ControllInfo = () => {
 
         {rightCash && (
           <RightInfo>
-            <h1>현금 충전</h1>
-            충전 방식 및 충전 금액 입력창
+            <h1>금액 충전</h1>
             <CloseButton onClick={onClckCloseRight}>닫기버튼</CloseButton>
           </RightInfo>
         )}
@@ -535,17 +289,17 @@ const ControllInfo = () => {
           <RightInfo>
             <h1>회원 탈퇴</h1>
             <InputBox placeholder="이름" type="text" onChange={onChangeName} />
-            <Rst>{msgName}</Rst>
+            <p>{msgName}</p>
             <InputBox placeholder="ID" type="text" onChange={onChangeId} />
-            <Rst>{msgId}</Rst>
+            <p>{msgId}</p>
             <InputBox placeholder="PW" type="text" onChange={onChangePw} />
-            <Rst>{msgPw}</Rst>
+            <p>{msgPw}</p>
             <InputBox
               placeholder="EMAIL"
               type="text"
               onChange={onChangeEmail}
             />
-            <Rst>{msgEmail}</Rst>
+            <p>{msgEmail}</p>
             <CloseButton onClick={onClckCloseRight}>닫기버튼</CloseButton>
           </RightInfo>
         )}
