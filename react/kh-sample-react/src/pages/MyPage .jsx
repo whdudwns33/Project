@@ -156,7 +156,7 @@ const ControllInfo = () => {
   const [checkEmail, setCheckEmail] = useState(false);
 
   // 백엔드 이후 체크된 정보를 토대로 true or false
-
+  const [checkedInfo, setCheckedInfo] = useState(false);
   const onClickCheck = async () => {
     const checked = await AxiosApi.memberCheck(
       data.name,
@@ -164,17 +164,19 @@ const ControllInfo = () => {
       data.pw,
       data.email
     );
+    console.log(checked);
     console.log("온 클릭 체크 이후 결과가 잘 찍혔습니다.");
     console.log(data.name, data.id, data.pw, data.email);
-    if (checked === true) {
+    if (checked.data === true) {
+      console.log("체크가 true입니다.");
       setCheckedInfo(true);
     } else {
+      console.log("체크가 false입니다.");
       setCheckedInfo(false);
     }
   };
 
-  const [checkedInfo, setCheckedInfo] = useState(false);
-  // 체크가 완료되면 정보 변경
+  
   // 변경 아이디 제약 조건
   const [ID, setID] = useState("");
   const [msg, setMsg] = useState("");
@@ -253,7 +255,7 @@ const ControllInfo = () => {
             {checkName && checkId && checkPw && checkEmail && (
               <button onClick={onClickCheck}>체크</button>
             )}
-            {checkedInfo && <InputBox />}
+            {checkedInfo && <p>잘찍였나봐요. 도비는 자유예요</p>}
             <CloseButton onClick={onClckCloseRight}>닫기버튼</CloseButton>
           </RightInfo>
         )}
