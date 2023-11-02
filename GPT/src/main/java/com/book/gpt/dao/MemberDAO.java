@@ -39,4 +39,58 @@ public class MemberDAO {
         Common.close(conn);
         return isChecked;
     }
+
+    public boolean isIdcheck(String newId) {
+        // 중복 체크
+        boolean isDup = false;
+        try {
+            conn = Common.getConnection();
+            String checkSql = "SELECT COUNT(*) AS count FROM MEMBER WHERE ID = ?";
+            PreparedStatement pstmt = conn.prepareStatement(checkSql);
+            pstmt.setString(1, newId);
+            ResultSet resultSet = pstmt.executeQuery();
+            if (resultSet.next()) {
+                int count = resultSet.getInt("count");
+                if (count == 0) {
+                    System.out.println(isDup);
+                    isDup = true;
+                } else {
+                    System.out.println(isDup);
+                    isDup = false;
+                }
+            }
+            System.out.println(isDup);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isDup;
+    }
+
+    public boolean changeData( String currentId, String newId) {
+        boolean isData = false;
+        try {
+            conn = Common.getConnection();
+            // 아이디 변경을 위한 SQL 쿼리를 작성합니다.
+            String updateSql = "UPDATE MEMBER SET ID = ? WHERE ID = ?";
+            if (isIdcheck(newId) == true) {
+                // PreparedStatement를 생성하고 파라미터 값을 설정합니다.
+                PreparedStatement pstmt = conn.prepareStatement(updateSql);
+                pstmt.setString(1, newId);
+                pstmt.setString(2, currentId);
+
+                // 업데이트 쿼리를 실행합니다.
+                int rowsUpdated = pstmt.executeUpdate();
+                if (rowsUpdated > 0) {
+                    isData = true;
+                    System.out.println("아이디 변경 완료");
+                } else {
+                    isData = false;
+                    System.out.println("아이디 변경 실패");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    return isData;
+    }
 }

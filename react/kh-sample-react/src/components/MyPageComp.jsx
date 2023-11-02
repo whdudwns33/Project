@@ -70,9 +70,10 @@ export const LeftTop = styled.div`
 // 이미지 레이어
 export const Imagine = styled.div`
   box-shadow: inset 7px 2px 10px #babebc, inset -5px -5px 12px #fff;
-  border-radius: 50%;
+  border-radius: 5%;
   width: 50%;
   height: 50%;
+  margin-bottom: 5%;
 
   @media (max-width: 450px) {
     width: 50%;
@@ -180,6 +181,8 @@ export const Right = styled.div`
 // 정보 수정창
 export const RightInfo = styled.div`
   @media (min-width: 451px) {
+    display: flex;
+    flex-direction: column;
     box-shadow: -5px -5px 1px #fff, 5px 5px 1px #babebc;
     border-radius: 10px;
     width: 80%;
@@ -187,6 +190,8 @@ export const RightInfo = styled.div`
     animation-name: Info-animation;
     animation-duration: 0.3s;
     color: white;
+    border: 3px solid black;
+    align-items: center;
   }
   @media (max-width: 450px) {
     box-shadow: -5px -5px 1px #fff, 5px 5px 1px #babebc;
@@ -208,9 +213,16 @@ export const RightInfo = styled.div`
     }
   }
 `;
+// 정보 수정창 등장
+export const InputTag = styled.div`
+  display: flex;
+  width: 50%;
+  justify-content: center;
+`;
+
 // 꾸밈 효과
 // 좌측 버튼
-export const ResetButton = styled.button`
+export const SetButton = styled.button`
   @media (min-width: 450px) {
     margin: 0;
     padding: 0;
@@ -218,8 +230,8 @@ export const ResetButton = styled.button`
     font-size: 1.8rem;
     border-radius: 10px;
     box-shadow: -5px -5px 10px #fff, 5px 5px 8px #babebc;
-    width: 70%;
-    height: 20%;
+    width: ${(props) => props.width || "70%"};
+    height: ${(props) => props.height || "20%"};
     cursor: pointer;
     transition: transform 0.3s;
   }

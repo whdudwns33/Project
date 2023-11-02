@@ -1,7 +1,7 @@
 import { useState, useReducer, useEffect } from "react";
 import {
   Container,
-  ResetButton,
+  SetButton,
   CloseButton,
   InputBox,
   Left,
@@ -13,8 +13,9 @@ import {
   LeftButton,
   Right,
   RightInfo,
+  InputTag,
 } from "../components/MyPageComp";
-import AxiosApi from "../api/AxiosApi";
+import AxiosApi from "../api/MyPageAxiosApi";
 
 // 입력받은 정보를 객체로 저장하는 함수 reducer
 const reducer = (data, action) => {
@@ -31,7 +32,6 @@ const reducer = (data, action) => {
       return data;
   }
 };
-// b. 입력 컨트롤러: 회원 정보 수정(아이디, 비밀번호, 회원탈퇴), 금액 충전
 const ControllInfo = () => {
   // ㄱ. 버튼 클릭으로 화면 변화
   // 초기 상태 설정
@@ -176,21 +176,39 @@ const ControllInfo = () => {
     }
   };
 
-  
   // 변경 아이디 제약 조건
-  const [ID, setID] = useState("");
+  const [newId, setNewId] = useState("");
   const [msg, setMsg] = useState("");
   const onId = (e) => {
     setMsg("");
-    const Id = e.target.value;
-    if (/^[a-zA-Z0-9]{8,20}$/.test(Id)) {
+    if (/^[a-zA-Z0-9]{8,20}$/.test(e.target.value)) {
       setMsg("유효합니다.");
-      setID(Id);
+      setNewId(e.target.value);
+
+      setCheckTrue(true);
     } else {
       setMsg("유효하지 않습니다.");
+      setCheckTrue(false);
     }
   };
-  // 변경 아이디 제약 조건
+
+  // 체크된 아이디 제출 및 클릭시 데이터 변경
+  const [checkTrue, setCheckTrue] = useState(false);
+  const onClickChangeId = async () => {
+    try {
+      const chId = await AxiosApi.handleIdChange(data.id, newId);
+      console.log("newId의 값:", newId); // newId의 값을 확인
+      console.log("제출된 아이디가 잘 찍혔습니다." + chId.data);
+      if (chId === true) {
+        setCheckTrue(true);
+      } else {
+        setCheckTrue(false);
+      }
+    } catch (error) {
+      console.error("ID 변경 중 오류 발생:", error);
+    }
+  };
+
   const [PW, setPW] = useState("");
   const onPw = (e) => {
     setMsg("");
@@ -228,10 +246,10 @@ const ControllInfo = () => {
         </LeftTop>
         <LeftBottom>
           <LeftButton>
-            <ResetButton onClick={onClickId}>아이디 변경</ResetButton>
-            <ResetButton onClick={onClickPw}>비밀번호 변경</ResetButton>
-            <ResetButton onClick={onClickCash}>금액충전</ResetButton>
-            <ResetButton onClick={onClickMember}>회원탈퇴</ResetButton>
+            <SetButton onClick={onClickId}>아이디 변경</SetButton>
+            <SetButton onClick={onClickPw}>비밀번호 변경</SetButton>
+            <SetButton onClick={onClickCash}>금액충전</SetButton>
+            <SetButton onClick={onClickMember}>회원탈퇴</SetButton>
           </LeftButton>
         </LeftBottom>
       </Left>
@@ -253,9 +271,32 @@ const ControllInfo = () => {
             />
             <p>{msgEmail}</p>
             {checkName && checkId && checkPw && checkEmail && (
-              <button onClick={onClickCheck}>체크</button>
+              <InputTag>
+                <SetButton
+                  width="50%"
+                  height="100%"
+                  onClick={onClickCheck}
+                  boxShadow="none"
+                >
+                  정보 확인
+                </SetButton>
+              </InputTag>
             )}
-            {checkedInfo && <p>잘찍였나봐요. 도비는 자유예요</p>}
+            {/* ture 백에서 받아와서 아이디 변경 */}
+            {checkedInfo && (
+              <InputTag>
+                <InputBox placeholder="ID" type="text" onChange={onId} />
+                <div>{msg}</div>
+                <div>
+                  {checkTrue && (
+                    <SetButton onClick={onClickChangeId}>제출</SetButton>
+                  )}
+                  {checkTrue && <p>잘 입력되었습니다.</p>}
+                  {!checkTrue && <p>잘 못 입력되었습니다.</p>}
+                </div>
+              </InputTag>
+            )}
+
             <CloseButton onClick={onClckCloseRight}>닫기버튼</CloseButton>
           </RightInfo>
         )}
