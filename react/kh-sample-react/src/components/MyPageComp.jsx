@@ -190,7 +190,6 @@ export const RightInfo = styled.div`
     animation-name: Info-animation;
     animation-duration: 0.3s;
     color: white;
-    border: 3px solid black;
     align-items: center;
   }
   @media (max-width: 450px) {
@@ -296,3 +295,5 @@ export const InputBox = styled.input`
     font-size: 30px;
   }
 `;
+
+

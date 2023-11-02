@@ -1,10 +1,10 @@
 import "./App.css";
-import ControllInfo from "./pages/MyPage ";
+import MyPage from "./pages/MyPage ";
 
 function App() {
   return (
     <>
-      <ControllInfo />
+      <MyPage />
     </>
   );
 }

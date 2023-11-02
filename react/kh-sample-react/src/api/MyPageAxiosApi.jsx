@@ -10,9 +10,8 @@ const AxiosApi = {
     );
   },
 
-  handleIdChange: async (currentId, newId) => {
+  modifyID: async (currentId, newId) => {
     try {
-      // 준비된 데이터를 객체로 만들지 않고, 각각의 매개변수로 전달합니다.
       const updateId = {
         currentId: currentId,
         newId: newId,
@@ -22,9 +21,8 @@ const AxiosApi = {
       // POST 요청을 보냅니다.
       return await axios.post(KH_DOMAIN + "/users/updateId", updateId);
     } catch (error) {
-      // 오류 처리: 서버 요청 중 오류 발생 시, 적절한 대응이 필요합니다.
       console.error("ID 변경 중 오류 발생:", error);
-      throw error; // 나중에 오류를 처리하기 위해 다시 throw합니다.
+      throw error; 
     }
   },
 
