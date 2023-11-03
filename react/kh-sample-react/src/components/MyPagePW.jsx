@@ -3,7 +3,7 @@ import { reducer } from "../pages/MyPage ";
 import AxiosApi from "../api/MyPageAxiosApi";
 import { InputBox, SetButton, InputTag } from "./MyPageComp";
 
-const MyPageID = () => {
+const MyPagePW = () => {
   const [data, dispatch] = useReducer(reducer, {
     name: "",
     id: "",
@@ -100,15 +100,18 @@ const MyPageID = () => {
     }
   };
 
-  // 변경 아이디 제약 조건
-  const [newId, setNewId] = useState("");
+  // 변경 비밀번호 제약 조건
+  const [newPw, setNewPw] = useState("");
   const [msg, setMsg] = useState("");
-  const onModifyId = (e) => {
+  const onModifyPw = (e) => {
     setMsg("");
-    if (/^[a-zA-Z0-9]{8,20}$/.test(e.target.value)) {
+    if (
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/.test(
+        e.target.value
+      )
+    ) {
       setMsg("유효합니다.");
-      setNewId(e.target.value);
-
+      setNewPw(e.target.value);
       setCheckTrue(true);
     } else {
       setMsg("유효하지 않습니다.");
@@ -116,18 +119,18 @@ const MyPageID = () => {
     }
   };
   const [checkTrue, setCheckTrue] = useState(false);
-  const onClickModifyId = async () => {
+  const onClickModifyPw = async () => {
     try {
-      const chId = await AxiosApi.modifyID(data.id, newId);
-      console.log("newId의 값:", newId); // newId의 값을 확인
-      console.log("제출된 아이디가 잘 찍혔습니다." + chId.data);
-      if (chId.data === true) {
+      const chPw = await AxiosApi.modifyPW(data.pw, newPw);
+      console.log("newPw의 값:", newPw); // newId의 값을 확인
+      console.log("제출된 비밀번호가 잘 찍혔습니다." + chPw.data);
+      if (chPw === true) {
         setCheckTrue(true);
       } else {
         setCheckTrue(false);
       }
     } catch (error) {
-      console.error("ID 변경 중 오류 발생:", error);
+      console.error("PW 변경 중 오류 발생:", error);
     }
   };
 
@@ -135,7 +138,7 @@ const MyPageID = () => {
     <div>
       <>
         <InputTag>
-          <h1>아이디 변경</h1>
+          <h1>비밀번호 변경</h1>
           <InputBox placeholder="이름" type="text" onChange={onChangeName} />
           <p>{msgName}</p>
           <InputBox placeholder="ID" type="text" onChange={onChangeId} />
@@ -153,13 +156,14 @@ const MyPageID = () => {
           {checkedInfo && (
             <>
               <InputBox
-                placeholder="NEW ID"
+                placeholder="NEW PW"
                 type="text"
-                onChange={onModifyId}
+                onChange={onModifyPw}
               />
               <p>{msg}</p>
+
               {checkTrue && (
-                <SetButton width="40%" height="10%" onClick={onClickModifyId}>
+                <SetButton width="40%" height="10%" onClick={onClickModifyPw}>
                   정보 수정
                 </SetButton>
               )}
@@ -171,4 +175,4 @@ const MyPageID = () => {
   );
 };
 
-export default MyPageID;
+export default MyPagePW;

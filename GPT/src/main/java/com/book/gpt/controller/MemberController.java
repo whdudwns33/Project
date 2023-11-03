@@ -13,8 +13,7 @@ import java.util.Map;
 
 public class MemberController {
     @GetMapping("/checkInfo")
-    public ResponseEntity<Boolean> memberCheck(@RequestParam String name, String id, String pw, String email) {
-
+    public ResponseEntity<Boolean> memberCheck(@RequestParam String name,@RequestParam String id,@RequestParam String pw,@RequestParam String email) {
         MemberDAO dao = new MemberDAO();
         boolean isTrue = dao.memberCheck(name, id, pw, email);
         return new ResponseEntity<>(isTrue, HttpStatus.OK);
@@ -24,11 +23,29 @@ public class MemberController {
     public ResponseEntity<Boolean> updateId (@RequestBody Map<String, String> updateId) {
         String currentId = updateId.get("currentId");
         String newId = updateId.get("newId");
-        System.out.println(currentId);
-        System.out.println(newId);
         MemberDAO dao = new MemberDAO();
-        boolean isTrue = dao.changeData(currentId, newId);
+        boolean isTrue = dao.modifyId(currentId, newId);
         System.out.println(isTrue);
         return new ResponseEntity<>(isTrue, HttpStatus.OK);
     }
+    @PostMapping("/updatePw")
+    public ResponseEntity<Boolean> updatePw (@RequestBody Map<String, String> updatePw) {
+        // 프론트엔드의 aixos의 키값과 동일한 이름일 것
+        String currentPw = updatePw.get("currentPw");
+        String newPw = updatePw.get("newPw");
+        MemberDAO dao = new MemberDAO();
+        boolean isTrue = dao.modifyPw(currentPw, newPw);
+        System.out.println(isTrue);
+        return new ResponseEntity<>(isTrue, HttpStatus.OK);
+    }
+    // @PostMapping/ @DeleteMaping은 큰 차이가 없다
+    @PostMapping("/delete")
+    public ResponseEntity<Boolean> deleteMember (@RequestBody Map<String, String> del) {
+        String getId = del.get("delId");
+        MemberDAO dao = new MemberDAO();
+        boolean isTrue = dao.deleteMember(getId);
+        System.out.println("삭제여부 : " + isTrue);
+        return new ResponseEntity<>(isTrue, HttpStatus.OK);
+    }
 }
+

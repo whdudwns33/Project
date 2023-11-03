@@ -3,7 +3,7 @@ import { reducer } from "../pages/MyPage ";
 import AxiosApi from "../api/MyPageAxiosApi";
 import { InputBox, SetButton, InputTag } from "./MyPageComp";
 
-const MyPageID = () => {
+const MyPageDELETE = () => {
   const [data, dispatch] = useReducer(reducer, {
     name: "",
     id: "",
@@ -27,6 +27,7 @@ const MyPageID = () => {
       setNameMsg("유효하지 않습니다.");
       setCheckName(false);
     }
+    console.log(checkName);
   };
   // 아이디 제약 조건
   const onChangeId = (e) => {
@@ -40,6 +41,7 @@ const MyPageID = () => {
       setIdMsg("유효하지 않습니다.");
       setCheckId(false);
     }
+    console.log(checkId);
   };
   // 비밀번호 제약 조건
   const onChangePw = (e) => {
@@ -57,6 +59,7 @@ const MyPageID = () => {
       setPwMsg("유효하지 않습니다.");
       setCheckPw(false);
     }
+    console.log(checkPw);
   };
   // 이메일 제약 조건
   const onChangeEmail = (e) => {
@@ -70,6 +73,7 @@ const MyPageID = () => {
       setEmailMsg("유효하지 않습니다.");
       setCheckEmail(false);
     }
+    console.log(checkEmail);
   };
 
   // 기본 이름 아이디 등 입력하고 난후 입력 조건이 적절하면 등장하는 정보 수정 입력창
@@ -100,34 +104,39 @@ const MyPageID = () => {
     }
   };
 
-  // 변경 아이디 제약 조건
-  const [newId, setNewId] = useState("");
+  // 아이디 삭제 제약 조건
+  const [delId, setDelId] = useState("");
   const [msg, setMsg] = useState("");
-  const onModifyId = (e) => {
+  const onDeleteId = (e) => {
     setMsg("");
     if (/^[a-zA-Z0-9]{8,20}$/.test(e.target.value)) {
       setMsg("유효합니다.");
-      setNewId(e.target.value);
-
+      setDelId(e.target.value);
       setCheckTrue(true);
     } else {
       setMsg("유효하지 않습니다.");
       setCheckTrue(false);
     }
+    console.log("제약 조건으로 입력된 삭제될 아이디" + delId);
   };
   const [checkTrue, setCheckTrue] = useState(false);
-  const onClickModifyId = async () => {
+  const [deleteTrue, setDeleteState] = useState(false);
+  const onClickDeleteId = async () => {
     try {
-      const chId = await AxiosApi.modifyID(data.id, newId);
-      console.log("newId의 값:", newId); // newId의 값을 확인
-      console.log("제출된 아이디가 잘 찍혔습니다." + chId.data);
-      if (chId.data === true) {
+      const response = await AxiosApi.memberDel(delId);
+      console.log("del ::::" + delId);
+      console.log("del의 값:", response.data);
+      if (response.data === true) {
         setCheckTrue(true);
+        console.log("삭제되었습니다.");
+        setDeleteState(true);
       } else {
         setCheckTrue(false);
+        console.log("삭제되지 못했습니다.");
+        setDeleteState(false);
       }
     } catch (error) {
-      console.error("ID 변경 중 오류 발생:", error);
+      console.error("오류 발생:", error);
     }
   };
 
@@ -135,7 +144,7 @@ const MyPageID = () => {
     <div>
       <>
         <InputTag>
-          <h1>아이디 변경</h1>
+          <h1>회원 탈퇴</h1>
           <InputBox placeholder="이름" type="text" onChange={onChangeName} />
           <p>{msgName}</p>
           <InputBox placeholder="ID" type="text" onChange={onChangeId} />
@@ -149,20 +158,21 @@ const MyPageID = () => {
               정보 확인
             </SetButton>
           )}
-          {/* ture 백에서 받아와서 아이디 변경 */}
+
           {checkedInfo && (
             <>
               <InputBox
-                placeholder="NEW ID"
+                placeholder="DELETE ID"
                 type="text"
-                onChange={onModifyId}
+                onChange={onDeleteId}
               />
               <p>{msg}</p>
               {checkTrue && (
-                <SetButton width="40%" height="10%" onClick={onClickModifyId}>
-                  정보 수정
+                <SetButton width="40%" height="10%" onClick={onClickDeleteId}>
+                  회원 탈퇴
                 </SetButton>
               )}
+              {deleteTrue && <p>삭제 되었습니다.</p>}
             </>
           )}
         </InputTag>
@@ -171,4 +181,4 @@ const MyPageID = () => {
   );
 };
 
-export default MyPageID;
+export default MyPageDELETE;
