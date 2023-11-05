@@ -2,6 +2,12 @@ import axios from "axios";
 const KH_DOMAIN = "http://localhost:8111";
 
 const AxiosApi = {
+  //회원정보 조회
+  memberGet: async (id) => {
+    return await axios.get(KH_DOMAIN + `/users/member/?id=${id}`);
+  },
+
+
   // 정보 수정을 위해서 입력 받은 정보들이 존재하는지 확인
   memberCheck: async (name, id, pw, email) => {
     return await axios.get(
@@ -9,7 +15,7 @@ const AxiosApi = {
         `/users/checkInfo/?name=${name}&id=${id}&pw=${pw}&email=${email}`
     );
   },
-
+  // 아이디 비밀번호 변경
   modifyID: async (currentId, newId) => {
     try {
       const updateId = {
@@ -50,7 +56,20 @@ const AxiosApi = {
       delId: delId,
     };
     console.log("회원 탈퇴를 위한 del 값이 잘 들어갔는지" + del.data);
-    return await axios.delete(KH_DOMAIN + "/users/delete", del);
+    return await axios.post(KH_DOMAIN + "/users/delete", del);
   },
+
+  // 금액 충전
+  chargeAmout: async (id, cash) => {
+    const IntCash = parseInt(cash);
+    console.log(cash);
+    const charge = {
+      id: id,
+      cash : IntCash,
+    };
+    console.log(charge.data);
+    return await axios.post(KH_DOMAIN + "/users/charge", charge);
+  },
+
 };
 export default AxiosApi;

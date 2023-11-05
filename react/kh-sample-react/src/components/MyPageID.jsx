@@ -132,7 +132,6 @@ const MyPageID = () => {
   };
 
   return (
-    <div>
       <>
         <InputTag>
           <h1>아이디 변경</h1>
@@ -167,7 +166,6 @@ const MyPageID = () => {
           )}
         </InputTag>
       </>
-    </div>
   );
 };
 

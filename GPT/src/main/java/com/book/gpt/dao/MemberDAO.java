@@ -1,5 +1,6 @@
 package com.book.gpt.dao;
 import com.book.gpt.common.Common;
+import com.book.gpt.dto.MemberDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,7 +13,34 @@ public class MemberDAO {
     private Statement stmt = null;
     private ResultSet rs = null;
     private PreparedStatement pStmt = null;
+    
+    // 정보 조회
+    public List<MemberDTO> memberInfo(String getId) {
+        List<MemberDTO> list = new ArrayList<>();
+        String sql = "SELECT NAME, EMAIL, TEL, CASH FROM MEMBER WHERE ID = ?";
+        try (Connection conn = Common.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, getId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String name = rs.getString("NAME");
+                    String email = rs.getString("EMAIL");
+                    String tel = rs.getString("TEL");
+                    int cash = rs.getInt("CASH");
 
+                    MemberDTO dto = new MemberDTO();
+                    dto.setName(name);
+                    dto.setEmail(email);
+                    dto.setTel(tel);
+                    dto.setCash(cash);
+                    list.add(dto);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
     // 이름~이메일 입력시 존재하는 지 체크
     public boolean memberCheck(String name, String id, String pw, String email) {
@@ -178,4 +206,32 @@ public class MemberDAO {
         }
         return isData;
     }
+
+    public boolean chargingCash (String getId, int getCash) {
+        boolean isData = false;
+        int rowsUpdated = 0;
+        try {
+            conn = Common.getConnection();
+            String sql = "UPDATE MEMBER SET CASH = CASH + ? WHERE id = ?";
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setInt(1, getCash);
+            pStmt.setString(2, getId);
+            rowsUpdated = pStmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Common.close(pStmt);
+        Common.close(conn);
+        if (rowsUpdated == 1) {
+            isData = true;
+            System.out.println("충전 완료: " + rowsUpdated);
+        } else {
+            isData = false;
+            System.out.println("충전 실패: " + rowsUpdated);
+        }
+        return isData;
+        }
+
+   
+
 }

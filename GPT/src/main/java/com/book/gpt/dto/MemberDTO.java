@@ -13,4 +13,20 @@ public class MemberDTO {
     private String tel;
     private int cash;
     private String auth;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public void setCash(int cash) {
+        this.cash = cash;
+    }
 }

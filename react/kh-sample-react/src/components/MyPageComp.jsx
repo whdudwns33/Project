@@ -1,9 +1,18 @@
+import { createGlobalStyle } from "styled-components";
 import styled from "styled-components";
+
+export const GlobalStyle = createGlobalStyle`
+  /* 여기에 글로벌 스타일을 정의합니다. */
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  /* 다른 글로벌 스타일 정의 가능 */
+`;
 
 // 기본 컨테이너: 전체 레이어
 export const Container = styled.div`
   // PC
-  @media (min-width: 451px) {
     margin: 0 auto;
     padding: 0;
     box-sizing: border-box;
@@ -11,19 +20,17 @@ export const Container = styled.div`
     height: 100vh;
     flex-wrap: wrap;
     display: flex;
-    min-width: 1440px;
-    min-height: 1000px;
+    min-width: 1000px;
+    min-height: 800px;
     justify-content: space-evenly;
     background-color: #fff;
-  }
+  
   // 모바일
   @media (max-width: 450px) {
     box-sizing: border-box;
     width: 100vw;
     height: 100vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
     background-color: #fff;
   }
 `;
@@ -41,14 +48,11 @@ export const Left = styled.div`
   box-shadow: -5px -5px 10px #fff, 5px 5px 10px #babebc;
   background: #ebecf0;
   flex-direction: column;
-
-  @media (min-width: 451px) {
-    align-items: center;
-  }
+  align-items: center;  
 
   @media (max-width: 450px) {
     width: 100%;
-    height: 100%;
+    height: 150%;
   }
 `;
 
@@ -64,9 +68,11 @@ export const LeftTop = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  // 모바일
+
   @media (max-width: 450px) {
-    flex-direction: column;
+    width: 80%;
+    height: 50%;
+
   }
 `;
 // 이미지 레이어
@@ -78,7 +84,7 @@ export const Imagine = styled.div`
   margin-bottom: 5%;
 
   @media (max-width: 450px) {
-    width: 80%;
+    width: 60%;
     height: 50%;
   }
 `;
@@ -92,12 +98,13 @@ export const InfoBox = styled.div`
   justify-content: space-around;
 
   @media (max-width: 450px) {
-    width: 80%;
+    width: 60%;
     height: 40%;
     align-items: center;
   }
 `;
 // 정보의 이름 레이어
+// 구현 예정
 export const InfoName = styled.div`
   width: 100px;
   margin-top: 1%;
@@ -105,6 +112,7 @@ export const InfoName = styled.div`
 
   @media (max-width: 450px) {
     margin: 0;
+
   }
 `;
 //
@@ -115,38 +123,33 @@ export const InfoName = styled.div`
 //
 // 좌측 하단 전체 레이어
 export const LeftBottom = styled.div`
-  @media (min-width: 451px) {
     width: 70%;
     height: 40%;
     display: flex;
     justify-content: center;
     align-items: center;
     box-shadow: inset 7px 2px 10px #babebc, inset -5px -5px 12px #fff;
-  }
+
   @media (max-width: 450px) {
-    width: 100%;
-    height: 40%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 80%;
+    height: 50%;    
+    box-shadow: none;
+
   }
 `;
 // 좌측 하단 버튼들의 레이어
 export const LeftButton = styled.div`
-  @media (min-width: 451px) {
-    width: 100%;
-    height: 80%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-  }
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  
   @media (max-width: 450px) {
-    width: 80%;
-    height: 100%;
+    width: 60%;
+    height: 50%;
     display: flex;
-    justify-content: space-evenly;
-    align-items: center;
     box-shadow: inset 7px 2px 10px #babebc, inset -5px -5px 12px #fff;
     flex-wrap: wrap;
   }
@@ -164,21 +167,16 @@ export const Right = styled.div`
   border-radius: 10px;
   color: white;
   box-shadow: -5px -5px 10px #fff, 5px 5px 10px #babebc;
-
-  // PC
-  @media (min-width: 451px) {
-    width: 60%;
-    height: 98%;
-    display: flex;
-    justify-content: center;
-    text-align: center;
-    margin-top: 5px;
-  }
-
+  width: 60%;
+  height: 98%;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin-top: 5px;
+  
   @media (max-width: 450px) {
     position: absolute;
-    width: 80%;
-    min-width: 300px;
+    width: 100%;
     height: 80%;
     border-radius: 5%;
     display: ${(props) => (props.isVisible ? "flex" : "none")};
@@ -194,10 +192,9 @@ export const RightInfo = styled.div`
   align-items: center;
   animation-name: Info-animation;
   animation-duration: 0.3s;
-  @media (min-width: 451px) {
     width: 100%;
     height: 100%;
-  }
+  
 
   @media (max-width: 450px) {
     text-align: center;
@@ -220,8 +217,6 @@ export const InputTag = styled.div`
   width: ${(props) => props.width || "100%"};
   height: ${(props) => props.height || "100%"};
   align-items: center;
-  margin-top: 10%;
-  border: 2px solid white;
   border-radius: 10px;
 `;
 // 입력창
@@ -232,16 +227,16 @@ export const InputBox = styled.input`
   border: none;
   text-align: center;
   border-radius: 10px;
-  width: ${(props) => props.width || "60%"};
-  height: ${(props) => props.width || "10%"};
-  font-size: 40px;
+  width: ${(props) => props.width || "40%"};
+  height: ${(props) => props.width || "5%"};
+  font-size: 2rem;
   box-shadow: 1px 1px 5px 1px black inset;
 
   @media (max-width: 450px) {
     background-color: none;
     box-shadow: inset 7px 2px 5px #babebc, inset -5px -5px 6px #fff;
     width: 80%;
-    font-size: 30px;
+    font-size: 1.5rem;
     height: 15%;
   }
 `;
@@ -255,7 +250,6 @@ export const InputBox = styled.input`
 // 꾸밈 효과
 // 좌측 버튼
 export const SetButton = styled.button`
-  @media (min-width: 450px) {
     padding: 0;
     border: none;
     font-size: 1.8rem;
@@ -267,7 +261,7 @@ export const SetButton = styled.button`
     transition: transform 0.3s;
     margin-top: 5%;
     margin-bottom: 5%;
-  }
+  
   @media (max-width: 450px) {
     padding: 0;
     border: none;
@@ -284,10 +278,9 @@ export const SetButton = styled.button`
 `;
 // 닫기 버튼
 export const CloseButton = styled.button`
-  @media (min-width: 451px) {
-    display: none;
-  }
+  display: none;
   @media (max-width: 450px) {
+    display: flex;
     margin: 0;
     padding: 0;
     border: none;
@@ -298,6 +291,25 @@ export const CloseButton = styled.button`
   }
   &:active {
     cursor: pointer;
-    box-shadow: inset 1px 1px 2px #babebc, inset -1px -1px 2px #fff;
+    box-shadow: inset 1px 1px 2px rgb(186, 190, 188), inset -1px -1px 2px #fff;
   }
 `;
+
+export const DivRow = styled.div`
+  margin-top: 5%;
+  margin-bottom: 5%;
+  display: flex;
+  justify-content:space-evenly;
+  flex-wrap: wrap;
+  border: 3px solid black;
+  width: 80%;
+  height: 5%;
+
+  .chooseBank {
+    width: 20%;
+    border: none;
+    border-radius: 10px;
+  }
+`;
+
+

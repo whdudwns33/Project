@@ -135,7 +135,6 @@ const MyPagePW = () => {
   };
 
   return (
-    <div>
       <>
         <InputTag>
           <h1>비밀번호 변경</h1>
@@ -171,7 +170,6 @@ const MyPagePW = () => {
           )}
         </InputTag>
       </>
-    </div>
   );
 };
 

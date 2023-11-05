@@ -141,7 +141,6 @@ const MyPageDELETE = () => {
   };
 
   return (
-    <div>
       <>
         <InputTag>
           <h1>회원 탈퇴</h1>
@@ -177,7 +176,6 @@ const MyPageDELETE = () => {
           )}
         </InputTag>
       </>
-    </div>
   );
 };
 

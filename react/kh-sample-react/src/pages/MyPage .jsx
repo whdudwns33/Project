@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   SetButton,
@@ -16,6 +16,8 @@ import {
 import MyPageID from "../components/MyPageID";
 import MyPagePW from "../components/MyPagePW";
 import MyPageDELETE from "../components/MyPageDelete";
+import MyPageCash from "../components/MyPageCash";
+import AxiosApi from "../api/MyPageAxiosApi";
 
 // 입력받은 정보를 객체로 저장하는 함수 reducer
 export const reducer = (data, action) => {
@@ -33,6 +35,8 @@ export const reducer = (data, action) => {
   }
 };
 const MyPage = () => {
+  // 임시 id 키
+  const id = "jojo6807";
   // 초기 상태 설정
   const [rightIdInfo, setRightIdInfo] = useState(false);
   const [rightPwInfo, setRightPwInfo] = useState(false);
@@ -60,6 +64,22 @@ const MyPage = () => {
     setPwMsg("비밀번호 형식에 맞추어 입력하시오.");
     setEmailMsg("이메일 형식에 맞추어 입력하시오.");
   };
+  // 회원정보 조회
+  const [memberInfo, setMemberInfo] = useState({
+
+  });
+  useEffect(() => {
+    const memberInfo = async () => {
+      const rsp = await AxiosApi.memberGet(id); // 전체 조회
+      if (rsp.status === 200) {
+        // 콘솔창 보면 DATA[0]이 리스트
+        setMemberInfo(rsp.data[0]);
+        console.log(rsp.data[0]);
+      }
+    };
+    memberInfo();
+  }, []);
+
 
   // ID 변경 버튼 클릭
   const onClickId = () => {
@@ -90,13 +110,10 @@ const MyPage = () => {
           </Imagine>
           <InfoBox>
             <div>
-              <InfoName>회원 이름</InfoName>
-              <InfoName>이메일</InfoName>
-              <InfoName>전화번호</InfoName>
-              <InfoName>소지금액</InfoName>
-            </div>
-            <div>
-              <p style={{ marginTop: "0" }}>결과 출력</p>
+              <InfoName>회원 이름: {memberInfo.name}</InfoName>
+              <InfoName>이메일: {memberInfo.email}</InfoName>
+              <InfoName>전화번호: {memberInfo.tel}</InfoName>
+              <InfoName>소지금액: {memberInfo.cash}</InfoName>
             </div>
           </InfoBox>
         </LeftTop>
@@ -125,13 +142,14 @@ const MyPage = () => {
             <CloseButton onClick={onClckCloseRight}>닫기버튼</CloseButton>
           </RightInfo>
         )}
-        {/*         
+                
         {rightCash && (
           <RightInfo>
-            <h1>금액 충전</h1>
+            <MyPageCash/>
             <CloseButton onClick={onClckCloseRight}>닫기버튼</CloseButton>
           </RightInfo>
-        )} */}
+          
+        )}
 
         {rightMember && (
           <RightInfo>
