@@ -1,23 +1,22 @@
 import { useState, useEffect } from "react";
 import {
   Container,
-  SetButton,
   Left,
-  LeftTop,
   Imagine,
   InfoBox,
   InfoName,
-  LeftBottom,
   LeftButton,
   Right,
   CloseButton,
   RightInfo,
 } from "../components/MyPageComp";
+import { StyledButton } from "../globalStyle/StyledButton";
 import MyPageID from "../components/MyPageID";
 import MyPagePW from "../components/MyPagePW";
 import MyPageDELETE from "../components/MyPageDelete";
 import MyPageCash from "../components/MyPageCash";
 import AxiosApi from "../api/MyPageAxiosApi";
+import MyPageSlider from "../components/MyPageSilder";
 
 // 입력받은 정보를 객체로 저장하는 함수 reducer
 export const reducer = (data, action) => {
@@ -42,6 +41,7 @@ const MyPage = () => {
   const [rightPwInfo, setRightPwInfo] = useState(false);
   const [rightCash, setRightCash] = useState(false);
   const [rightMember, setRightMember] = useState(false);
+  const [rightSlider, setRightSlider] = useState(true);
 
   const [isRightVisible, setIsRightVisible] = useState(false);
   const onClckCloseRight = () => {
@@ -53,21 +53,20 @@ const MyPage = () => {
   const [msgPw, setPwMsg] = useState("비밀번호 형식에 맞추어 입력하시오.");
   const [msgEmail, setEmailMsg] = useState("이메일 형식에 맞추어 입력하시오.");
 
-  const handleButtonClick = (isId, isPw, isCash, isMember) => {
+  const handleButtonClick = (isId, isPw, isCash, isMember, isSlider) => {
     setIsRightVisible(true);
     setRightIdInfo(isId);
     setRightPwInfo(isPw);
     setRightCash(isCash);
     setRightMember(isMember);
+    setRightSlider(isSlider);
     setNameMsg("이름 형식에 맞추어 입력하시오.");
     setIdMsg("아이디 형식에 맞추어 입력하시오.");
     setPwMsg("비밀번호 형식에 맞추어 입력하시오.");
     setEmailMsg("이메일 형식에 맞추어 입력하시오.");
   };
   // 회원정보 조회
-  const [memberInfo, setMemberInfo] = useState({
-
-  });
+  const [memberInfo, setMemberInfo] = useState({});
   useEffect(() => {
     const memberInfo = async () => {
       const rsp = await AxiosApi.memberGet(id); // 전체 조회
@@ -80,54 +79,70 @@ const MyPage = () => {
     memberInfo();
   }, []);
 
-
   // ID 변경 버튼 클릭
   const onClickId = () => {
-    handleButtonClick(true, false, false, false);
+    handleButtonClick(true, false, false, false, false);
   };
 
   // Pw 변경 버튼 클릭
   const onClickPw = () => {
-    handleButtonClick(false, true, false, false);
+    handleButtonClick(false, true, false, false, false);
   };
 
   // Cash 충전 버튼 클릭
   const onClickCash = () => {
-    handleButtonClick(false, false, true, false);
+    handleButtonClick(false, false, true, false, false);
   };
 
   // 회원 탈퇴 버튼 클릭
   const onClickMember = () => {
-    handleButtonClick(false, false, false, true);
+    handleButtonClick(false, false, false, true, false);
   };
 
   return (
     <Container>
       <Left>
-        <LeftTop>
-          <Imagine>
-            <img src="/태연.jpg" alt="사진" />
-          </Imagine>
-          <InfoBox>
-            <div>
-              <InfoName>회원 이름: {memberInfo.name}</InfoName>
-              <InfoName>이메일: {memberInfo.email}</InfoName>
-              <InfoName>전화번호: {memberInfo.tel}</InfoName>
-              <InfoName>소지금액: {memberInfo.cash}</InfoName>
-            </div>
-          </InfoBox>
-        </LeftTop>
-        <LeftBottom>
-          <LeftButton>
-            <SetButton onClick={onClickId}>아이디 변경</SetButton>
-            <SetButton onClick={onClickPw}>비밀번호 변경</SetButton>
-            <SetButton onClick={onClickCash}>금액충전</SetButton>
-            <SetButton onClick={onClickMember}>회원탈퇴</SetButton>
-          </LeftButton>
-        </LeftBottom>
+        <Imagine>
+          <img src="/태연.jpg" alt="사진" />
+        </Imagine>
+        <InfoBox>
+          <div>
+            <InfoName>회원 이름: {memberInfo.name}</InfoName>
+            <InfoName>이메일: {memberInfo.email}</InfoName>
+            <InfoName>전화번호: {memberInfo.tel}</InfoName>
+            <InfoName>소지금액: {memberInfo.cash}원</InfoName>
+          </div>
+        </InfoBox>
+        <LeftButton>
+          <StyledButton
+            value="아이디 변경"
+            width="60%"
+            height="15%"
+            onClick={onClickId}
+          ></StyledButton>
+          <StyledButton
+            value="비밀번호 변경"
+            width="60%"
+            height="15%"
+            onClick={onClickPw}
+          ></StyledButton>
+          <StyledButton
+            value="금액 충전"
+            width="60%"
+            height="15%"
+            onClick={onClickCash}
+          ></StyledButton>
+          <StyledButton
+            value="회원 탈퇴"
+            width="60%"
+            height="15%"
+            onClick={onClickMember}
+          ></StyledButton>
+        </LeftButton>
       </Left>
 
       <Right isVisible={isRightVisible}>
+        {rightSlider && <MyPageSlider />}
         {/* 아이디 변경 */}
         {rightIdInfo && (
           <RightInfo>
@@ -142,13 +157,12 @@ const MyPage = () => {
             <CloseButton onClick={onClckCloseRight}>닫기버튼</CloseButton>
           </RightInfo>
         )}
-                
+
         {rightCash && (
           <RightInfo>
-            <MyPageCash/>
+            <MyPageCash />
             <CloseButton onClick={onClckCloseRight}>닫기버튼</CloseButton>
           </RightInfo>
-          
         )}
 
         {rightMember && (
