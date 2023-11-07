@@ -36,7 +36,7 @@ export const reducer = (data, action) => {
 };
 const MyPage = () => {
   // 임시 id 키
-  const id = "jojo1544";
+  const id = "jojo6807";
   // 초기 상태 설정
   const [rightIdInfo, setRightIdInfo] = useState(false);
   const [rightPwInfo, setRightPwInfo] = useState(false);
@@ -104,7 +104,6 @@ const MyPage = () => {
     <Container>
       <Left>
         <Imagine>
-          {/* <ProfileImage /> */}
           <ProfileImage />
         </Imagine>
         <InfoBox>

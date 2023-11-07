@@ -134,8 +134,9 @@ const MyPageID = () => {
 
   return (
     <>
+    <h1>아이디 변경</h1>
       <InputTag>
-        <h1>아이디 변경</h1>
+        
         <InputBox placeholder="이름" type="text" onChange={onChangeName} />
         <p>{msgName}</p>
         <InputBox placeholder="ID" type="text" onChange={onChangeId} />
@@ -152,6 +153,7 @@ const MyPageID = () => {
             onClick={onClickCheck}
           ></StyledButton>
         )}
+        <br/>
         {/* ture 백에서 받아와서 아이디 변경 */}
         {checkedInfo && (
           <>

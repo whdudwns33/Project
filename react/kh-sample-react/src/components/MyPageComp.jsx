@@ -21,9 +21,10 @@ export const Container = styled.div`
   display: flex;
   justify-content: space-evenly;
   background-color: #fff;
-
+  min-width: 1200px;
+  min-height: 800px;
   // 모바일
-  @media (max-width: 800px) {
+  @media (max-width: 450px) {
     box-sizing: border-box;
     width: 100vw;
     height: 100vh;
@@ -46,7 +47,7 @@ export const Left = styled.div`
   align-items: center;
   justify-content: center;
   min-width: 500px;
-  @media (max-width: 800px) {
+  @media (max-width: 450px) {
     width: 100%;
     height: 150%;
     display: flex;
@@ -64,7 +65,7 @@ export const Imagine = styled.div`
   height: 30%;
   margin-bottom: 5%;
   overflow: hidden;
-  @media (max-width: 800px) {
+  @media (max-width: 450px) {
     width: 60%;
     height: 25%;
   }
@@ -79,8 +80,11 @@ export const ImageSection = styled.div`
 // 이미지 내부 레이어
 export const IsideImage = styled.img`
   border: 3px solid red;
-  width: 100%;
-  height: 100%;
+  transition-delay: 0.3s;
+  transition-duration: 0.3s;
+  &:hover {
+    // 우측 아래로 확대
+}
 `;
 // 이미지 등록
 export const ImageSubmit = styled.input`
@@ -109,8 +113,8 @@ export const InfoBox = styled.div`
   justify-content: space-evenly;
   align-items: center;
   border-radius: 10px;
-
-  @media (max-width: 800px) {
+  min-height: 300px;
+  @media (max-width: 450px) {
     width: 60%;
     height: 20%;
   }
@@ -127,7 +131,7 @@ export const InfoName = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  @media (max-width: 800px) {
+  @media (max-width: 450px) {
     font-size: 1.5rem;
   }
 `;
@@ -146,7 +150,7 @@ export const LeftButton = styled.div`
   align-items: center;
   border-radius: 10px;
 
-  @media (max-width: 800px) {
+  @media (max-width: 450px) {
     width: 60%;
     height: 30%;
     display: flex;
@@ -168,7 +172,7 @@ export const Right = styled.div`
   justify-content: center;
   text-align: center;
   min-width: 500px;
-  @media (max-width: 800px) {
+  @media (max-width: 450px) {
     margin-top: 50%;
     position: absolute;
     width: 100vw;
@@ -191,7 +195,7 @@ export const RightInfo = styled.div`
   width: 100%;
   height: 100%;
 
-  @media (max-width: 800px) {
+  @media (max-width: 450px) {
     text-align: center;
   }
 
@@ -209,10 +213,12 @@ export const RightInfo = styled.div`
 export const InputTag = styled.div`
   display: flex;
   flex-direction: column;
-  width: ${(props) => props.width || "100%"};
-  height: ${(props) => props.height || "100%"};
+  width: ${(props) => props.width || "80%"};
+  height: ${(props) => props.height || "80%"};
   align-items: center;
   border-radius: 10px;
+  border: 3px solid white;
+  justify-content: center;
 `;
 // 입력창
 export const InputBox = styled.input`
@@ -227,7 +233,7 @@ export const InputBox = styled.input`
   font-size: 2rem;
   box-shadow: 1px 1px 5px 1px black inset;
 
-  @media (max-width: 800px) {
+  @media (max-width: 450px) {
     background-color: none;
     box-shadow: inset 7px 2px 5px #babebc, inset -5px -5px 6px #fff;
     width: 80%;
@@ -256,7 +262,7 @@ export const DivRow = styled.div`
 
 export const SetButton = styled.button`
   display: none;
-  @media (max-width: 800px) {
+  @media (max-width: 450px) {
     width: 20%;
     height: 5%;
     display: flex;
