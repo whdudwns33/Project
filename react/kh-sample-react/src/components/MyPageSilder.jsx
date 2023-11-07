@@ -4,7 +4,7 @@ import Slider from "react-slick";
 import Draggable from "react-draggable";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import haize from "../image/헤이즈.jpg";
+// import haize from "../image/헤이즈.jpg";
 
 const Img = styled.img`
   z-index: 15;
@@ -59,19 +59,13 @@ const SimpleSlider = () => {
       <h2>Simple Slider</h2>
       <StyledSlider {...settings}>
         <Draggable axis="x">
-          <div>
-            <Img src={haize} alt="사진1" />
-          </div>
+          <div>{/* <Img src={haize} alt="사진1" /> */}</div>
         </Draggable>
         <Draggable axis="x">
-          <div>
-            <Img src={haize} alt="사진1" />
-          </div>
+          <div>{/* <Img src={haize} alt="사진1" /> */}</div>
         </Draggable>
         <Draggable axis="x">
-          <div>
-            <Img src={haize} alt="사진1" />
-          </div>
+          <div>{/* <Img src={haize} alt="사진1" /> */}</div>
         </Draggable>
         {/* 추가 이미지를 필요한 만큼 넣을 수 있습니다 */}
       </StyledSlider>

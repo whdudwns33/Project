@@ -1,7 +1,8 @@
 import { useState, useReducer } from "react";
 import { reducer } from "../pages/MyPage ";
 import AxiosApi from "../api/MyPageAxiosApi";
-import { InputBox, SetButton, InputTag } from "./MyPageComp";
+import { InputBox, InputTag } from "./MyPageComp";
+import { StyledButton } from "../globalStyle/StyledButton";
 
 const MyPageID = () => {
   const [data, dispatch] = useReducer(reducer, {
@@ -132,40 +133,42 @@ const MyPageID = () => {
   };
 
   return (
-      <>
-        <InputTag>
-          <h1>아이디 변경</h1>
-          <InputBox placeholder="이름" type="text" onChange={onChangeName} />
-          <p>{msgName}</p>
-          <InputBox placeholder="ID" type="text" onChange={onChangeId} />
-          <p>{msgId}</p>
-          <InputBox placeholder="PW" type="text" onChange={onChangePw} />
-          <p>{msgPw}</p>
-          <InputBox placeholder="EMAIL" type="text" onChange={onChangeEmail} />
-          <p>{msgEmail}</p>
-          {checkName && checkId && checkPw && checkEmail && (
-            <SetButton width="40%" height="10%" onClick={onClickCheck}>
-              정보 확인
-            </SetButton>
-          )}
-          {/* ture 백에서 받아와서 아이디 변경 */}
-          {checkedInfo && (
-            <>
-              <InputBox
-                placeholder="NEW ID"
-                type="text"
-                onChange={onModifyId}
-              />
-              <p>{msg}</p>
-              {checkTrue && (
-                <SetButton width="40%" height="10%" onClick={onClickModifyId}>
-                  정보 수정
-                </SetButton>
-              )}
-            </>
-          )}
-        </InputTag>
-      </>
+    <>
+      <InputTag>
+        <h1>아이디 변경</h1>
+        <InputBox placeholder="이름" type="text" onChange={onChangeName} />
+        <p>{msgName}</p>
+        <InputBox placeholder="ID" type="text" onChange={onChangeId} />
+        <p>{msgId}</p>
+        <InputBox placeholder="PW" type="text" onChange={onChangePw} />
+        <p>{msgPw}</p>
+        <InputBox placeholder="EMAIL" type="text" onChange={onChangeEmail} />
+        <p>{msgEmail}</p>
+        {checkName && checkId && checkPw && checkEmail && (
+          <StyledButton
+            width="10%"
+            height="5%"
+            value="정보 확인"
+            onClick={onClickCheck}
+          ></StyledButton>
+        )}
+        {/* ture 백에서 받아와서 아이디 변경 */}
+        {checkedInfo && (
+          <>
+            <InputBox placeholder="NEW ID" type="text" onChange={onModifyId} />
+            <p>{msg}</p>
+            {checkTrue && (
+              <StyledButton
+                value="정보 수정"
+                width="40%"
+                height="10%"
+                onClick={onClickModifyId}
+              ></StyledButton>
+            )}
+          </>
+        )}
+      </InputTag>
+    </>
   );
 };
 

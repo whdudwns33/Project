@@ -2,6 +2,7 @@ import { useState, useReducer } from "react";
 import { reducer } from "../pages/MyPage ";
 import AxiosApi from "../api/MyPageAxiosApi";
 import { InputBox, SetButton, InputTag } from "./MyPageComp";
+import { StyledButton } from "../globalStyle/StyledButton";
 
 const MyPageDELETE = () => {
   const [data, dispatch] = useReducer(reducer, {
@@ -141,41 +142,41 @@ const MyPageDELETE = () => {
   };
 
   return (
-      <>
-        <InputTag>
-          <h1>회원 탈퇴</h1>
-          <InputBox placeholder="이름" type="text" onChange={onChangeName} />
-          <p>{msgName}</p>
-          <InputBox placeholder="ID" type="text" onChange={onChangeId} />
-          <p>{msgId}</p>
-          <InputBox placeholder="PW" type="text" onChange={onChangePw} />
-          <p>{msgPw}</p>
-          <InputBox placeholder="EMAIL" type="text" onChange={onChangeEmail} />
-          <p>{msgEmail}</p>
-          {checkName && checkId && checkPw && checkEmail && (
-            <SetButton width="40%" height="10%" onClick={onClickCheck}>
-              정보 확인
-            </SetButton>
-          )}
+    <>
+      <InputTag>
+        <h1>회원 탈퇴</h1>
+        <InputBox placeholder="이름" type="text" onChange={onChangeName} />
+        <p>{msgName}</p>
+        <InputBox placeholder="ID" type="text" onChange={onChangeId} />
+        <p>{msgId}</p>
+        <InputBox placeholder="PW" type="text" onChange={onChangePw} />
+        <p>{msgPw}</p>
+        <InputBox placeholder="EMAIL" type="text" onChange={onChangeEmail} />
+        <p>{msgEmail}</p>
+        {checkName && checkId && checkPw && checkEmail && (
+          <StyledButton width="40%" height="10%" onClick={onClickCheck}>
+            정보 확인
+          </StyledButton>
+        )}
 
-          {checkedInfo && (
-            <>
-              <InputBox
-                placeholder="DELETE ID"
-                type="text"
-                onChange={onDeleteId}
-              />
-              <p>{msg}</p>
-              {checkTrue && (
-                <SetButton width="40%" height="10%" onClick={onClickDeleteId}>
-                  회원 탈퇴
-                </SetButton>
-              )}
-              {deleteTrue && <p>삭제 되었습니다.</p>}
-            </>
-          )}
-        </InputTag>
-      </>
+        {checkedInfo && (
+          <>
+            <InputBox
+              placeholder="DELETE ID"
+              type="text"
+              onChange={onDeleteId}
+            />
+            <p>{msg}</p>
+            {checkTrue && (
+              <StyledButton width="40%" height="10%" onClick={onClickDeleteId}>
+                회원 탈퇴
+              </StyledButton>
+            )}
+            {deleteTrue && <p>삭제 되었습니다.</p>}
+          </>
+        )}
+      </InputTag>
+    </>
   );
 };
 

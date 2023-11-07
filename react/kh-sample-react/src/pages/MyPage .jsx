@@ -7,8 +7,8 @@ import {
   InfoName,
   LeftButton,
   Right,
-  CloseButton,
   RightInfo,
+  SetButton,
 } from "../components/MyPageComp";
 import { StyledButton } from "../globalStyle/StyledButton";
 import MyPageID from "../components/MyPageID";
@@ -17,6 +17,7 @@ import MyPageDELETE from "../components/MyPageDelete";
 import MyPageCash from "../components/MyPageCash";
 import AxiosApi from "../api/MyPageAxiosApi";
 import MyPageSlider from "../components/MyPageSilder";
+import ProfileImage from "../components/MyPageProfile";
 
 // 입력받은 정보를 객체로 저장하는 함수 reducer
 export const reducer = (data, action) => {
@@ -35,7 +36,7 @@ export const reducer = (data, action) => {
 };
 const MyPage = () => {
   // 임시 id 키
-  const id = "jojo6807";
+  const id = "jojo1544";
   // 초기 상태 설정
   const [rightIdInfo, setRightIdInfo] = useState(false);
   const [rightPwInfo, setRightPwInfo] = useState(false);
@@ -103,72 +104,80 @@ const MyPage = () => {
     <Container>
       <Left>
         <Imagine>
-          <img src="/태연.jpg" alt="사진" />
+          {/* <ProfileImage /> */}
+          <ProfileImage />
         </Imagine>
         <InfoBox>
-          <div>
-            <InfoName>회원 이름: {memberInfo.name}</InfoName>
-            <InfoName>이메일: {memberInfo.email}</InfoName>
-            <InfoName>전화번호: {memberInfo.tel}</InfoName>
-            <InfoName>소지금액: {memberInfo.cash}원</InfoName>
-          </div>
+          <>
+            <InfoName>
+              <p>회원 이름</p>
+              <p>이메일</p>
+              <p>전화 번호</p>
+              <p>소지 금액</p>
+            </InfoName>
+            <InfoName>
+              <p style={{ fontSize: "100%" }}>{memberInfo.name}</p>
+              <p style={{ fontSize: "100%" }}>{memberInfo.email}</p>
+              <p style={{ fontSize: "100%" }}>{memberInfo.tel}</p>
+              <p style={{ fontSize: "100%" }}>{memberInfo.cash}원</p>
+            </InfoName>
+          </>
         </InfoBox>
         <LeftButton>
           <StyledButton
             value="아이디 변경"
-            width="60%"
-            height="15%"
+            width="80%"
+            height="20%"
             onClick={onClickId}
           ></StyledButton>
           <StyledButton
             value="비밀번호 변경"
-            width="60%"
-            height="15%"
+            width="80%"
+            height="20%"
             onClick={onClickPw}
           ></StyledButton>
           <StyledButton
             value="금액 충전"
-            width="60%"
-            height="15%"
+            width="80%"
+            height="20%"
             onClick={onClickCash}
           ></StyledButton>
           <StyledButton
             value="회원 탈퇴"
-            width="60%"
-            height="15%"
+            width="80%"
+            height="20%"
             onClick={onClickMember}
           ></StyledButton>
         </LeftButton>
       </Left>
 
       <Right isVisible={isRightVisible}>
-        {rightSlider && <MyPageSlider />}
         {/* 아이디 변경 */}
         {rightIdInfo && (
           <RightInfo>
             <MyPageID />
-            <CloseButton onClick={onClckCloseRight}>닫기버튼</CloseButton>
+            <SetButton onClick={onClckCloseRight}>닫기버튼</SetButton>
           </RightInfo>
         )}
         {/* 패스워드 변경 */}
         {rightPwInfo && (
           <RightInfo>
             <MyPagePW />
-            <CloseButton onClick={onClckCloseRight}>닫기버튼</CloseButton>
+            <SetButton onClick={onClckCloseRight}>닫기버튼</SetButton>
           </RightInfo>
         )}
 
         {rightCash && (
           <RightInfo>
             <MyPageCash />
-            <CloseButton onClick={onClckCloseRight}>닫기버튼</CloseButton>
+            <SetButton onClick={onClckCloseRight}>닫기버튼</SetButton>
           </RightInfo>
         )}
 
         {rightMember && (
           <RightInfo>
             <MyPageDELETE />
-            <CloseButton onClick={onClckCloseRight}>닫기버튼</CloseButton>
+            <SetButton onClick={onClckCloseRight}>닫기버튼</SetButton>
           </RightInfo>
         )}
       </Right>

@@ -148,9 +148,9 @@ const MyPagePW = () => {
         <InputBox placeholder="EMAIL" type="text" onChange={onChangeEmail} />
         <p>{msgEmail}</p>
         {checkName && checkId && checkPw && checkEmail && (
-          <SetButton width="40%" height="10%" onClick={onClickCheck}>
+          <StyledButton width="40%" height="10%" onClick={onClickCheck}>
             정보 확인
-          </SetButton>
+          </StyledButton>
         )}
         {/* ture 백에서 받아와서 아이디 변경 */}
         {checkedInfo && (
