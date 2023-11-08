@@ -16,10 +16,10 @@ import MyPagePW from "../components/MyPagePW";
 import MyPageDELETE from "../components/MyPageDelete";
 import MyPageCash from "../components/MyPageCash";
 import AxiosApi from "../api/MyPageAxiosApi";
-import MyPageSlider from "../components/MyPageSilder";
 import ProfileImage from "../components/MyPageProfile";
-
+// import { useUser } from "../contexts/Context";
 // 입력받은 정보를 객체로 저장하는 함수 reducer
+
 export const reducer = (data, action) => {
   switch (action.type) {
     case "Name":
@@ -35,6 +35,8 @@ export const reducer = (data, action) => {
   }
 };
 const MyPage = () => {
+  // const { checkLoginStatus, isLoggedin, user } = useUser();
+
   // 임시 id 키
   const id = "jojo6807";
   // 초기 상태 설정
@@ -76,9 +78,16 @@ const MyPage = () => {
         setMemberInfo(rsp.data[0]);
         console.log(rsp.data[0]);
       }
+      //   checkLoginStatus();
     };
     memberInfo();
   }, []);
+
+  // useEffect(() => {
+  //   if (isLoggedin) {
+  //     console.log(user);
+  //   }
+  // }, []);
 
   // ID 변경 버튼 클릭
   const onClickId = () => {

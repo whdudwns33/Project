@@ -16,18 +16,18 @@ export const Container = styled.div`
   margin: 0 auto;
   padding: 0;
   box-sizing: border-box;
-  width: 100vw;
+  width: 80vw;
   height: 100vh;
   display: flex;
   justify-content: space-evenly;
   background-color: #fff;
-  min-width: 1200px;
+  min-width: 1300px;
   min-height: 800px;
   // 모바일
   @media (max-width: 450px) {
     box-sizing: border-box;
     width: 100vw;
-    height: 100vh;
+    height: 150vh;
     display: flex;
     background-color: #fff;
   }
@@ -47,6 +47,7 @@ export const Left = styled.div`
   align-items: center;
   justify-content: center;
   min-width: 500px;
+
   @media (max-width: 450px) {
     width: 100%;
     height: 150%;
@@ -84,7 +85,7 @@ export const IsideImage = styled.img`
   transition-duration: 0.3s;
   &:hover {
     // 우측 아래로 확대
-}
+  }
 `;
 // 이미지 등록
 export const ImageSubmit = styled.input`
@@ -175,8 +176,8 @@ export const Right = styled.div`
   @media (max-width: 450px) {
     margin-top: 50%;
     position: absolute;
-    width: 100vw;
-    height: 100%;
+    width: 200vw;
+    height: 200%;
     border-radius: 5%;
     display: ${(props) => (props.isVisible ? "flex" : "none")};
     z-index: 50;
@@ -213,12 +214,28 @@ export const RightInfo = styled.div`
 export const InputTag = styled.div`
   display: flex;
   flex-direction: column;
-  width: ${(props) => props.width || "80%"};
+  width: ${(props) => props.width || "50%"};
   height: ${(props) => props.height || "80%"};
-  align-items: center;
   border-radius: 10px;
   border: 3px solid white;
+  align-items: center;
   justify-content: center;
+  .InpuTitle {
+    display: flex;
+    width: 60%;
+    flex-direction: row;
+    border: 3px solid red;
+    justify-content: space-around;
+
+    .littleTitle {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+  }
+  @media (max-width: 450px) {
+    width: 80%;
+    height: 80%;
+  }
 `;
 // 입력창
 export const InputBox = styled.input`
@@ -228,7 +245,7 @@ export const InputBox = styled.input`
   border: none;
   text-align: center;
   border-radius: 10px;
-  width: ${(props) => props.width || "40%"};
+  width: ${(props) => props.width || "60%"};
   height: ${(props) => props.height || "5%"};
   font-size: 2rem;
   box-shadow: 1px 1px 5px 1px black inset;
@@ -237,7 +254,7 @@ export const InputBox = styled.input`
     background-color: none;
     box-shadow: inset 7px 2px 5px #babebc, inset -5px -5px 6px #fff;
     width: 80%;
-    height: 7%;
+    height: ${(props) => props.height || "100%"};
     font-size: 2rem;
   }
 `;

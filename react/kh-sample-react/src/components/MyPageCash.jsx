@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { InputBox, SetButton, InputTag, DivRow } from "./MyPageComp";
 import axios from "axios";
 import AxiosApi from "../api/MyPageAxiosApi";
-import { StyledButton } from "../globalStyle/StyledButton";
 
 const MyPageCash = () => {
   // 테스트용 id
@@ -60,9 +59,9 @@ const MyPageCash = () => {
               placeholder="충전할 금액 입력"
               onChange={onChangeCash}
             ></InputBox>
-            <StyledButton width="20%" height="5%" onClick={onClickCharge}>
+            <SetButton width="20%" height="5%" onClick={onClickCharge}>
               금액 충전
-            </StyledButton>
+            </SetButton>
             {cashCheck}
           </>
         )}

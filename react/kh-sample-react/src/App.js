@@ -1,20 +1,48 @@
-import "./App.css";
+// import { BrowserRouter, Routes, Route } from "react-router-dom";
+// import { ViewerPage } from "./pages/ViewerPage";
+// import { SearchResultPage } from "./pages/SearchResultPage";
+// import { SalesGraph } from "./utils/SalesGraph";
+// import Login from "./pages/LoginPage";
+// import { BookAdminPage } from "./pages/BookAdminPage";
+// import { MainPage } from "./pages/MainPage";
+// import { UserProvider } from "./contexts/Context";
+// import BuyReviewPg from "./pages/BuyReviewPage";
 import MyPage from "./pages/MyPage ";
-import { GlobalStyle } from "./components/MyPageComp";
-// import ImageUploader from "./components/MyPageProfile";
-// 할일
-// useState로 메모리 관리.
-// 테스트 아이디로 정보 조회하기 -> 메인에서
-// 문자 인증 만들기
-// 파이어 베이스 등록하기
+// import CartPage from "./pages/CartPage";
 
 function App() {
   return (
-    <>
-      <GlobalStyle />
-      <MyPage />
-      {/* <ImageUploader /> */}
-    </>
+    // <>
+    //   <UserProvider>
+    //     <BrowserRouter>
+    //       <Routes>
+    //         <Route path="/" element={<MainPage></MainPage>}></Route>
+    //         <Route
+    //           path="/ViewerPage"
+    //           element={<ViewerPage></ViewerPage>}
+    //         ></Route>
+    //         <Route
+    //           path="/SearchResultPage"
+    //           element={<SearchResultPage></SearchResultPage>}
+    //         ></Route>
+    //         <Route
+    //           path="/SalesGraph"
+    //           element={<SalesGraph></SalesGraph>}
+    //         ></Route>
+    //         <Route path="/" element={<Login />} />
+    //         <Route path="/login" element={<Login />} />
+    //         <Route path="/purchase" element={<BuyReviewPg />} />
+    //         <Route
+    //           path="/BookAdminPage"
+    //           element={<BookAdminPage></BookAdminPage>}
+    //         ></Route>
+    //         <Route path="/MyPage" element={<MyPage></MyPage>} />
+    //         <Route path="CartPage" element={<CartPage></CartPage>} />
+    //       </Routes>
+    //     </BrowserRouter>
+    //   </UserProvider>
+    // </>
+    <MyPage />
   );
 }
 

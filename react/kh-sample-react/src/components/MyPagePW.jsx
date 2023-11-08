@@ -1,7 +1,7 @@
 import { useState, useReducer } from "react";
 import { reducer } from "../pages/MyPage ";
 import AxiosApi from "../api/MyPageAxiosApi";
-import { InputBox, SetButton, InputTag } from "./MyPageComp";
+import { InputBox, InputTag } from "./MyPageComp";
 import { StyledButton } from "../globalStyle/StyledButton";
 
 const MyPagePW = () => {
@@ -95,6 +95,8 @@ const MyPagePW = () => {
     if (checked.data === true) {
       console.log("체크가 true입니다.");
       setCheckedInfo(true);
+      setOldIsVisible(false);
+      setNewIsVisible(true);
     } else {
       console.log("체크가 false입니다.");
       setCheckedInfo(false);
@@ -119,6 +121,8 @@ const MyPagePW = () => {
       setCheckTrue(false);
     }
   };
+
+  // 비밀번호 변경 클릭 함수
   const [checkTrue, setCheckTrue] = useState(false);
   const onClickModifyPw = async () => {
     try {
@@ -127,45 +131,108 @@ const MyPagePW = () => {
       console.log("제출된 비밀번호가 잘 찍혔습니다." + chPw.data);
       if (chPw === true) {
         setCheckTrue(true);
+        alert("비밀번호가 변경되었습니다.");
       } else {
         setCheckTrue(false);
+        alert("비밀번호가 변경되었습니다.");
       }
     } catch (error) {
       console.error("PW 변경 중 오류 발생:", error);
     }
   };
 
+  // 정보 제출 이후에 조건이 달성되면 해당 페이지 사라지고 다음 페이지 등장
+  const [isOldVisible, setOldIsVisible] = useState(true);
+  const [isNewVisible, setNewIsVisible] = useState(false);
   return (
     <>
-      <InputTag>
-        <h1>비밀번호 변경</h1>
-        <InputBox placeholder="이름" type="text" onChange={onChangeName} />
-        <p>{msgName}</p>
-        <InputBox placeholder="ID" type="text" onChange={onChangeId} />
-        <p>{msgId}</p>
-        <InputBox placeholder="PW" type="text" onChange={onChangePw} />
-        <p>{msgPw}</p>
-        <InputBox placeholder="EMAIL" type="text" onChange={onChangeEmail} />
-        <p>{msgEmail}</p>
-        {checkName && checkId && checkPw && checkEmail && (
-          <StyledButton width="40%" height="10%" onClick={onClickCheck}>
-            정보 확인
-          </StyledButton>
-        )}
-        {/* ture 백에서 받아와서 아이디 변경 */}
-        {checkedInfo && (
-          <>
-            <InputBox placeholder="NEW PW" type="text" onChange={onModifyPw} />
-            <p>{msg}</p>
+      <h1>비밀번호 변경</h1>
+      {isOldVisible && (
+        <>
+          <InputTag>
+            <p>비밀번호를 변경합니다.</p>
+            <div className="InpuTitle">
+              <p className="littleTitle">이 름 : </p>
+              <InputBox
+                height="100%"
+                width="70%"
+                placeholder="이름"
+                type="text"
+                onChange={onChangeName}
+              />
+            </div>
+            <p>{msgName}</p>
+            <div className="InpuTitle">
+              <p className="littleTitle">아이디 : </p>
+              <InputBox
+                height="100%"
+                width="70%"
+                placeholder="아이디"
+                type="text"
+                onChange={onChangeId}
+              />
+            </div>
+            <p>{msgId}</p>
+            <div className="InpuTitle">
+              <p className="littleTitle">비밀번호 : </p>
+              <InputBox
+                height="100%"
+                width="70%"
+                placeholder="비밀번호"
+                type="text"
+                onChange={onChangePw}
+              />
+            </div>
+            <p>{msgPw}</p>
+            <div className="InpuTitle">
+              <p className="littleTitle">이메일 : </p>
+              <InputBox
+                height="100%"
+                width="70%"
+                placeholder="이메일"
+                type="text"
+                onChange={onChangeEmail}
+              />
+            </div>
+            <p>{msgEmail}</p>
 
-            {checkTrue && (
-              <StyledButton width="40%" height="10%" onClick={onClickModifyPw}>
-                정보 수정
-              </StyledButton>
+            {checkName && checkId && checkPw && checkEmail && (
+              <StyledButton
+                width="40%"
+                height="5%"
+                value="정보 확인"
+                onClick={onClickCheck}
+              ></StyledButton>
             )}
-          </>
-        )}
-      </InputTag>
+          </InputTag>
+        </>
+      )}
+
+      {isNewVisible && (
+        <InputTag>
+          {checkedInfo && (
+            <>
+              <p>새로운 비밀번호를 입력하시오.</p>
+              <InputBox
+                width="60%"
+                height="10%"
+                placeholder="NEW PW"
+                type="text"
+                onChange={onModifyPw}
+              />
+              <p>{msg}</p>
+              {checkTrue && (
+                <StyledButton
+                  value="비밀 번호 변경"
+                  width="40%"
+                  height="7%"
+                  onClick={onClickModifyPw}
+                ></StyledButton>
+              )}
+            </>
+          )}
+        </InputTag>
+      )}
     </>
   );
 };

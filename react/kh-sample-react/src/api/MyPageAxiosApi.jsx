@@ -7,9 +7,9 @@ const AxiosApi = {
     return await axios.get(KH_DOMAIN + `/users/member/?id=${id}`);
   },
 
-
   // 정보 수정을 위해서 입력 받은 정보들이 존재하는지 확인
   memberCheck: async (name, id, pw, email) => {
+    console.log("체크를 위한 정보" + name, id, pw, email);
     return await axios.get(
       KH_DOMAIN +
         `/users/checkInfo/?name=${name}&id=${id}&pw=${pw}&email=${email}`
@@ -65,11 +65,10 @@ const AxiosApi = {
     console.log(cash);
     const charge = {
       id: id,
-      cash : IntCash,
+      cash: IntCash,
     };
     console.log(charge.data);
     return await axios.post(KH_DOMAIN + "/users/charge", charge);
   },
-
 };
 export default AxiosApi;

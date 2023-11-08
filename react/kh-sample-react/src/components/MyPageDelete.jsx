@@ -1,7 +1,7 @@
 import { useState, useReducer } from "react";
 import { reducer } from "../pages/MyPage ";
 import AxiosApi from "../api/MyPageAxiosApi";
-import { InputBox, SetButton, InputTag } from "./MyPageComp";
+import { InputBox, InputTag } from "./MyPageComp";
 import { StyledButton } from "../globalStyle/StyledButton";
 
 const MyPageDELETE = () => {
