@@ -9,6 +9,7 @@ import {
   Right,
   RightInfo,
   SetButton,
+  
 } from "../components/MyPageComp";
 import { StyledButton } from "../globalStyle/StyledButton";
 import MyPageID from "../components/MyPageID";
@@ -17,6 +18,7 @@ import MyPageDELETE from "../components/MyPageDelete";
 import MyPageCash from "../components/MyPageCash";
 import AxiosApi from "../api/MyPageAxiosApi";
 import ProfileImage from "../components/MyPageProfile";
+import Footer from "../components/mainPageComp/smallComps/Footer";
 // import { useUser } from "../contexts/Context";
 // 입력받은 정보를 객체로 저장하는 함수 reducer
 
@@ -111,6 +113,7 @@ const MyPage = () => {
 
   return (
     <Container>
+  
       <Left>
         <Imagine>
           <ProfileImage />
@@ -188,7 +191,9 @@ const MyPage = () => {
             <SetButton onClick={onClckCloseRight}>닫기버튼</SetButton>
           </RightInfo>
         )}
+
       </Right>
+  
     </Container>
   );
 };

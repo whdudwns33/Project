@@ -1,3 +1,4 @@
+import { Outlet } from "react-router-dom";
 // import { BrowserRouter, Routes, Route } from "react-router-dom";
 // import { ViewerPage } from "./pages/ViewerPage";
 // import { SearchResultPage } from "./pages/SearchResultPage";
@@ -9,7 +10,7 @@
 // import BuyReviewPg from "./pages/BuyReviewPage";
 import MyPage from "./pages/MyPage ";
 // import CartPage from "./pages/CartPage";
-
+import Footer from "./components/mainPageComp/smallComps/Footer";
 function App() {
   return (
     // <>
@@ -42,7 +43,12 @@ function App() {
     //     </BrowserRouter>
     //   </UserProvider>
     // </>
-    <MyPage />
+    <>
+      <MyPage />
+      <Footer>
+        <Outlet />
+      </Footer>
+    </>
   );
 }
 

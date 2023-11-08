@@ -1,7 +1,7 @@
 import { useState, useReducer } from "react";
 import { reducer } from "../pages/MyPage ";
 import AxiosApi from "../api/MyPageAxiosApi";
-import { InputBox, InputTag } from "./MyPageComp";
+import { InputBox, InputTag, InpuTitle, LittleTitle } from "./MyPageComp";
 import { StyledButton } from "../globalStyle/StyledButton";
 
 const MyPagePW = () => {
@@ -149,10 +149,10 @@ const MyPagePW = () => {
       <h1>비밀번호 변경</h1>
       {isOldVisible && (
         <>
-          <InputTag>
-            <p>비밀번호를 변경합니다.</p>
-            <div className="InpuTitle">
-              <p className="littleTitle">이 름 : </p>
+           <InputTag>
+            <p>아이디를 변경합니다.</p>
+            <InpuTitle >
+              <LittleTitle>이 름 : </LittleTitle>
               <InputBox
                 height="100%"
                 width="70%"
@@ -160,10 +160,10 @@ const MyPagePW = () => {
                 type="text"
                 onChange={onChangeName}
               />
-            </div>
+            </InpuTitle>
             <p>{msgName}</p>
-            <div className="InpuTitle">
-              <p className="littleTitle">아이디 : </p>
+            <InpuTitle>
+              <LittleTitle>아이디 : </LittleTitle>
               <InputBox
                 height="100%"
                 width="70%"
@@ -171,10 +171,10 @@ const MyPagePW = () => {
                 type="text"
                 onChange={onChangeId}
               />
-            </div>
+            </InpuTitle>
             <p>{msgId}</p>
-            <div className="InpuTitle">
-              <p className="littleTitle">비밀번호 : </p>
+            <InpuTitle>
+              <LittleTitle>비밀번호 : </LittleTitle>
               <InputBox
                 height="100%"
                 width="70%"
@@ -182,10 +182,10 @@ const MyPagePW = () => {
                 type="text"
                 onChange={onChangePw}
               />
-            </div>
+            </InpuTitle>
             <p>{msgPw}</p>
-            <div className="InpuTitle">
-              <p className="littleTitle">이메일 : </p>
+            <InpuTitle>
+              <LittleTitle>이메일 : </LittleTitle>
               <InputBox
                 height="100%"
                 width="70%"
@@ -193,7 +193,7 @@ const MyPagePW = () => {
                 type="text"
                 onChange={onChangeEmail}
               />
-            </div>
+            </InpuTitle>
             <p>{msgEmail}</p>
 
             {checkName && checkId && checkPw && checkEmail && (

@@ -6,6 +6,8 @@ export const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+
   }
   /* 다른 글로벌 스타일 정의 가능 */
 `;
@@ -15,21 +17,20 @@ export const Container = styled.div`
   // PC
   margin: 0 auto;
   padding: 0;
-  box-sizing: border-box;
   width: 80vw;
-  height: 100vh;
+  height: 120vh;
   display: flex;
   justify-content: space-evenly;
   background-color: #fff;
-  min-width: 1300px;
-  min-height: 800px;
+  min-width: 1000px;
+  min-height: 1200px;
   // 모바일
   @media (max-width: 450px) {
     box-sizing: border-box;
     width: 100vw;
-    height: 150vh;
-    display: flex;
+    height: 200vh;
     background-color: #fff;
+    flex-direction: column;
   }
 `;
 
@@ -46,7 +47,7 @@ export const Left = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 500px;
+  min-width: 400px;
 
   @media (max-width: 450px) {
     width: 100%;
@@ -118,6 +119,8 @@ export const InfoBox = styled.div`
   @media (max-width: 450px) {
     width: 60%;
     height: 20%;
+    min-height: 500px;
+
   }
 `;
 // 정보의 내용 레이어
@@ -125,15 +128,16 @@ export const InfoName = styled.div`
   box-shadow: 7px 2px 10px #babebc, inset -5px -5px 12px #fff;
   width: 40%;
   height: 80%;
-  font-size: 1rem;
+  font-size: 0.8rem;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
   @media (max-width: 450px) {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
   }
 `;
 //
@@ -214,29 +218,45 @@ export const RightInfo = styled.div`
 export const InputTag = styled.div`
   display: flex;
   flex-direction: column;
-  width: ${(props) => props.width || "50%"};
-  height: ${(props) => props.height || "80%"};
+  font-weight: bolder;
+  width: ${(props) => props.width || "80%"};
+  height: ${(props) => props.height || "50%"};
   border-radius: 10px;
   border: 3px solid white;
-  align-items: center;
-  justify-content: center;
-  .InpuTitle {
-    display: flex;
-    width: 60%;
-    flex-direction: row;
-    border: 3px solid red;
-    justify-content: space-around;
 
-    .littleTitle {
-      font-size: 1rem;
-      font-weight: bold;
-    }
-  }
   @media (max-width: 450px) {
+    align-items: center;
+    justify-content: center;
     width: 80%;
     height: 80%;
   }
 `;
+
+export const InpuTitle = styled.div`
+  padding: 0;
+  display: flex;
+  width: 70%;
+  height: 5%;
+  margin-left: 5%;
+
+  flex-direction: row;
+  justify-content: space-between;
+  @media (max-width: 450px) {
+    margin: 0;
+  }
+`;
+
+export const LittleTitle = styled.span`
+color: white;
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 5%;
+  @media (max-width: 450px) {
+    font-size: 1.5rem;
+  }
+`;
+
+
 // 입력창
 export const InputBox = styled.input`
   margin: 0;
@@ -253,7 +273,7 @@ export const InputBox = styled.input`
   @media (max-width: 450px) {
     background-color: none;
     box-shadow: inset 7px 2px 5px #babebc, inset -5px -5px 6px #fff;
-    width: 80%;
+    width: 75%;
     height: ${(props) => props.height || "100%"};
     font-size: 2rem;
   }
