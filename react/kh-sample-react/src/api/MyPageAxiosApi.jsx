@@ -1,7 +1,7 @@
 import axios from "axios";
 const KH_DOMAIN = "http://localhost:8111";
 
-const AxiosApi = {
+const MyPageAxiosApi = {
   //회원정보 조회
   memberGet: async (id) => {
     return await axios.get(KH_DOMAIN + `/users/member/?id=${id}`);
@@ -48,6 +48,22 @@ const AxiosApi = {
       throw error;
     }
   },
+  modifyName: async (currentName, newName) => {
+    try {
+      const updateName = {
+        // 백엔드의 @RequestBody의 맵 객체의 키값과 동일할 것
+        currentName: currentName,
+        newName: newName,
+      };
+      console.log("현제 이름" + currentName);
+      console.log("새로운 이름" + newName);
+      // POST 요청을 보냅니다.
+      return await axios.post(KH_DOMAIN + "/users/updateName", updateName);
+    } catch (error) {
+      console.error("ID 변경 중 오류 발생:", error);
+      throw error;
+    }
+  },
 
   // 회원 탈퇴
   memberDel: async (delId) => {
@@ -71,4 +87,4 @@ const AxiosApi = {
     return await axios.post(KH_DOMAIN + "/users/charge", charge);
   },
 };
-export default AxiosApi;
+export default MyPageAxiosApi;

@@ -1,10 +1,14 @@
 import { useState, useReducer } from "react";
-import { reducer } from "../pages/MyPage ";
+import { reducer } from "../pages/MyPage";
 import AxiosApi from "../api/MyPageAxiosApi";
 import { InputBox, InputTag, InpuTitle, LittleTitle } from "./MyPageComp";
 import { StyledButton } from "../globalStyle/StyledButton";
 import { useNavigate } from "react-router-dom/dist";
+import sha256 from "sha256";
+
 const MyPageID = () => {
+  const navigate = useNavigate();
+
   const [data, dispatch] = useReducer(reducer, {
     name: "",
     id: "",
@@ -19,6 +23,7 @@ const MyPageID = () => {
 
   // 이름 제약 조건
   const onChangeName = (e) => {
+    alert("이름 입력 onblur");
     const inputName = e.target.value;
     if (inputName.length >= 2 && !/[0-9!@#$%^&*(),.?":{}|<>]/.test(inputName)) {
       dispatch({ type: "Name", value: inputName });
@@ -51,15 +56,18 @@ const MyPageID = () => {
         inputPw
       )
     ) {
-      dispatch({ type: "Pw", value: inputPw });
+      const hashedPassword = sha256(inputPw).toString();
+      dispatch({ type: "Pw", value: hashedPassword });
       setPwMsg("유효합니다.");
       setCheckPw(true);
+      console.log(hashedPassword);
     } else {
       dispatch({ type: "Pw", value: false });
       setPwMsg("유효하지 않습니다.");
       setCheckPw(false);
     }
   };
+
   // 이메일 제약 조건
   const onChangeEmail = (e) => {
     const inputEmail = e.target.value;
@@ -83,25 +91,12 @@ const MyPageID = () => {
 
   // 백엔드 이후 체크된 정보를 토대로 true or false
   const [checkedInfo, setCheckedInfo] = useState(false);
+
   const onClickCheck = async () => {
-    const checked = await AxiosApi.memberCheck(
-      data.name,
-      data.id,
-      data.pw,
-      data.email
-    );
-    console.log(checked);
-    console.log("온 클릭 체크 이후 결과가 잘 찍혔습니다.");
-    console.log(data.name, data.id, data.pw, data.email);
-    if (checked.data === true) {
-      console.log("체크가 true입니다.");
-      setCheckedInfo(true);
-      setOldIsVisible(false);
-      setNewIsVisible(true);
-    } else {
-      console.log("체크가 false입니다.");
-      setCheckedInfo(false);
-    }
+    await AxiosApi.memberCheck(data.name, data.id, data.pw, data.email);
+    setCheckedInfo(true);
+    setOldIsVisible(false);
+    setNewIsVisible(true);
   };
 
   // 변경 아이디 제약 조건
@@ -112,13 +107,15 @@ const MyPageID = () => {
     if (/^[a-zA-Z0-9]{8,20}$/.test(e.target.value)) {
       setMsg("유효합니다.");
       setNewId(e.target.value);
-
+      console.log(checkTrue);
       setCheckTrue(true);
     } else {
       setMsg("유효하지 않습니다.");
       setCheckTrue(false);
     }
   };
+
+  // 아이디 변경 클릭 함수
   const [checkTrue, setCheckTrue] = useState(false);
   const onClickModifyId = async () => {
     try {
@@ -126,13 +123,15 @@ const MyPageID = () => {
       console.log("newId의 값:", newId); // newId의 값을 확인
       console.log("제출된 아이디가 잘 찍혔습니다." + chId.data);
       if (chId.data === true) {
-        setCheckTrue(true);
         console.log("아이디 변경");
         alert("아이디가 변경되었습니다.");
+        navigate("/");
+        window.location.reload();
         // 아이디 변경 시 로그 아웃
       } else {
         setCheckTrue(false);
         console.log("아이디 변경 실패");
+        window.location.reload();
       }
     } catch (error) {
       console.error("ID 변경 중 오류 발생:", error);
@@ -149,19 +148,17 @@ const MyPageID = () => {
         <>
           <InputTag>
             <p>아이디를 변경합니다.</p>
-            <InpuTitle >
-              <LittleTitle>이 름 </LittleTitle>
+            <InpuTitle>
               <InputBox
                 height="100%"
                 width="70%"
                 placeholder="이름"
                 type="text"
-                onChange={onChangeName}
+                onBlur={onChangeName}
               />
             </InpuTitle>
             <p>{msgName}</p>
             <InpuTitle>
-              <LittleTitle>아이디 </LittleTitle>
               <InputBox
                 height="100%"
                 width="70%"
@@ -172,7 +169,6 @@ const MyPageID = () => {
             </InpuTitle>
             <p>{msgId}</p>
             <InpuTitle>
-              <LittleTitle>비밀번호 </LittleTitle>
               <InputBox
                 height="100%"
                 width="70%"
@@ -183,7 +179,6 @@ const MyPageID = () => {
             </InpuTitle>
             <p>{msgPw}</p>
             <InpuTitle>
-              <LittleTitle>이메일 </LittleTitle>
               <InputBox
                 height="100%"
                 width="70%"

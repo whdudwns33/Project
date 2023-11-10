@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { InputBox, SetButton, InputTag, DivRow } from "./MyPageComp";
 import axios from "axios";
 import AxiosApi from "../api/MyPageAxiosApi";
+import { useUser } from "../contexts/Context";
+import { StyledButton } from "../globalStyle/StyledButton";
 
 const MyPageCash = () => {
-  // 테스트용 id
-  const id = "jojo6807";
-
+  const { checkLoginStatus, isLoggedin, user } = useUser();
   const [cash, setCash] = useState();
   const [isClick, setIsClick] = useState(false);
   const [cashCheck, setCashCheck] = useState(false);
@@ -22,18 +22,20 @@ const MyPageCash = () => {
   };
   const onClickCharge = async () => {
     try {
-      const charge = await AxiosApi.chargeAmout(id, cash);
-      console.log(id);
+      const charge = await AxiosApi.chargeAmout(user.id, cash);
+      console.log("금액충전" + user.id);
       console.log(cash);
       if (charge.data === true) {
         console.log("현금이 충전되었습니다.");
         setCashCheck(true);
+        window.location.reload();
       } else {
         console.log("현금이 충전되지 않았습니다.");
         setCashCheck(true);
+        window.location.reload();
       }
     } catch (error) {
-      console.error("ID 변경 중 오류 발생:", error);
+      console.error("변경 중 오류 발생:", error);
     }
   };
 
@@ -53,18 +55,14 @@ const MyPageCash = () => {
           </button>
         </DivRow>
         <p>{clickName}</p>
-        {isClick && (
-          <>
-            <InputBox
-              placeholder="충전할 금액 입력"
-              onChange={onChangeCash}
-            ></InputBox>
-            <SetButton width="20%" height="5%" onClick={onClickCharge}>
-              금액 충전
-            </SetButton>
-            {cashCheck}
-          </>
-        )}
+        <InputBox
+          placeholder="충전할 금액 입력"
+          onChange={onChangeCash}
+        ></InputBox>
+        <StyledButton width="20%" height="5%" onClick={onClickCharge}>
+          금액 충전
+        </StyledButton>
+        {cashCheck}
       </InputTag>
     </>
   );

@@ -1,10 +1,14 @@
 import { useState, useReducer } from "react";
-import { reducer } from "../pages/MyPage ";
+import { reducer } from "../pages/MyPage";
 import AxiosApi from "../api/MyPageAxiosApi";
 import { InputBox, InputTag, InpuTitle, LittleTitle } from "./MyPageComp";
 import { StyledButton } from "../globalStyle/StyledButton";
+import { useNavigate } from "react-router-dom/dist";
+import sha256 from "sha256";
 
 const MyPagePW = () => {
+  const navigate = useNavigate();
+
   const [data, dispatch] = useReducer(reducer, {
     name: "",
     id: "",
@@ -29,7 +33,7 @@ const MyPagePW = () => {
       setCheckName(false);
     }
   };
-  // 아이디 제약 조건
+  // 비밀번호 제약 조건
   const onChangeId = (e) => {
     const inputId = e.target.value;
     if (/^[a-zA-Z0-9]{8,20}$/.test(inputId)) {
@@ -50,9 +54,11 @@ const MyPagePW = () => {
         inputPw
       )
     ) {
-      dispatch({ type: "Pw", value: inputPw });
+      const hashedPassword = sha256(inputPw).toString();
+      dispatch({ type: "Pw", value: hashedPassword });
       setPwMsg("유효합니다.");
       setCheckPw(true);
+      console.log(hashedPassword);
     } else {
       dispatch({ type: "Pw", value: false });
       setPwMsg("유효하지 않습니다.");
@@ -115,6 +121,7 @@ const MyPagePW = () => {
     ) {
       setMsg("유효합니다.");
       setNewPw(e.target.value);
+      console.log(checkTrue);
       setCheckTrue(true);
     } else {
       setMsg("유효하지 않습니다.");
@@ -130,11 +137,12 @@ const MyPagePW = () => {
       console.log("newPw의 값:", newPw); // newId의 값을 확인
       console.log("제출된 비밀번호가 잘 찍혔습니다." + chPw.data);
       if (chPw === true) {
-        setCheckTrue(true);
         alert("비밀번호가 변경되었습니다.");
       } else {
         setCheckTrue(false);
         alert("비밀번호가 변경되었습니다.");
+        navigate("/");
+        window.location.reload();
       }
     } catch (error) {
       console.error("PW 변경 중 오류 발생:", error);
@@ -149,10 +157,9 @@ const MyPagePW = () => {
       <h1>비밀번호 변경</h1>
       {isOldVisible && (
         <>
-           <InputTag>
+          <InputTag>
             <p>아이디를 변경합니다.</p>
-            <InpuTitle >
-              <LittleTitle>이 름 : </LittleTitle>
+            <InpuTitle>
               <InputBox
                 height="100%"
                 width="70%"
@@ -163,7 +170,6 @@ const MyPagePW = () => {
             </InpuTitle>
             <p>{msgName}</p>
             <InpuTitle>
-              <LittleTitle>아이디 : </LittleTitle>
               <InputBox
                 height="100%"
                 width="70%"
@@ -174,7 +180,6 @@ const MyPagePW = () => {
             </InpuTitle>
             <p>{msgId}</p>
             <InpuTitle>
-              <LittleTitle>비밀번호 : </LittleTitle>
               <InputBox
                 height="100%"
                 width="70%"
@@ -185,7 +190,6 @@ const MyPagePW = () => {
             </InpuTitle>
             <p>{msgPw}</p>
             <InpuTitle>
-              <LittleTitle>이메일 : </LittleTitle>
               <InputBox
                 height="100%"
                 width="70%"

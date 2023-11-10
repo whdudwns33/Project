@@ -2,13 +2,13 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCphqOtWHhIegf9J2WZH4CN1g_3bwmbdNg",
-  authDomain: "mini-project-gpt.firebaseapp.com",
-  projectId: "mini-project-gpt",
-  storageBucket: "mini-project-gpt.appspot.com",
-  messagingSenderId: "879643543017",
-  appId: "1:879643543017:web:6da40ef4bcc9758e2eb778",
-  measurementId: "G-FK3EZF3LZY",
+  apiKey: "AIzaSyDp-uSgAG8Ax_5xPQ_wRqhM_rRH7xpPqP0",
+  authDomain: "reactminiproject-15ad8.firebaseapp.com",
+  projectId: "reactminiproject-15ad8",
+  storageBucket: "reactminiproject-15ad8.appspot.com",
+  messagingSenderId: "734520669264",
+  appId: "1:734520669264:web:9e5afe2a70703e430a4d55",
+  measurementId: "G-LQMBKEHYXK",
 };
 
 // Initialize Firebase

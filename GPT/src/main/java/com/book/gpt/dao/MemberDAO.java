@@ -1,15 +1,17 @@
 package com.book.gpt.dao;
 
-//import com.book.gpt.JWT.JwtAuthorizationFilter;
+import com.book.gpt.JWT.JwtAuthorizationFilter;
 import com.book.gpt.common.Common;
 import com.book.gpt.dto.MemberDTO;
-//import io.jsonwebtoken.Jwts;
-//import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.sql.*;
@@ -32,180 +35,31 @@ public class MemberDAO {
     private ResultSet rs = null;
     private PreparedStatement pStmt = null;
 
-    public String hashPassword(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hashedBytes = md.digest(password.getBytes(StandardCharsets.UTF_8));
-            StringBuilder hexString = new StringBuilder(2 * hashedBytes.length);
-            for (byte b : hashedBytes) {
-                hexString.append(String.format("%02x", b));
-            }
-            return hexString.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public boolean loginCheck(String id, String pwd) {
-        System.out.println(hashPassword(pwd));
-        try {
-            conn = Common.getConnection();
-            String sql = "SELECT * FROM MEMBER WHERE ID = ?";
-            pStmt = conn.prepareStatement(sql);
-            pStmt.setString(1, id);
-            rs = pStmt.executeQuery();
-            if (rs.next()) {
-                String sqlPwd = rs.getString("PASSWORD"); // 데이터베이스에서 해싱된 비밀번호를 가져옴
-                String hashedPwd = hashPassword(pwd); // 사용자 입력 비밀번호를 해싱
-
-                System.out.println(hashedPwd);
-                if (hashPassword(sqlPwd).equals(hashedPwd)) {
-                    return true; // 해싱된 비밀번호와 입력한 비밀번호가 일치하면 로그인 성공
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            Common.close(rs);
-            Common.close(pStmt);
-            Common.close(conn);
-        }
-        return false;
-    }
-
-
-
-    // 중복값 체크 메서드
-    public boolean signupCheck(String id, String email, String phone) {
-        try {
-            conn = Common.getConnection();
-            String sql = "SELECT * FROM MEMBER WHERE ID = ? OR EMAIL = ? OR TEL = ?";
-            pStmt = conn.prepareStatement(sql);
-            pStmt.setString(1, id);
-            pStmt.setString(2, email);
-            pStmt.setString(3, phone);
-            rs = pStmt.executeQuery();
-
-            if (rs.next()) {
-                // 아이디, 이메일 또는 전화번호 중 하나라도 중복되는 경우
-                Common.close(rs);
-                Common.close(pStmt);
-                Common.close(conn);
-                return false;
-            } else {
-                // 중복되는 정보가 없는 경우
-                Common.close(rs);
-                Common.close(pStmt);
-                Common.close(conn);
-
-                return true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    // 회원가입 완료 메서드
-    // 회원가입 완료 메서드
-    public boolean signup(MemberDTO member) {
-        try {
-            conn = Common.getConnection();
-            String sql = "INSERT INTO MEMBER(ID, PASSWORD, NAME, EMAIL, TEL, CASH) VALUES(?, ?, ?, ?, ?, ?)";
-            pStmt = conn.prepareStatement(sql);
-            pStmt.setString(1, member.getId());
-
-            // 비밀번호를 해싱하여 저장
-            String hashedPassword = hashPassword(member.getPassword());
-            pStmt.setString(2, hashedPassword);
-
-            pStmt.setString(3, member.getName());
-            pStmt.setString(4, member.getEmail());
-            pStmt.setString(5, member.getTel());
-            pStmt.setInt(6, member.getCash());
-
-            int rowsAffected = pStmt.executeUpdate();
-
-            return rowsAffected > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            Common.close(pStmt);
-            Common.close(conn);
-        }
-    }
-    // MemberDAO 클래스에 findByUsername 메서드 추가
-    public MemberDTO findId(String id) {
-        try {
-            conn = Common.getConnection();
-            String sql = "SELECT * FROM MEMBER WHERE ID = ?";
-            pStmt = conn.prepareStatement(sql);
-            pStmt.setString(1, id);
-            rs = pStmt.executeQuery();
-            if (rs.next()) {
-                MemberDTO member = new MemberDTO();
-                member.setId(rs.getString("ID"));
-                member.setPassword(rs.getString("PASSWORD"));
-                member.setName(rs.getString("NAME"));
-                member.setEmail(rs.getString("EMAIL"));
-                member.setTel(rs.getString("TEL"));
-                member.setCash(rs.getInt("CASH"));
-                String role = findRoleById(id);
-                member.setRole(role);
-                return member;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            Common.close(rs);
-            Common.close(pStmt);
-            Common.close(conn);
-        }
-        return null;
-    }
-    public String findRoleById(String id) {
-        try {
-            conn = Common.getConnection();
-            String sql = "SELECT AUTH FROM MEMBER WHERE ID = ?";
-            pStmt = conn.prepareStatement(sql);
-            pStmt.setString(1, id);
-            rs = pStmt.executeQuery();
-            if (rs.next()) {
-                int auth = rs.getInt("AUTH"); // 사용자의 권한 정보를 가져옴
-                return auth == 0 ? "USER" : "ADMIN"; // 권한 정보를 반환
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            Common.close(rs);
-            Common.close(pStmt);
-            Common.close(conn);
-        }
-        return null;
-    }
-
     // 조영준
     // 정보 조회
     public List<MemberDTO> memberInfo(String getId) {
         List<MemberDTO> list = new ArrayList<>();
-        String sql = "SELECT NAME, EMAIL, TEL, CASH FROM MEMBER WHERE ID = ?";
+        String sql = "SELECT * FROM MEMBER WHERE ID = ?";
         try (Connection conn = Common.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, getId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
+                    String id = rs.getString("ID");
+                    String pw = rs.getString("PASSWORD");
                     String name = rs.getString("NAME");
                     String email = rs.getString("EMAIL");
                     String tel = rs.getString("TEL");
                     int cash = rs.getInt("CASH");
 
                     MemberDTO dto = new MemberDTO();
+                    dto.setId(id);
+                    dto.setPassword(pw);
                     dto.setName(name);
                     dto.setEmail(email);
                     dto.setTel(tel);
                     dto.setCash(cash);
+                    dto.setRole("ROLE_USER");
                     list.add(dto);
                 }
             }
@@ -361,33 +215,94 @@ public class MemberDAO {
         return isData;
     }
 
+    public boolean modifyName( String currentName, String newName) {
+        boolean isData = false;
+        try {
+            conn = Common.getConnection();
+            // 이름 변경을 위한 SQL 쿼리를 작성합니다.
+            String updateSql = "UPDATE MEMBER SET NAME = ? WHERE NAME = ?";
+            PreparedStatement pstmt = conn.prepareStatement(updateSql);
+            pstmt.setString(1, newName);
+            pstmt.setString(2, currentName);
+            System.out.println(newName);
+            System.out.println(currentName);
+            // 업데이트 쿼리를 실행합니다.
+            int rowsUpdated = pstmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                isData = true;
+                System.out.println("이름 변경 완료");
+            } else {
+                isData = false;
+                System.out.println("이름 변경 실패");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isData;
+    }
+
+
     // 삭제
     // 문제 점: try catch 구문의 바깥쪽에 선언된 boolean isData = false;
     // try catch 구문안에서 값을 변화 시키면 변화하지 않음?
-    public boolean deleteMember (String getId) {
-        boolean isData;
+    public boolean deleteMember(String memberId) {
+        boolean isData = false;
         int rowsUpdated = 0;
         try {
             conn = Common.getConnection();
             String sql = "DELETE FROM MEMBER WHERE ID = ?";
             pStmt = conn.prepareStatement(sql);
-            pStmt.setString(1, getId);
-            rowsUpdated = pStmt.executeUpdate(); // pStmt.executeUpdate()를 호출한 후에 리소스를 닫습니다.
+            pStmt.setString(1, memberId);
+            rowsUpdated = pStmt.executeUpdate();
+
+            // Member 삭제 후에 관련된 Cart와 Buy 데이터도 삭제
+            deleteCart(memberId);
+            deleteBuy(memberId);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            Common.close(pStmt);
+            Common.close(conn);
         }
-        Common.close(pStmt);
-        Common.close(conn);
-
         if (rowsUpdated == 1) {
             isData = true;
             System.out.println("삭제 완료: " + rowsUpdated);
         } else {
-            isData = false;
             System.out.println("삭제 실패: " + rowsUpdated);
         }
         return isData;
     }
+    // 카트 삭제
+    public void deleteCart(String memberId) {
+        try {
+            conn = Common.getConnection();
+            String sql = "DELETE FROM CART WHERE MEMBER_ID = ?";
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, memberId);
+            pStmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Common.close(pStmt);
+            Common.close(conn);
+        }
+    }
+    // 구매 삭제
+    public void deleteBuy(String memberId) {
+        try {
+            conn = Common.getConnection();
+            String sql = "DELETE FROM BUY WHERE MEMBER_ID = ?";
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, memberId);
+            pStmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Common.close(pStmt);
+            Common.close(conn);
+        }
+    }
+
 
     public boolean chargingCash (String getId, int getCash) {
         boolean isData = false;
@@ -413,4 +328,5 @@ public class MemberDAO {
         }
         return isData;
     }
+
 }

@@ -4,14 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-//import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class MemberDTO {
     private String id;
     private String password;
@@ -20,7 +20,8 @@ public class MemberDTO {
     private String tel;
     private int cash;
     private int auth;
-//    private Collection<? extends GrantedAuthority> authorities; // 권한 정보
+    private String profileUrl = null; // 프로필 이미지 URL
+
+    private Collection<? extends GrantedAuthority> authorities; // 권한 정보
     private String role;
-    private String profileUrl;
 }

@@ -21,7 +21,6 @@ export const Container = styled.div`
   height: 120vh;
   display: flex;
   justify-content: space-evenly;
-  background-color: #fff;
   min-width: 1000px;
   min-height: 1200px;
   // 모바일
@@ -29,7 +28,6 @@ export const Container = styled.div`
     box-sizing: border-box;
     width: 100vw;
     height: 200vh;
-    background-color: #fff;
     flex-direction: column;
   }
 `;
@@ -43,7 +41,6 @@ export const Left = styled.div`
   height: 98%;
   border-radius: 10px;
   box-shadow: -5px -5px 10px #fff, 5px 5px 10px #babebc;
-  background: #ebecf0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -120,7 +117,6 @@ export const InfoBox = styled.div`
     width: 60%;
     height: 20%;
     min-height: 500px;
-
   }
 `;
 // 정보의 내용 레이어
@@ -167,7 +163,6 @@ export const LeftButton = styled.div`
 // 우측 레이어, 모바일시 어퍼 레이어
 // 우측 실제로 정보를 변경하는 레이어
 export const Right = styled.div`
-  background-color: #3cb371;
   border-radius: 10px;
   color: black;
   box-shadow: -5px -5px 10px #fff, 5px 5px 10px #babebc;
@@ -219,6 +214,7 @@ export const InputTag = styled.div`
   display: flex;
   flex-direction: column;
   font-weight: bolder;
+  align-items: center;
   width: ${(props) => props.width || "80%"};
   height: ${(props) => props.height || "50%"};
   border-radius: 10px;
@@ -237,25 +233,11 @@ export const InpuTitle = styled.div`
   display: flex;
   width: 70%;
   height: 5%;
-  margin-left: 5%;
-
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   @media (max-width: 450px) {
     margin: 0;
   }
 `;
-
-export const LittleTitle = styled.span`
-color: white;
-  font-size: 16px;
-  font-weight: bold;
-  margin-right: 5%;
-  @media (max-width: 450px) {
-    font-size: 1.5rem;
-  }
-`;
-
 
 // 입력창
 export const InputBox = styled.input`

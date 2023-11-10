@@ -1,10 +1,14 @@
 import { useState, useReducer } from "react";
-import { reducer } from "../pages/MyPage ";
+import { reducer } from "../pages/MyPage";
 import AxiosApi from "../api/MyPageAxiosApi";
 import { InputBox, InputTag } from "./MyPageComp";
 import { StyledButton } from "../globalStyle/StyledButton";
+import sha256 from "sha256";
+import { useNavigate } from "react-router-dom";
 
 const MyPageDELETE = () => {
+  const navigate = useNavigate();
+
   const [data, dispatch] = useReducer(reducer, {
     name: "",
     id: "",
@@ -52,15 +56,16 @@ const MyPageDELETE = () => {
         inputPw
       )
     ) {
-      dispatch({ type: "Pw", value: inputPw });
+      const hashedPassword = sha256(inputPw).toString();
+      dispatch({ type: "Pw", value: hashedPassword });
       setPwMsg("유효합니다.");
       setCheckPw(true);
+      console.log(hashedPassword);
     } else {
       dispatch({ type: "Pw", value: false });
       setPwMsg("유효하지 않습니다.");
       setCheckPw(false);
     }
-    console.log(checkPw);
   };
   // 이메일 제약 조건
   const onChangeEmail = (e) => {
@@ -78,31 +83,16 @@ const MyPageDELETE = () => {
   };
 
   // 기본 이름 아이디 등 입력하고 난후 입력 조건이 적절하면 등장하는 정보 수정 입력창
-  // 체크
   const [checkName, setCheckName] = useState(false);
   const [checkId, setCheckId] = useState(false);
   const [checkPw, setCheckPw] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
 
   // 백엔드 이후 체크된 정보를 토대로 true or false
-  const [checkedInfo, setCheckedInfo] = useState(false);
   const onClickCheck = async () => {
-    const checked = await AxiosApi.memberCheck(
-      data.name,
-      data.id,
-      data.pw,
-      data.email
-    );
-    console.log(checked);
+    await AxiosApi.memberCheck(data.name, data.id, data.pw, data.email);
     console.log("온 클릭 체크 이후 결과가 잘 찍혔습니다.");
     console.log(data.name, data.id, data.pw, data.email);
-    if (checked.data === true) {
-      console.log("체크가 true입니다.");
-      setCheckedInfo(true);
-    } else {
-      console.log("체크가 false입니다.");
-      setCheckedInfo(false);
-    }
   };
 
   // 아이디 삭제 제약 조건
@@ -125,15 +115,18 @@ const MyPageDELETE = () => {
   const onClickDeleteId = async () => {
     try {
       const response = await AxiosApi.memberDel(delId);
-      console.log("del ::::" + delId);
+      console.log("del :" + delId);
       console.log("del의 값:", response.data);
       if (response.data === true) {
         setCheckTrue(true);
+        navigate("/");
         console.log("삭제되었습니다.");
+        alert("삭제되었습니다");
         setDeleteState(true);
       } else {
         setCheckTrue(false);
         console.log("삭제되지 못했습니다.");
+        alert("삭제되지 못했습니다");
         setDeleteState(false);
       }
     } catch (error) {
@@ -159,22 +152,16 @@ const MyPageDELETE = () => {
           </StyledButton>
         )}
 
-        {checkedInfo && (
-          <>
-            <InputBox
-              placeholder="DELETE ID"
-              type="text"
-              onChange={onDeleteId}
-            />
-            <p>{msg}</p>
-            {checkTrue && (
-              <StyledButton width="40%" height="10%" onClick={onClickDeleteId}>
-                회원 탈퇴
-              </StyledButton>
-            )}
-            {deleteTrue && <p>삭제 되었습니다.</p>}
-          </>
-        )}
+        <>
+          <InputBox placeholder="DELETE ID" type="text" onChange={onDeleteId} />
+          <p>{msg}</p>
+          {checkTrue && (
+            <StyledButton width="40%" height="10%" onClick={onClickDeleteId}>
+              회원 탈퇴
+            </StyledButton>
+          )}
+          {deleteTrue && <p>삭제 되었습니다.</p>}
+        </>
       </InputTag>
     </>
   );

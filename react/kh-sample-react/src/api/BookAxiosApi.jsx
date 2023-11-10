@@ -1,0 +1,36 @@
+import axios from "axios";
+
+const BACK_DOMAIN = "http://localhost:8111";
+
+export const BookAxiosApi = {
+  // 책 전체 목록 가져오기
+  getBooks: async () => {
+    const response = await axios.get(BACK_DOMAIN + "/book/admin");
+    
+    return response;
+  },
+  // ID를 기준으로 책을 찾음
+  findBookById: async (id) => {
+    const response = await axios.get(BACK_DOMAIN + `/book/${id}`);
+    
+    return response;
+  },
+
+  // 책 추가
+  addBook: async (bookToSave) => {
+    const response = await axios.post(BACK_DOMAIN + "/book/admin", bookToSave);
+    return response;
+  },
+
+  // 책 삭제
+  deleteBook: async (id) => {
+    const response = await axios.delete(BACK_DOMAIN + `/book/admin/${id}`);
+    return response;
+  },
+
+  // 책 수정
+  updateBook: async (id, book) => {
+    const response = await axios.put(BACK_DOMAIN + `/book/admin/${id}`, book);
+    return response;
+  },
+};

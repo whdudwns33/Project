@@ -2,14 +2,15 @@ import styled from "styled-components";
 
 // 버튼
 const Button = styled.button`
+  margin: 5px;
   position: relative;
   padding: 0;
   border: 2px solid #888888;
   outline: none;
   background-color: #f4f5f6;
   border-radius: 15px;
-  box-shadow: -6px -20px 35px #ffffff, -6px -10px 15px #ffffff,
-    -20px 0px 30px #ffffff, 6px 20px 25px rgba(0, 0, 0, 0.2);
+  /* box-shadow: -6px -20px 35px #ffffff, -6px -10px 15px #ffffff,
+    -20px 0px 30px #ffffff, 6px 20px 25px rgba(0, 0, 0, 0.2); */
   transition: 0.13s ease-in-out;
   cursor: pointer;
 
@@ -22,6 +23,9 @@ const Button = styled.button`
         transform: translate3d(0px, 0px, 0px);
       }
     }
+  }
+  &:hover {
+    
   }
 `;
 
@@ -62,10 +66,10 @@ const ButtonText = styled.p`
 `;
 
 export const StyledButton = (props) => {
-  const { onClick, width, height, value } = props;
+  const { onClick, width, height, value, margin } = props;
 
   return (
-    <Button style={{ width, height }} onClick={onClick}>
+    <Button style={{ width, height, margin }} onClick={onClick}>
       <ButtonContent>
         <ButtonText>{value}</ButtonText>
       </ButtonContent>
