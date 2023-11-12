@@ -14,7 +14,6 @@ import { BooksProvider } from "./contexts/BookInfoContext";
 import { ViewerPageEpub } from "./pages/ViewerPageEpub";
 import { ViewerPagePdf } from "./pages/ViewerPagePdf";
 import { ViewerPageTxt } from "./pages/ViewerPageTxt";
-import { MyPageCopy } from "./pages/MyPage copy";
 
 function App() {
   return (

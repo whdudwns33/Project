@@ -1,9 +1,10 @@
 import { useState, useReducer } from "react";
 import { reducer } from "../pages/MyPage";
 import AxiosApi from "../api/MyPageAxiosApi";
-import { InputBox, InputTag, InpuTitle, LittleTitle } from "./MyPageComp";
+import { InputBox, InputTag, InpuTitle, MyPageButton } from "./MyPageComp";
 import { StyledButton } from "../globalStyle/StyledButton";
 import { useNavigate } from "react-router-dom/dist";
+import Modal from "../utils/LoginModal";
 import sha256 from "sha256";
 
 const MyPageName = () => {
@@ -15,11 +16,22 @@ const MyPageName = () => {
     pw: "",
     email: "",
   });
+   //모달창 제어
+   const [rst, setRst] = useState(false);
+   const closeModal = () => {
+     setRst(false);
+     navigate("/");
+     window.location.reload();
+   }
 
   const [msgName, setNameMsg] = useState("이름 형식에 맞추어 입력하시오.");
   const [msgId, setIdMsg] = useState("아이디 형식에 맞추어 입력하시오.");
   const [msgPw, setPwMsg] = useState("비밀번호 형식에 맞추어 입력하시오.");
   const [msgEmail, setEmailMsg] = useState("이메일 형식에 맞추어 입력하시오.");
+  
+  const allChecksTrue = () => {
+    return checkName && checkId && checkPw && checkEmail;
+  };
 
   // 이름 제약 조건
   const onChangeName = (e) => {
@@ -126,10 +138,7 @@ const MyPageName = () => {
       console.log("제출된 이름 잘 찍혔습니다." + chName.data);
       if (chName.data === true) {
         console.log("이름 변경");
-        alert("이름이 변경되었습니다.");
-        navigate("/");
-        window.location.reload();
-        // 아이디 변경 시 로그 아웃
+        setRst(true);
       } else {
         setCheckTrue(false);
         alert("이름이 변경되지 않았습니다.");
@@ -176,7 +185,7 @@ const MyPageName = () => {
                 height="100%"
                 width="70%"
                 placeholder="비밀번호"
-                type="text"
+                type="password"
                 onChange={onChangePw}
               />
             </InpuTitle>
@@ -192,14 +201,10 @@ const MyPageName = () => {
             </InpuTitle>
             <p>{msgEmail}</p>
 
-            {checkName && checkId && checkPw && checkEmail && (
-              <StyledButton
-                width="40%"
-                height="5%"
-                value="정보 확인"
+            <MyPageButton
                 onClick={onClickCheck}
-              ></StyledButton>
-            )}
+                disabled = {!allChecksTrue()}
+              >정보 확인</MyPageButton>
           </InputTag>
         </>
       )}
@@ -226,6 +231,9 @@ const MyPageName = () => {
               ></StyledButton>
             </>
           )}
+          <Modal open = {rst} close = {closeModal}  >
+              회원정보가 변경되었습니다.
+          </Modal>
         </InputTag>
       )}
     </>

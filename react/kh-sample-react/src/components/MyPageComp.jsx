@@ -43,7 +43,6 @@ export const Left = styled.div`
   box-shadow: -5px -5px 10px #fff, 5px 5px 10px #babebc;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   min-width: 400px;
 
   @media (max-width: 450px) {
@@ -169,8 +168,8 @@ export const Right = styled.div`
   width: 60%;
   height: 98%;
   display: flex;
-  justify-content: center;
-  text-align: center;
+  flex-direction: column;
+  align-items: center;
   min-width: 500px;
   @media (max-width: 450px) {
     margin-top: 50%;
@@ -178,7 +177,7 @@ export const Right = styled.div`
     width: 200vw;
     height: 200%;
     border-radius: 5%;
-    display: ${(props) => (props.isVisible ? "flex" : "none")};
+    display: ${(props) => (props.isvisible ? "flex" : "none")};
     z-index: 50;
   }
 `;
@@ -298,3 +297,9 @@ export const SetButton = styled.button`
     cursor: pointer;
   }
 `;
+
+export const MyPageButton = styled.button`
+  background-color : ${(props) => props.isTrue ? "gray" : "white" }
+  /* cursor : ${(props) => props.isTrue ? 'pointer' : 'not-allowed'} */
+`;
+

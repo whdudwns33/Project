@@ -4,17 +4,23 @@ import axios from "axios";
 import AxiosApi from "../api/MyPageAxiosApi";
 import { useUser } from "../contexts/Context";
 import { StyledButton } from "../globalStyle/StyledButton";
+import Modal from "../utils/LoginModal";
+
 
 const MyPageCash = () => {
-  const { checkLoginStatus, isLoggedin, user } = useUser();
+  const {user } = useUser();
   const [cash, setCash] = useState();
-  const [isClick, setIsClick] = useState(false);
-  const [cashCheck, setCashCheck] = useState(false);
   const [clickName, setClickName] = useState("");
+ //모달창 제어
+ const [rst, setRst] = useState(false);
+ const closeModal = () => {
+   setRst(false);
+   window.location.reload();
+ }
+
   // 클릭 시 결제창 등장
   // 클릭 시 클릭한 버튼의 이름 저장 및 출력
   const onClickCashBtn = (e) => {
-    setIsClick(true);
     setClickName(e.target.name);
   };
   const onChangeCash = (e) => {
@@ -27,11 +33,9 @@ const MyPageCash = () => {
       console.log(cash);
       if (charge.data === true) {
         console.log("현금이 충전되었습니다.");
-        setCashCheck(true);
-        window.location.reload();
+        setRst(true);
       } else {
         console.log("현금이 충전되지 않았습니다.");
-        setCashCheck(true);
         window.location.reload();
       }
     } catch (error) {
@@ -62,8 +66,10 @@ const MyPageCash = () => {
         <StyledButton width="20%" height="5%" onClick={onClickCharge}>
           금액 충전
         </StyledButton>
-        {cashCheck}
       </InputTag>
+              <Modal open = {rst} close = {closeModal}  >
+                금액이 충전되었습니다.
+              </Modal>
     </>
   );
 };

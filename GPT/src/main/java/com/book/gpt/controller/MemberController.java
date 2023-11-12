@@ -96,7 +96,7 @@ public class MemberController {
         // 회원 가입을 수행
         memberDTO.setName("user");
         memberDTO.setCash(0);
-        memberDTO.getProfileUrl();
+        memberDTO.setProfileUrl("https://firebasestorage.googleapis.com/v0/b/mini-project-gpt.appspot.com/o/%EC%9D%B4%EB%AF%B8%EC%A7%80%EC%97%86%EC%9D%8C?alt=media&token=c51e4498-e899-4206-99af-0817bdb38f92");
         boolean regResult = dao.signup(memberDTO);
         memberDTO.setRole("ROLE_USER");
         System.out.println(memberDTO.getRole());
@@ -170,6 +170,7 @@ public class MemberController {
             System.out.println("Tel: " + member.getTel());
             System.out.println("Cash: " + member.getCash());
             System.out.println("Role: " + member.getRole());
+            System.out.println("Profile: " + member.getProfileUrl());
             System.out.println("-----------------------------");
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
@@ -180,6 +181,15 @@ public class MemberController {
         MemberDAO dao = new MemberDAO();
         boolean isTrue = dao.memberCheck(name, id, pw, email);
         return new ResponseEntity<>(isTrue, HttpStatus.OK);
+    }
+    // 새로운 아이디 중복 검사
+    @PostMapping("/checkId")
+    public ResponseEntity<Boolean> checkID (@RequestBody Map<String, String> chckId) {
+        MemberDAO dao = new MemberDAO();
+        String newId = chckId.get("id");
+        System.out.println("새로운 아이디 : " + newId);
+        boolean istrue = dao.isIdcheck(newId);
+        return new ResponseEntity<>(istrue, HttpStatus.OK);
     }
     // 아이디 변경
     @PostMapping("/updateId")
@@ -228,6 +238,15 @@ public class MemberController {
         MemberDAO dao = new MemberDAO();
         boolean isTrue = dao.chargingCash(getId, getCash);
         System.out.println("충전 여부" + isTrue);
+        return new ResponseEntity<>(isTrue, HttpStatus.OK);
+    }
+    @PostMapping("/setImage")
+    public ResponseEntity<Boolean> setImage (@RequestBody Map<String, String> setImageUrl) {
+        String getId = setImageUrl.get("id");
+        String getUrl = setImageUrl.get("url");
+        MemberDAO dao = new MemberDAO();
+        boolean isTrue = dao.setImageUrl(getId, getUrl);
+        System.out.println(isTrue);
         return new ResponseEntity<>(isTrue, HttpStatus.OK);
     }
 

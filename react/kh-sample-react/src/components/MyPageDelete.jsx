@@ -1,8 +1,9 @@
 import { useState, useReducer } from "react";
 import { reducer } from "../pages/MyPage";
 import AxiosApi from "../api/MyPageAxiosApi";
-import { InputBox, InputTag } from "./MyPageComp";
+import { InputBox, InputTag, MyPageButton } from "./MyPageComp";
 import { StyledButton } from "../globalStyle/StyledButton";
+import Modal from "../utils/LoginModal";
 import sha256 from "sha256";
 import { useNavigate } from "react-router-dom";
 
@@ -15,11 +16,21 @@ const MyPageDELETE = () => {
     pw: "",
     email: "",
   });
+   //모달창 제어
+   const [rst, setRst] = useState(false);
+   const closeModal = () => {
+     setRst(false);
+     navigate("/");
+     window.location.reload();
+   }
 
   const [msgName, setNameMsg] = useState("이름 형식에 맞추어 입력하시오.");
   const [msgId, setIdMsg] = useState("아이디 형식에 맞추어 입력하시오.");
   const [msgPw, setPwMsg] = useState("비밀번호 형식에 맞추어 입력하시오.");
   const [msgEmail, setEmailMsg] = useState("이메일 형식에 맞추어 입력하시오.");
+  const allChecksTrue = () => {
+    return checkName && checkId && checkPw && checkEmail;
+  };
   // 이름 제약 조건
   const onChangeName = (e) => {
     const inputName = e.target.value;
@@ -119,9 +130,8 @@ const MyPageDELETE = () => {
       console.log("del의 값:", response.data);
       if (response.data === true) {
         setCheckTrue(true);
-        navigate("/");
-        console.log("삭제되었습니다.");
-        alert("삭제되었습니다");
+        setRst(true);
+
         setDeleteState(true);
       } else {
         setCheckTrue(false);
@@ -142,15 +152,15 @@ const MyPageDELETE = () => {
         <p>{msgName}</p>
         <InputBox placeholder="ID" type="text" onChange={onChangeId} />
         <p>{msgId}</p>
-        <InputBox placeholder="PW" type="text" onChange={onChangePw} />
+        <InputBox placeholder="PW" type="password" onChange={onChangePw} />
         <p>{msgPw}</p>
         <InputBox placeholder="EMAIL" type="text" onChange={onChangeEmail} />
         <p>{msgEmail}</p>
-        {checkName && checkId && checkPw && checkEmail && (
-          <StyledButton width="40%" height="10%" onClick={onClickCheck}>
-            정보 확인
-          </StyledButton>
-        )}
+        <MyPageButton
+                onClick={onClickCheck}
+                disabled = {!allChecksTrue()}
+              >정보 확인</MyPageButton>
+          
 
         <>
           <InputBox placeholder="DELETE ID" type="text" onChange={onDeleteId} />
@@ -160,8 +170,10 @@ const MyPageDELETE = () => {
               회원 탈퇴
             </StyledButton>
           )}
-          {deleteTrue && <p>삭제 되었습니다.</p>}
         </>
+        <Modal open = {rst} close = {closeModal}  >
+          회원을 탈퇴하셨습니다.
+        </Modal>
       </InputTag>
     </>
   );

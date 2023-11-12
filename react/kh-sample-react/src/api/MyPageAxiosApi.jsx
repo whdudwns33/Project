@@ -15,6 +15,20 @@ const MyPageAxiosApi = {
         `/users/checkInfo/?name=${name}&id=${id}&pw=${pw}&email=${email}`
     );
   },
+  // 정보 변경 전 정보 중복 체크
+  checkedId: async (NewId) => {
+    try {
+      const checkId = {
+        id : NewId
+      };
+      console.log("중복성 체크 아이디:" + NewId);
+      return await axios.post(KH_DOMAIN + "/users/checkId", checkId);
+    }
+    catch (error) {
+      throw error
+    };
+ },
+
   // 아이디 비밀번호 변경
   modifyID: async (currentId, newId) => {
     try {
@@ -30,6 +44,7 @@ const MyPageAxiosApi = {
       console.error("ID 변경 중 오류 발생:", error);
       throw error;
     }
+    
   },
 
   modifyPW: async (currentPw, newPw) => {
@@ -86,5 +101,14 @@ const MyPageAxiosApi = {
     console.log(charge.data);
     return await axios.post(KH_DOMAIN + "/users/charge", charge);
   },
+
+  setImageUrl: async (id, url) => {
+    const setImageUrl = {
+      id: id,
+      url : url
+    };
+    console.log("axios url : " + url);
+    return await axios.post(KH_DOMAIN + "/users/setImage", setImageUrl );
+  }
 };
 export default MyPageAxiosApi;

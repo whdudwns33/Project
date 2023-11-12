@@ -180,6 +180,8 @@ const Login = () => {
     setSignUpData({ ...signUpData, [name]: value });
   };
 
+
+  // 임시 수정
   const loginSubmit = async (e) => {
     e.preventDefault();
     const hashedPassword = sha256(inputPw).toString();
@@ -187,7 +189,7 @@ const Login = () => {
     console.log(res.data);
     if (res.data) {
       window.localStorage.setItem("userId", inputId);
-      window.localStorage.setItem("userPw", inputPw);
+      window.localStorage.setItem("userPw", hashedPassword);
       window.localStorage.setItem("isLogin", "TRUE");
       // 로그인이 성공하면 토큰을 클라이언트에 저장
       const token = res.data; // 토큰 응답 데이터

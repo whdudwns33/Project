@@ -1,10 +1,11 @@
 import { useState, useReducer } from "react";
 import { reducer } from "../pages/MyPage";
 import AxiosApi from "../api/MyPageAxiosApi";
-import { InputBox, InputTag, InpuTitle, LittleTitle } from "./MyPageComp";
+import { InputBox, InputTag, InpuTitle, MyPageButton } from "./MyPageComp";
 import { StyledButton } from "../globalStyle/StyledButton";
 import { useNavigate } from "react-router-dom/dist";
 import sha256 from "sha256";
+import Modal from "../utils/LoginModal";
 
 const MyPagePW = () => {
   const navigate = useNavigate();
@@ -15,11 +16,22 @@ const MyPagePW = () => {
     pw: "",
     email: "",
   });
+  //모달창 제어
+  const [rst, setRst] = useState(false);
+  const closeModal = () => {
+    setRst(false);
+    navigate("/");
+    window.location.reload();
+  }
 
   const [msgName, setNameMsg] = useState("이름 형식에 맞추어 입력하시오.");
   const [msgId, setIdMsg] = useState("아이디 형식에 맞추어 입력하시오.");
   const [msgPw, setPwMsg] = useState("비밀번호 형식에 맞추어 입력하시오.");
   const [msgEmail, setEmailMsg] = useState("이메일 형식에 맞추어 입력하시오.");
+  const allChecksTrue = () => {
+    return checkName && checkId && checkPw && checkEmail;
+  };
+
   // 이름 제약 조건
   const onChangeName = (e) => {
     const inputName = e.target.value;
@@ -200,14 +212,11 @@ const MyPagePW = () => {
             </InpuTitle>
             <p>{msgEmail}</p>
 
-            {checkName && checkId && checkPw && checkEmail && (
-              <StyledButton
-                width="40%"
-                height="5%"
-                value="정보 확인"
+            <MyPageButton
                 onClick={onClickCheck}
-              ></StyledButton>
-            )}
+                disabled = {!allChecksTrue()}
+              >정보 확인</MyPageButton>
+          
           </InputTag>
         </>
       )}
@@ -233,6 +242,9 @@ const MyPagePW = () => {
                   onClick={onClickModifyPw}
                 ></StyledButton>
               )}
+              <Modal open = {rst} close = {closeModal}  >
+                비밀번호가 변경되었습니다.
+              </Modal>
             </>
           )}
         </InputTag>
