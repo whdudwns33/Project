@@ -7,28 +7,33 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-
   }
   /* 다른 글로벌 스타일 정의 가능 */
 `;
 
-// 기본 컨테이너: 전체 레이어
-export const Container = styled.div`
-  // PC
-  margin: 0 auto;
+export const Body = styled.div`
+  margin: 0;
   padding: 0;
-  width: 80vw;
-  height: 120vh;
+  background-color: rgba(245, 245, 245, 0.9);
+`;
+
+// 기본 컨테이너: 전체 레이어
+export const Container = styled.div.attrs({
+  className: "MyPageContanier-container",
+})`
+  width: 60vw;
+  height: 100vh;
   display: flex;
   justify-content: space-evenly;
-  min-width: 1000px;
-  min-height: 1200px;
-  // 모바일
+  background-color: rgba(245, 245, 245, 0.9);
+  /* min-width: 800px; */
+  min-height: 800px;
+  /* min-height:  */
   @media (max-width: 450px) {
-    box-sizing: border-box;
     width: 100vw;
-    height: 200vh;
-    flex-direction: column;
+    height: 100vh;
+    /* min-width: 300px;
+    min-height: 60vh; */
   }
 `;
 
@@ -37,18 +42,17 @@ export const Container = styled.div`
 // 좌측(이미지 및 정보보여주기, 정보 출력)
 export const Left = styled.div`
   display: flex;
-  width: ${(props) => props.width || "30%"};
-  height: 98%;
-  border-radius: 10px;
-  box-shadow: -5px -5px 10px #fff, 5px 5px 10px #babebc;
+  width: 45%;
+  box-shadow: 0 0 20px rgba(33, 33, 33, 0.2);
   flex-direction: column;
+  /* min-width: 400px;
+  min-height: 800px; */
   align-items: center;
-  min-width: 400px;
-
+  background-color: white;
   @media (max-width: 450px) {
     width: 100%;
-    height: 150%;
-    display: flex;
+    /* min-height: 300px;
+    min-width: 300px; */
   }
 `;
 
@@ -56,50 +60,51 @@ export const Left = styled.div`
 // 이미지 변경 및 등록 레이어
 export const Imagine = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  box-shadow: inset 7px 2px 10px #babebc, inset -5px -5px 12px #fff;
-  border-radius: 5%;
+  flex-direction: column;
+  /* border: 3px solid green; */
+  align-items: center;
   width: 80%;
-  height: 30%;
+  height: 40%;
   margin-bottom: 5%;
-  overflow: hidden;
   @media (max-width: 450px) {
-    width: 60%;
-    height: 25%;
+    width: 50%;
+    height: 30%;
   }
 `;
+export const Img = styled.div`
+  background-image: url(${(props) => props.src});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 60%;
+  height: 70%;
+  border-radius: 10px;
+  @media (max-width: 450px) {
+    margin-top: 30px;
+    width: 100%;
+    height: 100%;
+    /* min-height: 150px; */
+  }
+`;
+
 // 이미지 나누기 구역
 export const ImageSection = styled.div`
+  border: 3px solid gray;
   display: flex;
-  justify-content: space-evenly;
-  width: ${(props) => props.width || "100%"};
-  height: ${(props) => props.height || "80%"};
-`;
-// 이미지 내부 레이어
-export const IsideImage = styled.img`
-  border: 3px solid red;
-  transition-delay: 0.3s;
-  transition-duration: 0.3s;
-  &:hover {
-    // 우측 아래로 확대
+  width: 100%;
+  @media (max-width: 450px) {
+    display: none;
   }
 `;
 // 이미지 등록
 export const ImageSubmit = styled.input`
-  border: 3px solid red;
   cursor: pointer;
-  color: transparent;
   outline: none;
-  width: ${(props) => props.width || "50%"};
-  height: ${(props) => props.height || "80%"};
 `;
 // 이미지 업로드
 export const ImageUpload = styled.button`
   cursor: pointer;
-  border: 3px solid red;
-  width: ${(props) => props.width || "50%"};
-  height: ${(props) => props.height || "80%"};
-  font-size: 1rem;
+  outline: none;
 `;
 //
 // 정보 레이어
@@ -107,95 +112,65 @@ export const InfoBox = styled.div`
   width: 80%;
   height: 30%;
   display: flex;
-  box-shadow: inset 7px 2px 10px #babebc, inset -5px -5px 12px #fff;
-  justify-content: space-evenly;
+  border: 3px solid gray;
+  flex-direction: column;
   align-items: center;
+  justify-content: space-evenly;
   border-radius: 10px;
-  min-height: 300px;
   @media (max-width: 450px) {
     width: 60%;
     height: 20%;
-    min-height: 500px;
+    margin-bottom: 20px;
   }
 `;
-// 정보의 내용 레이어
-export const InfoName = styled.div`
-  box-shadow: 7px 2px 10px #babebc, inset -5px -5px 12px #fff;
-  width: 40%;
-  height: 80%;
-  font-size: 0.8rem;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  @media (max-width: 450px) {
-    font-size: 1.3rem;
-  }
-`;
-//
 
-//
-// 좌측 하단 버튼들의 레이어
-export const LeftButton = styled.div`
-  margin-top: 5%;
-  width: 80%;
-  height: 30%;
-  display: flex;
-  flex-direction: column;
-  box-shadow: inset 7px 2px 10px #babebc, inset -5px -5px 12px #fff;
-  justify-content: space-evenly;
-  align-items: center;
-  border-radius: 10px;
-
+export const LeftDiv = styled.div`
+  display: none;
   @media (max-width: 450px) {
-    width: 60%;
-    height: 30%;
     display: flex;
-    box-shadow: inset 7px 2px 10px #babebc, inset -5px -5px 12px #fff;
-    flex-wrap: wrap;
+    align-items: center;
+    flex-direction: column;
+    width: 60%;
   }
 `;
+
 //
 // 우측 레이어, 모바일시 어퍼 레이어
 // 우측 실제로 정보를 변경하는 레이어
 export const Right = styled.div`
-  border-radius: 10px;
+  border: 3px solid red;
   color: black;
-  box-shadow: -5px -5px 10px #fff, 5px 5px 10px #babebc;
-  width: 60%;
-  height: 98%;
+  width: 45%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 500px;
+  /* min-width: 400px;
+  min-height: 800px; */
   @media (max-width: 450px) {
-    margin-top: 50%;
+    width: 100%;
+    display: ${(props) => (props.isVisible ? "true" : "none")};
     position: absolute;
-    width: 200vw;
-    height: 200%;
-    border-radius: 5%;
-    display: ${(props) => (props.isvisible ? "flex" : "none")};
-    z-index: 50;
   }
 `;
+
 // 정보 수정창
 export const RightInfo = styled.div`
   display: flex;
   flex-direction: column;
-  box-shadow: -5px -5px 1px #fff, 5px 5px 1px #babebc;
-  border-radius: 10px;
   color: black;
-  align-items: center;
   animation-name: Info-animation;
   animation-duration: 0.3s;
-  width: 100%;
-  height: 100%;
-
+  width: 80%;
+  height: 40%;
+  border: 3px solid red;
   @media (max-width: 450px) {
-    text-align: center;
+    border: 2px solid black;
+    border-radius: 10px;
+    margin-bottom: 300px;
+    background-color: #fff;
+    z-index: 3000;
+    position: fixed;
   }
 
   @keyframes Info-animation {
@@ -210,28 +185,28 @@ export const RightInfo = styled.div`
 
 // 정보 수정창 등장
 export const InputTag = styled.div`
+  text-align: center;
+  align-items: center;
   display: flex;
   flex-direction: column;
   font-weight: bolder;
-  align-items: center;
-  width: ${(props) => props.width || "80%"};
-  height: ${(props) => props.height || "50%"};
   border-radius: 10px;
-  border: 3px solid white;
-
+  border: 3px solid black;
+  width: ${(props) => props.width || "100%"};
+  height: ${(props) => props.height || "80%"};
   @media (max-width: 450px) {
     align-items: center;
     justify-content: center;
-    width: 80%;
-    height: 80%;
+    width: 100%;
+    height: 40vh;
+    border: none;
   }
 `;
 
 export const InpuTitle = styled.div`
-  padding: 0;
+  border: 3px solid red;
   display: flex;
   width: 70%;
-  height: 5%;
   justify-content: center;
   @media (max-width: 450px) {
     margin: 0;
@@ -240,41 +215,61 @@ export const InpuTitle = styled.div`
 
 // 입력창
 export const InputBox = styled.input`
-  margin: 0;
-  padding: 0;
-  background-color: none;
   border: none;
   text-align: center;
   border-radius: 10px;
-  width: ${(props) => props.width || "60%"};
-  height: ${(props) => props.height || "5%"};
-  font-size: 2rem;
-  box-shadow: 1px 1px 5px 1px black inset;
+  width: 60%;
+  height: 30px;
+  font-size: 1rem;
 
   @media (max-width: 450px) {
+    border: 2px solid gray;
     background-color: none;
-    box-shadow: inset 7px 2px 5px #babebc, inset -5px -5px 6px #fff;
-    width: 75%;
+    width: ${(props) => props.width || "60%"};
     height: ${(props) => props.height || "100%"};
-    font-size: 2rem;
+    font-size: 1rem;
   }
 `;
 
-//
-export const DivRow = styled.div`
+// 우측 하단 버튼들의 레이어
+export const RightButton = styled.div`
   margin-top: 5%;
-  margin-bottom: 5%;
-  display: flex;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
-  border: 3px solid black;
   width: 80%;
-  height: 5%;
+  height: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  border-radius: 10px;
 
-  .chooseBank {
-    width: 20%;
-    border: none;
-    border-radius: 10px;
+  @media (max-width: 450px) {
+    width: 60%;
+    height: 30%;
+    display: flex;
+    border: 3px solid orange;
+    flex-wrap: wrap;
+    display: ${(props) => (props.isvisible ? "flex" : "none")};
+    z-index: 50;
+  }
+`;
+
+// 체크
+
+export const DivRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-bottom: 3px solid grey;
+  width: 80%;
+`;
+export const DivRowt = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-bottom: 3px solid grey;
+  width: 80%;
+  @media (max-width: 450px) {
+    display: none;
   }
 `;
 
@@ -291,7 +286,7 @@ export const SetButton = styled.button`
     border: 2px solid #888888;
     outline: none;
     background-color: #f4f5f6;
-    border-radius: 15px;
+    border-radius: 10px;
 
     transition: 0.13s ease-in-out;
     cursor: pointer;
@@ -299,7 +294,42 @@ export const SetButton = styled.button`
 `;
 
 export const MyPageButton = styled.button`
-  background-color : ${(props) => props.isTrue ? "gray" : "white" }
-  /* cursor : ${(props) => props.isTrue ? 'pointer' : 'not-allowed'} */
+  border: 3px solid red;
+  padding: 3px;
+  background-color: ${(props) => (props.isTrue ? "gray" : "white")};
+  /* cursor: ${(props) => (props.isTrue ? "pointer" : "not-allowed")}; */
 `;
 
+export const Information = styled.p`
+  @media (max-width: 450px) {
+    display: none;
+  }
+`;
+
+export const CashTag = styled.div`
+  border: 3px solid orange;
+  height: 100%;
+  width: 100%;
+`;
+
+export const Bank = styled.div`
+  border: 3px solid yellow;
+  display: flex;
+  width: 100%;
+  height: 30%;
+`;
+
+export const BankButton = styled.button`
+  width: 30%;
+  height: 80%;
+`;
+
+export const CashCharge = styled.div`
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid blue;
+  width: 100%;
+`;

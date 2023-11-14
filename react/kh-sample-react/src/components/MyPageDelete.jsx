@@ -1,7 +1,7 @@
 import { useState, useReducer } from "react";
 import { reducer } from "../pages/MyPage";
-import AxiosApi from "../api/MyPageAxiosApi";
-import { InputBox, InputTag, MyPageButton } from "./MyPageComp";
+import { InputBox, InputTag, InpuTitle, MyPageButton } from "./MyPageComp";
+import MyPageAxiosApi from "../api/MyPageAxiosApi";
 import { StyledButton } from "../globalStyle/StyledButton";
 import Modal from "../utils/LoginModal";
 import sha256 from "sha256";
@@ -16,13 +16,13 @@ const MyPageDELETE = () => {
     pw: "",
     email: "",
   });
-   //모달창 제어
-   const [rst, setRst] = useState(false);
-   const closeModal = () => {
-     setRst(false);
-     navigate("/");
-     window.location.reload();
-   }
+  //모달창 제어
+  const [rst, setRst] = useState(false);
+  const closeModal = () => {
+    setRst(false);
+    navigate("/");
+    window.location.reload();
+  };
 
   const [msgName, setNameMsg] = useState("이름 형식에 맞추어 입력하시오.");
   const [msgId, setIdMsg] = useState("아이디 형식에 맞추어 입력하시오.");
@@ -100,10 +100,13 @@ const MyPageDELETE = () => {
   const [checkEmail, setCheckEmail] = useState(false);
 
   // 백엔드 이후 체크된 정보를 토대로 true or false
+  const [checkedInfo, setCheckedInfo] = useState(false);
   const onClickCheck = async () => {
-    await AxiosApi.memberCheck(data.name, data.id, data.pw, data.email);
-    console.log("온 클릭 체크 이후 결과가 잘 찍혔습니다.");
+    await MyPageAxiosApi.memberCheck(data.name, data.id, data.pw, data.email);
     console.log(data.name, data.id, data.pw, data.email);
+    setCheckedInfo(true);
+    setOldIsVisible(false);
+    setNewIsVisible(true);
   };
 
   // 아이디 삭제 제약 조건
@@ -122,59 +125,122 @@ const MyPageDELETE = () => {
     console.log("제약 조건으로 입력된 삭제될 아이디" + delId);
   };
   const [checkTrue, setCheckTrue] = useState(false);
-  const [deleteTrue, setDeleteState] = useState(false);
   const onClickDeleteId = async () => {
     try {
-      const response = await AxiosApi.memberDel(delId);
+      const response = await MyPageAxiosApi.memberDel(delId);
       console.log("del :" + delId);
       console.log("del의 값:", response.data);
       if (response.data === true) {
         setCheckTrue(true);
         setRst(true);
-
-        setDeleteState(true);
       } else {
         setCheckTrue(false);
         console.log("삭제되지 못했습니다.");
         alert("삭제되지 못했습니다");
-        setDeleteState(false);
       }
     } catch (error) {
       console.error("오류 발생:", error);
     }
   };
+  // 정보 제출 이후에 조건이 달성되면 해당 페이지 사라지고 다음 페이지 등장
+  const [isOldVisible, setOldIsVisible] = useState(true);
+  const [isNewVisible, setNewIsVisible] = useState(false);
 
   return (
     <>
-      <InputTag>
-        <h1>회원 탈퇴</h1>
-        <InputBox placeholder="이름" type="text" onChange={onChangeName} />
-        <p>{msgName}</p>
-        <InputBox placeholder="ID" type="text" onChange={onChangeId} />
-        <p>{msgId}</p>
-        <InputBox placeholder="PW" type="password" onChange={onChangePw} />
-        <p>{msgPw}</p>
-        <InputBox placeholder="EMAIL" type="text" onChange={onChangeEmail} />
-        <p>{msgEmail}</p>
-        <MyPageButton
-                onClick={onClickCheck}
-                disabled = {!allChecksTrue()}
-              >정보 확인</MyPageButton>
-          
-
+      {isOldVisible && (
         <>
-          <InputBox placeholder="DELETE ID" type="text" onChange={onDeleteId} />
-          <p>{msg}</p>
-          {checkTrue && (
-            <StyledButton width="40%" height="10%" onClick={onClickDeleteId}>
+          <InputTag>
+            <h1
+              style={{
+                border: "bold",
+                fontSize: "1.5rem",
+                borderBottom: "3px solid black",
+              }}
+            >
               회원 탈퇴
-            </StyledButton>
-          )}
+            </h1>
+            <p>
+              회원을 탈퇴합니다. 회원 정보 확인을 위해 이름, 아이디, 비밀번호,
+              이메일을 입력하세요.
+            </p>
+
+            <InpuTitle>
+              <InputBox
+                height="100%"
+                width="70%"
+                placeholder="이름"
+                type="text"
+                onChange={onChangeName}
+              />
+            </InpuTitle>
+            <p>{msgName}</p>
+            <InpuTitle>
+              <InputBox
+                height="100%"
+                width="70%"
+                placeholder="아이디"
+                type="text"
+                onChange={onChangeId}
+              />
+            </InpuTitle>
+            <p>{msgId}</p>
+            <InpuTitle>
+              <InputBox
+                height="100%"
+                width="70%"
+                placeholder="비밀번호"
+                type="password"
+                onChange={onChangePw}
+              />
+            </InpuTitle>
+            <p>{msgPw}</p>
+            <InpuTitle>
+              <InputBox
+                height="100%"
+                width="70%"
+                placeholder="이메일"
+                type="text"
+                onChange={onChangeEmail}
+              />
+            </InpuTitle>
+            <p>{msgEmail}</p>
+
+            <MyPageButton onClick={onClickCheck} disabled={!allChecksTrue()}>
+              정보 확인
+            </MyPageButton>
+          </InputTag>
         </>
-        <Modal open = {rst} close = {closeModal}  >
-          회원을 탈퇴하셨습니다.
-        </Modal>
-      </InputTag>
+      )}
+
+      {isNewVisible && (
+        <InputTag height="30%">
+          {checkedInfo && (
+            <>
+              <p>회원 탈퇴할 아이디를 입력하세요.</p>
+              <InputBox
+                width="60%"
+                height="10%"
+                placeholder="ID"
+                type="text"
+                onChange={onDeleteId}
+              />
+              <p>{msg}</p>
+              {checkTrue && (
+                <StyledButton
+                  value="비밀 번호 변경"
+                  width="40%"
+                  height="7%"
+                  onClick={onClickDeleteId}
+                ></StyledButton>
+              )}
+              <Modal open={rst} close={closeModal}>
+                회원을 탈퇴하셨습니다..
+              </Modal>
+            </>
+          )}
+        </InputTag>
+      )}
     </>
   );
 };

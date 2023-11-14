@@ -1,15 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { storage } from "../api/firebase";
-import {
-  ImageSubmit,
-  IsideImage,
-  ImageSection,
-  ImageUpload,
-} from "./MyPageComp";
+import { ImageSubmit, ImageSection, ImageUpload } from "./MyPageComp";
 import MyPageAxiosApi from "../api/MyPageAxiosApi";
 import { useUser } from "../contexts/Context";
 
-const ProfileImage = () => {  
+const ProfileImage = () => {
   const { user } = useUser();
 
   const [file, setFile] = useState(null);
@@ -17,15 +12,17 @@ const ProfileImage = () => {
 
   const saveImageUrlToDatabase = async (id, url) => {
     try {
-      // 이미지 정보를 데이터베이스에 저장.  
+      // 이미지 정보를 데이터베이스에 저장.
       const response = await MyPageAxiosApi.setImageUrl(id, url);
-  
       console.log("이미지 URL이 데이터베이스에 저장되었습니다.", response);
+      window.location.reload();
     } catch (error) {
-      console.error("이미지 URL을 데이터베이스에 저장하는 중에 오류가 발생했습니다.", error);
+      console.error(
+        "이미지 URL을 데이터베이스에 저장하는 중에 오류가 발생했습니다.",
+        error
+      );
     }
   };
-
 
   const handleFileInputChange = (e) => {
     setFile(e.target.files[0]);
@@ -44,22 +41,11 @@ const ProfileImage = () => {
     });
   };
 
-  
   return (
     <>
       <ImageSection>
-        {url && <IsideImage src={url} alt="uploaded" />}
-      </ImageSection>
-      <ImageSection height="15%">
-        <ImageSubmit
-          width="45%"
-          height="100%"
-          type="file"
-          onChange={handleFileInputChange}
-        />
-        <ImageUpload width="45%" height="100%" onClick={handleUploadClick}>
-          사진 등록
-        </ImageUpload>
+        <ImageSubmit type="file" onChange={handleFileInputChange} />
+        <ImageUpload onClick={handleUploadClick}>사진 등록</ImageUpload>
       </ImageSection>
     </>
   );

@@ -20,16 +20,9 @@ public class MemberDTO {
     private String tel;
     private int cash;
     private int auth;
-    private String profileUrl; // 프로필 이미지 URL
-
-    private Collection<? extends GrantedAuthority> authorities; // 권한 정보
+    private String profileUrl = null; // 프로필 이미지 URL
+    private String loginType;
     private String role;
 
-    public String getProfileUrl() {
-        return profileUrl;
-    }
-
-    public void setProfileUrl(String profileUrl) {
-        this.profileUrl = profileUrl;
-    }
+    private Collection<? extends GrantedAuthority> authorities; // 권한 정보
 }

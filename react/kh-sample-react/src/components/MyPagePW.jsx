@@ -22,7 +22,7 @@ const MyPagePW = () => {
     setRst(false);
     navigate("/");
     window.location.reload();
-  }
+  };
 
   const [msgName, setNameMsg] = useState("이름 형식에 맞추어 입력하시오.");
   const [msgId, setIdMsg] = useState("아이디 형식에 맞추어 입력하시오.");
@@ -145,8 +145,9 @@ const MyPagePW = () => {
   const [checkTrue, setCheckTrue] = useState(false);
   const onClickModifyPw = async () => {
     try {
-      const chPw = await AxiosApi.modifyPW(data.pw, newPw);
-      console.log("newPw의 값:", newPw); // newId의 값을 확인
+      const hashedPassword = sha256(newPw).toString();
+      const chPw = await AxiosApi.modifyPW(data.pw, hashedPassword);
+      console.log("newPw의 값:", hashedPassword); // newId의 값을 확인
       console.log("제출된 비밀번호가 잘 찍혔습니다." + chPw.data);
       if (chPw === true) {
         alert("비밀번호가 변경되었습니다.");
@@ -166,11 +167,22 @@ const MyPagePW = () => {
   const [isNewVisible, setNewIsVisible] = useState(false);
   return (
     <>
-      <h1>비밀번호 변경</h1>
       {isOldVisible && (
         <>
           <InputTag>
-            <p>아이디를 변경합니다.</p>
+            <h1
+              style={{
+                border: "bold",
+                fontSize: "1.5rem",
+                borderBottom: "3px solid black",
+              }}
+            >
+              비밀번호 변경
+            </h1>
+            <p>
+              비밀번호를 변경합니다. 회원 정보 확인을 위해서 회원의 이름,
+              아이디, 비밀번호, 이메일을 입력하세요.
+            </p>
             <InpuTitle>
               <InputBox
                 height="100%"
@@ -196,7 +208,7 @@ const MyPagePW = () => {
                 height="100%"
                 width="70%"
                 placeholder="비밀번호"
-                type="text"
+                type="password"
                 onChange={onChangePw}
               />
             </InpuTitle>
@@ -212,17 +224,15 @@ const MyPagePW = () => {
             </InpuTitle>
             <p>{msgEmail}</p>
 
-            <MyPageButton
-                onClick={onClickCheck}
-                disabled = {!allChecksTrue()}
-              >정보 확인</MyPageButton>
-          
+            <MyPageButton onClick={onClickCheck} disabled={!allChecksTrue()}>
+              정보 확인
+            </MyPageButton>
           </InputTag>
         </>
       )}
 
       {isNewVisible && (
-        <InputTag>
+        <InputTag height="30%">
           {checkedInfo && (
             <>
               <p>새로운 비밀번호를 입력하시오.</p>
@@ -230,7 +240,7 @@ const MyPagePW = () => {
                 width="60%"
                 height="10%"
                 placeholder="NEW PW"
-                type="text"
+                type="password"
                 onChange={onModifyPw}
               />
               <p>{msg}</p>
@@ -242,7 +252,7 @@ const MyPagePW = () => {
                   onClick={onClickModifyPw}
                 ></StyledButton>
               )}
-              <Modal open = {rst} close = {closeModal}  >
+              <Modal open={rst} close={closeModal}>
                 비밀번호가 변경되었습니다.
               </Modal>
             </>

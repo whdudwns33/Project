@@ -1,7 +1,12 @@
 import { ReactReader } from "react-reader";
 import { useState, useRef, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 export const ViewerPageEpub = () => {
+  // ContentUrl 값 가져오기
+  const navigateLocation = useLocation();
+  const contentUrl = navigateLocation.state.contentUrl;
+
   // 밑줄
   const [selections, setSelections] = useState([]);
 
@@ -118,8 +123,8 @@ export const ViewerPageEpub = () => {
             title="E-book project Sample"
             location={location}
             locationChanged={locationChanged}
-            url="https://react-reader.metabits.no/files/alice.epub" // 외부에서 접근이 가능한 사이트의 주소
-            // url="https://firebasestorage.googleapis.com/v0/b/reactminiproject-15ad8.appspot.com/o/%EC%B9%B4%ED%94%84%EC%B9%B4%20%EB%B3%80%EC%8B%A0%20%ED%95%9C%EA%B8%80%EB%B2%88%EC%97%AD%20200620%2005.epub?alt=media&token=f8d0face-e9ec-4a8a-8e8e-d72a3005e125"
+            // 외부에서 접근이 가능한 사이트의 주소
+            url={contentUrl}
             // 책이 불러와질때 실행
             getRendition={(rendtion) => {
               renditionRef.current = rendtion;

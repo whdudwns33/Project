@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { FaStar, FaStarHalf } from "react-icons/fa"; // 별 아이콘을 사용하기 위한 import
 import AxiosApi from "../api/AxiosApi";
@@ -14,6 +14,7 @@ const ReviewSectionContainer = styled.div`
     margin-bottom: 15px;
     padding: 10px 0 8px 0;
     border-bottom: 2px solid #7d8e9e;
+    text-transform: uppercase; /* 텍스트를 대문자로 변환 */
   }
 
   .review-starbox {
@@ -28,12 +29,14 @@ const ReviewSectionContainer = styled.div`
     padding: 32px 0 20px 0;
     text-align: center;
     cursor: default;
+    vertical-align: middle; /* 셀 내용 중앙 정렬 */
   }
 
   .average-rating {
     font-size: 20px;
     font-weight: bold;
     color: #333;
+    color: #007bff; /* 평균 평점의 색상 변경 */
   }
 
   .star-icons {
@@ -41,13 +44,14 @@ const ReviewSectionContainer = styled.div`
     align-items: center;
     gap: 5px;
     font-size: 24px;
-    color: yellow;
+    justify-content: center; /* 별 아이콘 가운데 정렬 */
   }
 
   .total-ratings {
     font-size: 14px;
     color: #666;
     margin-top: 10px;
+    text-align: right; /* 총 평점을 오른쪽 정렬 */
   }
 
   ul {
@@ -59,21 +63,24 @@ const ReviewSectionContainer = styled.div`
     border: 1px solid #ddd;
     padding: 10px;
     margin: 10px 0;
+    border-radius: 5px; /* 테두리 둥글게 */
   }
 
   .review-rating {
     font-weight: bold;
     margin: 0;
+    color: #007bff; /* 리뷰 평점의 색상 변경 */
   }
 
   .review-text {
     margin: 0;
     color: #333;
+    font-style: italic; /* 리뷰 텍스트를 이탤릭체로 */
   }
 `;
 
 const ReviewSection = ({ openReviewModal, bookInfo }) => {
-  const { isLoggedin, checkLoginStatus } = useUser();
+  const { checkLoginStatus, user } = useUser();
   const [reviews, setReviews] = useState([]);
 
   const [averageRating, setAverageRating] = useState(0);
@@ -90,7 +97,7 @@ const ReviewSection = ({ openReviewModal, bookInfo }) => {
     }
   }
   // 리뷰 데이터를 가져오는 함수
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
     if (!bookInfo) {
       console.log(
         "bookInfo is null. fetchReviews will be called again when bookInfo is set."
@@ -107,8 +114,8 @@ const ReviewSection = ({ openReviewModal, bookInfo }) => {
     } catch (error) {
       console.error("리뷰 데이터 요청 에러", error);
     }
-  };
-  const fetchReviewStats = async () => {
+  }, [bookInfo]);
+  const fetchReviewStats = useCallback(async () => {
     if (!bookInfo) {
       console.log(
         "bookInfo is null. fetchReviewStats will be called again when bookInfo is set."
@@ -127,16 +134,18 @@ const ReviewSection = ({ openReviewModal, bookInfo }) => {
     } catch (error) {
       console.error("Failed to fetch review stats:", error);
     }
-  };
-  // useEffect 2개 쓴이유 동시 데이터베이스 접속하면 에러나서 그랬습니다.
-  useEffect(() => {
-    checkLoginStatus();
-  }, [isLoggedin]);
-  useEffect(() => {
-    fetchReviews();
-    fetchReviewStats();
   }, [bookInfo]);
 
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
+  useEffect(() => {
+    if (bookInfo) {
+      fetchReviews();
+      fetchReviewStats();
+    }
+  }, [bookInfo]);
   return (
     <ReviewSectionContainer>
       <h2>리뷰</h2>
@@ -156,6 +165,19 @@ const ReviewSection = ({ openReviewModal, bookInfo }) => {
         ) : (
           reviews.map((review, index) => (
             <li key={index}>
+              <div className="star-icons">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <span key={i}>
+                    {i + 1 <= review.rating ? (
+                      <FaStar color="#AAB9FF" />
+                    ) : i + 0.5 === review.rating ? (
+                      <FaStarHalf color="#AAB9FF" />
+                    ) : (
+                      <FaStar color="gray" />
+                    )}
+                  </span>
+                ))}
+              </div>
               <p className="review-rating">평점: {review.rating}</p>
               <p className="review-nickname">
                 닉네임: {review.memberName}

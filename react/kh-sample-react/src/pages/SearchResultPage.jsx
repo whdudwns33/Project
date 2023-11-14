@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { SearchResultPageComp } from "../components/SearchResultPageComp";
 import styled from "styled-components";
-import { StyledSearch } from "../globalStyle/StyledSearch";
-import { StyledTop } from "../globalStyle/StyledTop";
 import { StyledButton } from "../globalStyle/StyledButton";
 import { MiddleOrderBox } from "../globalStyle/MiddleOrderBox";
+import { StyledSearch } from "../globalStyle/StyledSearch";
 
 const Container = styled.div`
   width: 65%;
@@ -18,70 +16,43 @@ const Container = styled.div`
 `;
 
 export const SearchResultPage = () => {
-  const [search, setSearch] = useState("");
   const [bookData, setBookData] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
 
-  const searchBook = () => {
-    if (!search) {
-      return;
-    }
-
-    axios
-      .get("https://www.googleapis.com/books/v1/volumes", {
-        params: {
-          q: search,
-          key: "AIzaSyBZeJKPL9ccyGsvYo3_JA5OHw6ohKwGGgw", // 보안에 문제
-          maxResults: 10, // 한 페이지당 10개의 결과를 가져오도록 설정
-          startIndex: startIndex, // 페이지의 시작 인덱스 설정
-        },
-      })
-      .then((res) => {
-        if (res.data.items) {
-          setBookData(res.data.items);
-        } else {
-          setBookData([]); // 응답에 항목이 없는 경우 처리
-        }
-      })
-      .catch((err) => {
-        console.log("오류:", err);
-        setBookData([]); // 오류 처리: bookData를 빈 배열로 설정
-      });
-  };
-
   useEffect(() => {
-    searchBook(); // 초기 검색 또는 startIndex 변경 시 검색 실행
-  }, [startIndex]);
+    const handleStorageChange = () => {
+      const searchResult = localStorage.getItem("searchResult");
+      if (searchResult) {
+        setBookData(JSON.parse(searchResult).items);
+      }
+    };
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      setStartIndex(0); // 새로운 검색을 시작할 때 startIndex를 초기화
-      searchBook();
-    }
-  };
+    handleStorageChange();
+  }, []);
 
   const nextPage = () => {
-    setStartIndex(startIndex + 10); // 다음 페이지로 이동
+    if (bookData.length > startIndex + 10) {
+      setStartIndex(startIndex + 10); // 다음 페이지로 이동
+    } else {
+      alert("더 이상 가져올 자료가 없습니다."); // 경고 메시지를 표시
+    }
   };
 
   const prevPage = () => {
     if (startIndex >= 10) {
       setStartIndex(startIndex - 10); // 이전 페이지로 이동
+    } else {
+      alert("더 이상 가져올 자료가 없습니다."); // 경고 메시지를 표시
     }
   };
 
   return (
     <>
-      <StyledTop></StyledTop>
-      <StyledSearch
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        onKeyDown={handleKeyPress}
-        placeholder="Search any book!"
-        onClick={searchBook}
-      ></StyledSearch>
+      <StyledSearch></StyledSearch>
       <Container>
-        <SearchResultPageComp book={bookData} />
+        <SearchResultPageComp
+          book={bookData.slice(startIndex, startIndex + 10)}
+        />
       </Container>
       <MiddleOrderBox>
         <StyledButton

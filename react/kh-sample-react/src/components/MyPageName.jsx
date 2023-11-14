@@ -4,10 +4,10 @@ import AxiosApi from "../api/MyPageAxiosApi";
 import { InputBox, InputTag, InpuTitle, MyPageButton } from "./MyPageComp";
 import { StyledButton } from "../globalStyle/StyledButton";
 import { useNavigate } from "react-router-dom/dist";
-import Modal from "../utils/LoginModal";
 import sha256 from "sha256";
+import Modal from "../utils/LoginModal";
 
-const MyPageName = () => {
+const MyPagePW = () => {
   const navigate = useNavigate();
 
   const [data, dispatch] = useReducer(reducer, {
@@ -16,19 +16,18 @@ const MyPageName = () => {
     pw: "",
     email: "",
   });
-   //모달창 제어
-   const [rst, setRst] = useState(false);
-   const closeModal = () => {
-     setRst(false);
-     navigate("/");
-     window.location.reload();
-   }
+  //모달창 제어
+  const [rst, setRst] = useState(false);
+  const closeModal = () => {
+    setRst(false);
+    navigate("/");
+    window.location.reload();
+  };
 
   const [msgName, setNameMsg] = useState("이름 형식에 맞추어 입력하시오.");
   const [msgId, setIdMsg] = useState("아이디 형식에 맞추어 입력하시오.");
   const [msgPw, setPwMsg] = useState("비밀번호 형식에 맞추어 입력하시오.");
   const [msgEmail, setEmailMsg] = useState("이메일 형식에 맞추어 입력하시오.");
-  
   const allChecksTrue = () => {
     return checkName && checkId && checkPw && checkEmail;
   };
@@ -46,7 +45,7 @@ const MyPageName = () => {
       setCheckName(false);
     }
   };
-  // 아이디 제약 조건
+  // 비밀번호 제약 조건
   const onChangeId = (e) => {
     const inputId = e.target.value;
     if (/^[a-zA-Z0-9]{8,20}$/.test(inputId)) {
@@ -78,7 +77,6 @@ const MyPageName = () => {
       setCheckPw(false);
     }
   };
-
   // 이메일 제약 조건
   const onChangeEmail = (e) => {
     const inputEmail = e.target.value;
@@ -103,50 +101,56 @@ const MyPageName = () => {
   // 백엔드 이후 체크된 정보를 토대로 true or false
   const [checkedInfo, setCheckedInfo] = useState(false);
   const onClickCheck = async () => {
-    await AxiosApi.memberCheck(data.name, data.id, data.pw, data.email);
-
-    setCheckedInfo(true);
-    setOldIsVisible(false);
-    setNewIsVisible(true);
+    const checked = await AxiosApi.memberCheck(
+      data.name,
+      data.id,
+      data.pw,
+      data.email
+    );
+    console.log(checked);
+    console.log("온 클릭 체크 이후 결과가 잘 찍혔습니다.");
+    console.log(data.name, data.id, data.pw, data.email);
+    if (checked.data === true) {
+      console.log("체크가 true입니다.");
+      setCheckedInfo(true);
+      setOldIsVisible(false);
+      setNewIsVisible(true);
+    } else {
+      console.log("체크가 false입니다.");
+      setCheckedInfo(false);
+    }
   };
 
-  // 변경 이름 제약 조건
-  const [checkTrue, setCheckTrue] = useState(false);
+  // 이름 변경
   const [newName, setNewName] = useState("");
   const [msg, setMsg] = useState("");
   const onModifyName = (e) => {
     setMsg("");
-    setNewName(e.target.value);
     if (
-      newName.length >= 2 &&
+      e.target.value.length >= 2 &&
       !/[0-9!@#$%^&*(),.?":{}|<>]/.test(e.target.value)
     ) {
       setMsg("유효합니다.");
-
-      console.log(checkTrue);
-      console.log("새로운 이름:" + newName);
+      setNewName(e.target.value);
+      console.log(newName);
       setCheckTrue(true);
     } else {
       setMsg("유효하지 않습니다.");
       setCheckTrue(false);
     }
   };
+
+  // 비밀번호 변경 클릭 함수
+  const [checkTrue, setCheckTrue] = useState(false);
   const onClickModifyName = async () => {
     try {
       const chName = await AxiosApi.modifyName(data.name, newName);
-      console.log("newId의 값:", newName); // newId의 값을 확인
-      console.log("제출된 이름 잘 찍혔습니다." + chName.data);
-      if (chName.data === true) {
-        console.log("이름 변경");
-        setRst(true);
-      } else {
-        setCheckTrue(false);
-        alert("이름이 변경되지 않았습니다.");
-        console.log("이름 변경 실패");
-        window.location.reload();
-      }
+      console.log("newName 값:", chName); // newId의 값을 확인
+      alert("회원 정보가 변경되었습니다.");
+      navigate("/");
+      window.location.reload();
     } catch (error) {
-      console.error("변경 중 오류 발생:", error);
+      console.error("이름 변경 중 오류 발생:", error);
     }
   };
 
@@ -155,11 +159,22 @@ const MyPageName = () => {
   const [isNewVisible, setNewIsVisible] = useState(false);
   return (
     <>
-      <h1>이름 변경</h1>
       {isOldVisible && (
         <>
           <InputTag>
-            <p>이름을 변경합니다.</p>
+            <h1
+              style={{
+                border: "bold",
+                fontSize: "1.5rem",
+                borderBottom: "3px solid black",
+              }}
+            >
+              회원 정보 변경
+            </h1>
+            <p>
+              회원님의 이름을 변경합니다. 회원 정보 확인을 위해서 회원의 이름,
+              아이디, 비밀번호, 이메일을 입력하세요.
+            </p>
             <InpuTitle>
               <InputBox
                 height="100%"
@@ -201,19 +216,18 @@ const MyPageName = () => {
             </InpuTitle>
             <p>{msgEmail}</p>
 
-            <MyPageButton
-                onClick={onClickCheck}
-                disabled = {!allChecksTrue()}
-              >정보 확인</MyPageButton>
+            <MyPageButton onClick={onClickCheck} disabled={!allChecksTrue()}>
+              정보 확인
+            </MyPageButton>
           </InputTag>
         </>
       )}
 
       {isNewVisible && (
-        <InputTag>
+        <InputTag height="30%">
           {checkedInfo && (
             <>
-              <p>새로운 이름을 입력하시오.</p>
+              <p>새로운 회원 이름을 입력하시오.</p>
               <InputBox
                 width="60%"
                 height="10%"
@@ -222,22 +236,23 @@ const MyPageName = () => {
                 onChange={onModifyName}
               />
               <p>{msg}</p>
-
-              <StyledButton
-                value="이름 변경"
-                width="40%"
-                height="7%"
-                onClick={onClickModifyName}
-              ></StyledButton>
+              {checkTrue && (
+                <StyledButton
+                  value="회원 이름 변경"
+                  width="40%"
+                  height="7%"
+                  onClick={onClickModifyName}
+                ></StyledButton>
+              )}
+              <Modal open={rst} close={closeModal}>
+                회원 이름이 변경되었습니다.
+              </Modal>
             </>
           )}
-          <Modal open = {rst} close = {closeModal}  >
-              회원정보가 변경되었습니다.
-          </Modal>
         </InputTag>
       )}
     </>
   );
 };
 
-export default MyPageName;
+export default MyPagePW;

@@ -2,6 +2,7 @@ import styled from "styled-components";
 import CartModal from "../utils/CartModal";
 import PurchaseModal from "../utils/PurchaseModal";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const BookPurchaseBlock = styled.div`
   display: flex;
@@ -61,10 +62,10 @@ const BookPurchase = ({
   isPurchased,
   onAddToCart,
   onPurchase,
-  onPreview,
+  bookUrl,
 }) => {
   const { title, author, publisher, price, description, imageUrl } = info;
-
+  const navigate = useNavigate();
   const [cartModalOpen, setCartModalOpen] = useState(false);
   const [purchaseModalOpen, setPurchaseModalOpen] = useState(false);
 
@@ -92,8 +93,8 @@ const BookPurchase = ({
     openPurchaseModal();
   };
 
-  const viewPreview = () => {
-    onPreview();
+  const goToViewerPage = () => {
+    navigate("/viewerpage", { state: { contentUrl: bookUrl } });
   };
 
   return (
@@ -111,7 +112,7 @@ const BookPurchase = ({
           <p>{description}</p>
           <div className="buttons">
             {isPurchased ? (
-              <button onClick={viewPreview}>미리보기</button>
+              <button onClick={goToViewerPage}>뷰어 열기</button>
             ) : (
               <>
                 {isLoggedIn ? (

@@ -14,13 +14,18 @@ import { BooksProvider } from "./contexts/BookInfoContext";
 import { ViewerPageEpub } from "./pages/ViewerPageEpub";
 import { ViewerPagePdf } from "./pages/ViewerPagePdf";
 import { ViewerPageTxt } from "./pages/ViewerPageTxt";
+import DoNotShowInLogIn from "./components/mainPageComp/smallComps/DoNotShowInLogIn";
+import GlobalStyle from "./globalStyle/GlobalStyle";
+import { WhatIBoughtPage } from "./pages/WhatIBoughtPage";
 
 function App() {
   return (
     <>
+      <GlobalStyle />
       <BooksProvider>
         <UserProvider>
           <BrowserRouter>
+            <DoNotShowInLogIn />
             <Routes>
               <Route path="/" element={<MainPage />} />
               <Route path="/login" element={<Login />} />
@@ -55,6 +60,7 @@ function App() {
               <Route path="/MyPage" element={<MyPage />} />
               <Route path="/ViewerPagePdf" element={<ViewerPagePdf />} />
               <Route path="/ViewerPageTxt" element={<ViewerPageTxt />} />
+              <Route path="/WhatIBoughtPage" element={<WhatIBoughtPage />} />
             </Routes>
           </BrowserRouter>
         </UserProvider>

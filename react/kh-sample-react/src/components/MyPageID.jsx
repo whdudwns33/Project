@@ -1,12 +1,11 @@
 import { useState, useReducer } from "react";
 import { reducer } from "../pages/MyPage";
-import MyPageAxiosApi from "../api/MyPageAxiosApi";
-import { InputBox, InputTag, InpuTitle, MyPageButton } from "./MyPageComp";
+import { InputBox, InputTag, InpuTitle, MyPageButton, P } from "./MyPageComp";
 import { StyledButton } from "../globalStyle/StyledButton";
 import { useNavigate } from "react-router-dom/dist";
-import sha256 from "sha256";
 import Modal from "../utils/LoginModal";
-
+import MyPageAxiosApi from "../api/MyPageAxiosApi";
+import sha256 from "sha256";
 
 const MyPageID = () => {
   const navigate = useNavigate();
@@ -23,8 +22,8 @@ const MyPageID = () => {
     setRst(false);
     navigate("/");
     window.location.reload();
-  }
-  
+  };
+
   const [msgName, setNameMsg] = useState("이름 형식에 맞추어 입력하시오.");
   const [msgId, setIdMsg] = useState("아이디 형식에 맞추어 입력하시오.");
   const [msgPw, setPwMsg] = useState("비밀번호 형식에 맞추어 입력하시오.");
@@ -64,12 +63,12 @@ const MyPageID = () => {
         inputPw
       )
     ) {
-      dispatch({type : "Pw", value: inputPw});
-      // const hashedPassword = sha256(inputPw).toString();
-      // dispatch({ type: "Pw", value: hashedPassword });
+      dispatch({ type: "Pw", value: inputPw });
+      const hashedPassword = sha256(inputPw).toString();
+      dispatch({ type: "Pw", value: hashedPassword });
       setPwMsg("유효합니다.");
       setCheckPw(true);
-      // console.log(hashedPassword);
+      console.log(hashedPassword);
     } else {
       dispatch({ type: "Pw", value: false });
       setPwMsg("유효하지 않습니다.");
@@ -101,7 +100,6 @@ const MyPageID = () => {
     return checkName && checkId && checkPw && checkEmail;
   };
 
-
   // 백엔드 이후 체크된 정보를 토대로 true or false
   const [checkedInfo, setCheckedInfo] = useState(false);
 
@@ -128,7 +126,6 @@ const MyPageID = () => {
     }
   };
   // 아이디 중복 체크
-  
 
   // 아이디 변경 클릭 함수
   const [checkTrue, setCheckTrue] = useState(false);
@@ -139,8 +136,6 @@ const MyPageID = () => {
       if (chId.data === true) {
         console.log("아이디 변경");
         setRst(true);
-       
-
       } else {
         setCheckTrue(false);
         console.log("아이디 변경 실패");
@@ -156,15 +151,25 @@ const MyPageID = () => {
   const [isNewVisible, setNewIsVisible] = useState(false);
   return (
     <>
-      <h1>아이디 변경</h1>
       {isOldVisible && (
         <>
           <InputTag>
-            <p>아이디를 변경합니다.</p>
+            <h1
+              style={{
+                border: "bold",
+                fontSize: "1.5rem",
+                borderBottom: "3px solid black",
+              }}
+            >
+              아이디 변경
+            </h1>
+            <p>
+              아이디를 변경합니다. 회원 정보 확인을 위해서 회원의 이름, 아이디,
+              비밀번호, 이메일을 입력하세요.
+            </p>
+
             <InpuTitle>
               <InputBox
-                height="100%"
-                width="70%"
                 placeholder="이름"
                 type="text"
                 onBlur={onChangeName}
@@ -174,8 +179,6 @@ const MyPageID = () => {
             <p>{msgName}</p>
             <InpuTitle>
               <InputBox
-                height="100%"
-                width="70%"
                 placeholder="아이디"
                 type="text"
                 onChange={onChangeId}
@@ -184,8 +187,6 @@ const MyPageID = () => {
             <p>{msgId}</p>
             <InpuTitle>
               <InputBox
-                height="100%"
-                width="70%"
                 placeholder="비밀번호"
                 type="password"
                 onChange={onChangePw}
@@ -194,33 +195,27 @@ const MyPageID = () => {
             <p>{msgPw}</p>
             <InpuTitle>
               <InputBox
-                height="100%"
-                width="70%"
                 placeholder="이메일"
                 type="text"
                 onChange={onChangeEmail}
               />
             </InpuTitle>
             <p>{msgEmail}</p>
-
-            {(
-              <MyPageButton
-                onClick={onClickCheck}
-                disabled = {!allChecksTrue()}
-              >정보 확인</MyPageButton>
-            )}
+            <MyPageButton onClick={onClickCheck} disabled={!allChecksTrue()}>
+              정보 확인
+            </MyPageButton>
           </InputTag>
         </>
       )}
 
       {isNewVisible && (
-        <InputTag>
+        <InputTag height="30%">
           {checkedInfo && (
             <>
               <p>새로운 아이디를 입력하시오.</p>
               <InputBox
-                width="60%"
-                height="10%"
+                height="100%"
+                width="70%"
                 placeholder="NEW ID"
                 type="text"
                 onChange={onModifyId}
@@ -236,7 +231,7 @@ const MyPageID = () => {
                   onClick={onClickModifyId}
                 ></StyledButton>
               )}
-              <Modal open = {rst} close = {closeModal}  >
+              <Modal open={rst} close={closeModal}>
                 회원정보가 변경되었습니다.
               </Modal>
             </>

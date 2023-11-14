@@ -25,7 +25,7 @@ export const BooksProvider = ({ children }) => {
     try {
       const response = await BookAxiosApi.getBooks(); // API를 호출하여 책 목록을 가져옵니다.
       setBooks(response.data); // 가져온 책 목록으로 상태를 업데이트합니다.
-      console.log(response);
+      // console.log(response);
     } catch (error) {
       // console.error('책 목록을 가져오는데 실패했습니다:', error); // 오류 발생 시 콘솔에 로그를 출력합니다.
     }

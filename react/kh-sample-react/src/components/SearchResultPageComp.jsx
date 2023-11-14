@@ -48,7 +48,7 @@ const Card = styled.div`
   }
 `;
 
-export const SearchResultPageComp = ({ book }) => {
+export const SearchResultPageComp = ({ book = [] }) => {
   const [show, setShow] = useState(false);
   const [bookItem, setItem] = useState(null);
 

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 // 버튼
-const Button = styled.button`
+export const Button = styled.button`
   margin: 5px;
   position: relative;
   padding: 0;
@@ -25,7 +25,6 @@ const Button = styled.button`
     }
   }
   &:hover {
-    
   }
 `;
 

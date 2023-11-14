@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Th } from "../globalStyle/StyledTable";
 import { Td } from "../globalStyle/StyledTable";
 import { Table } from "../globalStyle/StyledTable";
-import { StyledTop } from "../globalStyle/StyledTop";
 import { MiddleOrderBox } from "../globalStyle/MiddleOrderBox";
 import { Input } from "../globalStyle/StyledTable";
 import { TableBox } from "../globalStyle/StyledTable";
@@ -10,8 +9,22 @@ import { storage } from "../api/firebase";
 import { StyledTd } from "../globalStyle/StyledTable";
 import { StyledButton } from "../globalStyle/StyledButton";
 import { MemberAdminApi } from "../api/MemberAdminApi";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { StyledTitle } from "../globalStyle/StyledTitle";
 
 export const MemberAdminPage = () => {
+  // 사용자 권한 정보 가져오기
+  const navigateLocation = useLocation();
+  const auth = navigateLocation.state ? navigateLocation.state.userAuth : null;
+  console.log("회원 관리 페이지, 권한 : " + auth);
+
+  const navigate = useNavigate();
+  if (auth !== 1) {
+    // 관리자 권한이 없다면,
+    navigate("/"); // 자동으로 다시 메인 페이지로 이동하게
+  }
+
   const [memberList, setMemberList] = useState([]);
   const [newMember, setNewMember] = useState({
     id: "",
@@ -154,10 +167,9 @@ export const MemberAdminPage = () => {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <StyledTop></StyledTop>
         <MiddleOrderBox>
           <TableBox>
-            <h1>회원 관리 페이지</h1>
+            <StyledTitle>회원 관리 페이지</StyledTitle>
             <Table>
               <thead>
                 <tr>
@@ -256,7 +268,9 @@ export const MemberAdminPage = () => {
                   <StyledTd>
                     <div>
                       <input type="file" onChange={handleFileInputChange} />
-                      <button type="button" onClick={handleUploadClick}>Upload</button> 
+                      <button type="button" onClick={handleUploadClick}>
+                        Upload
+                      </button>
                     </div>
 
                     {url && <img src={url} alt="uploaded" />}

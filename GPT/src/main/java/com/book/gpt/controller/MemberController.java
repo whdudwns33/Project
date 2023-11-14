@@ -1,17 +1,21 @@
 package com.book.gpt.controller;
 
+import com.book.gpt.JWT.CustomUserDetailsServiceImpl;
 import com.book.gpt.JWT.JwtAuthorizationFilter;
 import com.book.gpt.dao.MemberDAO;
 import com.book.gpt.dao.MemberDAO2;
 import com.book.gpt.dto.MemberDTO;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +29,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/users")
 public class MemberController {
+
     @Value("${jwt.secret}") // application.properties에서 설정 가져오기
     private String jwtSecretKey;
     @Autowired
@@ -34,6 +39,8 @@ public class MemberController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;   // Add this line
+    @Autowired
+    private CustomUserDetailsServiceImpl customUserDetailsService;
 
     // 로그인
     @PostMapping("/login")
@@ -41,15 +48,23 @@ public class MemberController {
         String id = loginData.get("id");
         String pwd = loginData.get("password");
 
-//        MemberDTO user = dao.findId(id);
-
+//        MemberDTO user = dao.findId(id
 
         boolean loginResult = dao.loginCheck(id, pwd);
         System.out.println(loginResult);
         if (loginResult) {
             // 로그인 성공 시 토큰 생성
-            String role = dao.findRoleById(id); // 사용자의 권한 정보를 가져옴
+//            String role = dao.findRoleById(id); // 사용자의 권한 정보를 가져옴
+//            System.out.println(role);
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(id); // UserDetails 객체를 가져옴
+            System.out.println(userDetails);
+            String role = userDetails.getAuthorities().stream() // 권한 정보를 가져옴
+                    .map(GrantedAuthority::getAuthority)
+                    .findFirst().orElse("ROLE_USER"); // 권한이 없는 경우 기본값으로 "ROLE_USER"를 사용
             System.out.println(role);
+
+            MemberDTO user = dao.findId(id); // 사용자 정보 조회
+            user.setLoginType("general"); // 로그인 타입 설정
             String token = jwtAuthorizationFilter.generateToken(id, role);
             // 클라이언트에게 토큰 반환
             return new ResponseEntity<>(token, HttpStatus.OK);
@@ -153,8 +168,65 @@ public class MemberController {
         String[] parts = token.split("\\.");
         return parts.length == 3;
     }
+    @GetMapping("/check-kakao-login")
+    public ResponseEntity<String> checkKakaoLogin(@RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.substring("Bearer ".length());
+        final String requestUrl = "https://kapi.kakao.com/v1/user/access_token_info";
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + token);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> responseEntity = restTemplate.exchange(requestUrl, HttpMethod.GET, new HttpEntity<>(headers), String.class);
 
+        if(responseEntity.getStatusCode() == HttpStatus.OK) {
+            return new ResponseEntity<>("User is logged in with Kakao", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("User is not logged in with Kakao", HttpStatus.UNAUTHORIZED);
+        }
+    }
+    @PostMapping("/kakao-login")
+    public ResponseEntity<String> kakaoLogin(@RequestBody Map<String, Object> kakaoData) {
+        // 카카오 토큰 추출
+        String kakaoToken = (String) kakaoData.get("access_token");
+
+        // Check if 'access_token' is provided
+        if (kakaoToken == null || kakaoToken.isEmpty()) {
+            return new ResponseEntity<>("Invalid or missing Kakao token", HttpStatus.BAD_REQUEST);
+        }
+
+        // 카카오 사용자 정보 조회
+        String kakaoUserInfo = requestKakaoUserInfo(kakaoToken);
+
+        // JSON 파싱
+        JSONObject jsonObject = new JSONObject(kakaoUserInfo);
+        String kakaoId = jsonObject.get("id").toString();
+        String kakaoNickname = jsonObject.getJSONObject("properties").get("nickname").toString();
+
+        // 회원 정보 조회 및 처리
+        if (!dao.kakaoSignupCheck(kakaoNickname)) {
+            // 카카오 닉네임이 가입되어 있지 않은 경우, 회원 가입 후 로그인 처리
+            System.out.println(kakaoNickname);
+            MemberDTO member = new MemberDTO();
+            member.setId(kakaoNickname);
+            dao.kakaoSignup(member);
+        }
+
+        // 카카오 닉네임이 이미 가입되어 있는 경우(또는 방금 가입한 경우), 로그인 처리
+        MemberDTO user = dao.findId(kakaoNickname); // 사용자 정보 조회
+        user.setLoginType("kakao"); // 로그인 타입 설정
+        String token = jwtAuthorizationFilter.generateToken(kakaoNickname, "ROLE_USER");
+        return new ResponseEntity<>(token, HttpStatus.OK);
+    }
+
+    private String requestKakaoUserInfo(String kakaoToken) {
+        final String requestUrl = "https://kapi.kakao.com/v2/user/me";
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + kakaoToken);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> responseEntity = restTemplate.exchange(requestUrl, HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        System.out.println("Kakao API Response: " + responseEntity.getBody());
+        return responseEntity.getBody();
+    }
     // 조영준
     // 회원 정보 조회
     @GetMapping("/member")
@@ -170,7 +242,6 @@ public class MemberController {
             System.out.println("Tel: " + member.getTel());
             System.out.println("Cash: " + member.getCash());
             System.out.println("Role: " + member.getRole());
-            System.out.println("Profile: " + member.getProfileUrl());
             System.out.println("-----------------------------");
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
@@ -181,15 +252,6 @@ public class MemberController {
         MemberDAO dao = new MemberDAO();
         boolean isTrue = dao.memberCheck(name, id, pw, email);
         return new ResponseEntity<>(isTrue, HttpStatus.OK);
-    }
-    // 새로운 아이디 중복 검사
-    @PostMapping("/checkId")
-    public ResponseEntity<Boolean> checkID (@RequestBody Map<String, String> chckId) {
-        MemberDAO dao = new MemberDAO();
-        String newId = chckId.get("id");
-        System.out.println("새로운 아이디 : " + newId);
-        boolean istrue = dao.isIdcheck(newId);
-        return new ResponseEntity<>(istrue, HttpStatus.OK);
     }
     // 아이디 변경
     @PostMapping("/updateId")
@@ -240,6 +302,7 @@ public class MemberController {
         System.out.println("충전 여부" + isTrue);
         return new ResponseEntity<>(isTrue, HttpStatus.OK);
     }
+    // 이미지 업로드
     @PostMapping("/setImage")
     public ResponseEntity<Boolean> setImage (@RequestBody Map<String, String> setImageUrl) {
         String getId = setImageUrl.get("id");
@@ -249,5 +312,4 @@ public class MemberController {
         System.out.println(isTrue);
         return new ResponseEntity<>(isTrue, HttpStatus.OK);
     }
-
 }

@@ -21,16 +21,16 @@ public class AdminMemberDAO {
         try {
             return jdbcTemplate.query(sql, (rs, rowNum) ->
                     new MemberDTO(
-                            rs.getString("id"),
-                            rs.getString("password"),
-                            rs.getString("name"),
-                            rs.getString("email"),
-                            rs.getString("tel"),
-                            rs.getInt("cash"),
-                            rs.getInt("auth"),
-                            rs.getString("profile_url"),
-                            null, // authorities
-                            null // role
+//                            rs.getString("id"),
+//                            rs.getString("password"),
+//                            rs.getString("name"),
+//                            rs.getString("email"),
+//                            rs.getString("tel"),
+//                            rs.getInt("cash"),
+//                            rs.getInt("auth"),
+//                            rs.getString("profile_url"),
+//                            null, // authorities
+//                            null // role
                     ));
         } catch (DataAccessException e) {
             throw new RuntimeException("회원 정보를 조회하는 데 실패했습니다.", e);

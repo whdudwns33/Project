@@ -1,44 +1,47 @@
 import React from "react";
-import { useInView } from "react-intersection-observer";
-import styled, { css } from "styled-components";
 import Main from "../components/mainPageComp/Main";
-import { StyledTop } from "../globalStyle/StyledTop";
-import { StyledBackground } from "../globalStyle/StyledBackground";
 import Footer from "../components/mainPageComp/Footer";
-import { useEffect } from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/Context";
 
-const fadeInOutAnimation = css`
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-  ${({ inView }) =>
-    inView
-      ? `opacity: 1; transform: translateY(0px);`
-      : `opacity: 0; transform: translateY(-30px);`}
-`;
+const SubscribeButton = styled.button`
+  display: block;
+  position: fixed;
+  bottom: 16px; 
+  left: 50%;
+  transform: translateX(-50%);
 
-const AnimatedStyledTop = styled(StyledTop)`
-  ${fadeInOutAnimation}
+  z-index: 9999;
+  
+  width: 350px; 
+  background: var(--black); 
+  color: var(--white); 
+  border-radius: 30px; 
+  padding: 16px 0; 
+  font-size: 16px; 
+  line-height: 1.5; 
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16); 
+  transition: 0.3s linear;
+  &:hover {
+    
+    transform: translateX(-50%) scale(1.05);
+  }
 `;
 
 export const MainPage = () => {
-  const { checkLoginStatus, isLoggedin, user } = useUser();
+  const navigate = useNavigate();
+  const { isLoggedin } = useUser();
 
-  const [topRef, topInView] = useInView({
-    threshold: 0.1,
-    triggerOnce: false, // To ensure the animation occurs every time the component enters or leaves the viewport
-  });
-
-  useEffect(() => {
-    console.log(user);
-    console.log("로그인 상태" + isLoggedin);
-  }, []);
   return (
     <>
-      <AnimatedStyledTop ref={topRef} inView={topInView} />
-      <StyledBackground>
-        <Main />
-        <Footer />
-      </StyledBackground>
+      <Main />
+      <Footer />
+      {!isLoggedin && ( 
+        <SubscribeButton onClick={() => navigate("/login")}>독서 시작하기</SubscribeButton>
+      )}
     </>
   );
 };

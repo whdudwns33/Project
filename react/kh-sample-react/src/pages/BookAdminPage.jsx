@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Th } from "../globalStyle/StyledTable";
 import { Td } from "../globalStyle/StyledTable";
 import { Table } from "../globalStyle/StyledTable";
-import { StyledTop } from "../globalStyle/StyledTop";
 import { MiddleOrderBox } from "../globalStyle/MiddleOrderBox";
 import { Input } from "../globalStyle/StyledTable";
 import { TableBox } from "../globalStyle/StyledTable";
@@ -10,6 +9,7 @@ import { storage } from "../api/firebase";
 import { StyledTd } from "../globalStyle/StyledTable";
 import { StyledButton } from "../globalStyle/StyledButton";
 import { BookAxiosApi } from "../api/BookAxiosApi";
+import { StyledTitle } from "../globalStyle/StyledTitle";
 
 export const BookAdminPage = () => {
   const [bookList, setBookList] = useState([]);
@@ -174,6 +174,7 @@ export const BookAdminPage = () => {
       console.error("파일 업로드에 실패했습니다.", error);
     }
   };
+
   const handleUploadForContent = async () => {
     const storageRef = storage.ref();
     const fileRef = storageRef.child(fileForContent.name);
@@ -190,10 +191,9 @@ export const BookAdminPage = () => {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <StyledTop></StyledTop>
         <MiddleOrderBox>
           <TableBox>
-            <h1>책 관리 페이지</h1>
+            <StyledTitle>책 관리 페이지</StyledTitle>
             <Table>
               <thead>
                 <tr>

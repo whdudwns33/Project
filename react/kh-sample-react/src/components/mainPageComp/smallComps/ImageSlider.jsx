@@ -44,7 +44,7 @@ const ImageSliderContainer = styled.div`
   height: 50vh;
   overflow: hidden;
   position: relative;
-  margin-top: -50px;
+  
 `;
 
 // 각 이미지 스타일을 정의합니다.

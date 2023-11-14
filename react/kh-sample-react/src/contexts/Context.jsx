@@ -36,24 +36,64 @@ export const UserProvider = ({ children }) => {
   };
 
   // checkLoginStatus 함수는 비동기로 로그인 상태를 체크합니다.
+  // const checkLoginStatus = async () => {
+  //   try {
+  //     // 로컬 스토리지에서 'authToken'이라는 키로 저장된 토큰을 가져옵니다.
+  //     const token = window.localStorage.getItem("authToken");
+  //     // AxiosApi를 통해 로그인 상태를 체크하는 API를 호출하고, 토큰을 인자로 전달합니다.
+  //     const response = await AxiosApi.checkLogin(token);
+  //     // console.log(response.data); // 응답 데이터를 콘솔에 출력합니다.
+  //     // 응답에서 "User is logged in" 메시지를 받으면 사용자가 로그인한 것으로 간주하고, login 함수를 호출합니다.
+  //     if (response.data.message === "User is logged in") {
+  //       login(response.data.user, token);
+  //       console.log(`로그인 상태`);
+  //     } else {
+  //       // 그렇지 않다면 logout 함수를 호출하여 사용자를 로그아웃 처리합니다.
+  //       logout();
+  //       console.log("로그아웃 상태");
+  //     }
+  //   } catch (error) {
+  //     // API 호출 중 에러가 발생하면 콘솔에 에러를 출력하고, logout 함수를 호출합니다.
+  //     console.error("Error checking login status:", error);
+  //     logout();
+  //   }
+  // };
+  // 컨텍스트에 checkLoginStatus 함수 추가
   const checkLoginStatus = async () => {
     try {
-      // 로컬 스토리지에서 'authToken'이라는 키로 저장된 토큰을 가져옵니다.
-      const token = window.localStorage.getItem("authToken");
-      // AxiosApi를 통해 로그인 상태를 체크하는 API를 호출하고, 토큰을 인자로 전달합니다.
-      const response = await AxiosApi.checkLogin(token);
-      // console.log(response.data); // 응답 데이터를 콘솔에 출력합니다.
-      // 응답에서 "User is logged in" 메시지를 받으면 사용자가 로그인한 것으로 간주하고, login 함수를 호출합니다.
+      const token = window.localStorage.getItem("authToken"); // 로컬 스토리지에서 토큰 가져오기
+      const response = await AxiosApi.checkLogin(token); // 토큰을 인자로 전달
       if (response.data.message === "User is logged in") {
-        login(response.data.user, token);
+        if (response.data.user.loginType === "kakao") {
+          // 카카오 로그인 상태 확인
+          const kakaoResponse = await AxiosApi.checkKakaoLogin(token);
+          if (kakaoResponse.status === 200) {
+            // 카카오 로그인 사용자의 정보 가져오기
+            console.log(kakaoResponse);
+            const kakaoUserInfoResponse = await AxiosApi.getKakaoUserInfo(
+              token
+            );
+            if (kakaoUserInfoResponse.status === 200) {
+              login(kakaoUserInfoResponse.data, token);
+            }
+          }
+        } else {
+          const userInfoResponse = await AxiosApi.getUserInfo(
+            response.data.user.id
+          );
+          if (userInfoResponse.status === 200) {
+            login(userInfoResponse.data, token);
+          }
+        }
+        console.log(response.data.user.cash);
+        console.log(response.data.user.id);
+        console.log(response.data.user.loginType);
         console.log(`로그인 상태`);
       } else {
-        // 그렇지 않다면 logout 함수를 호출하여 사용자를 로그아웃 처리합니다.
         logout();
         console.log("로그아웃 상태");
       }
     } catch (error) {
-      // API 호출 중 에러가 발생하면 콘솔에 에러를 출력하고, logout 함수를 호출합니다.
       console.error("Error checking login status:", error);
       logout();
     }

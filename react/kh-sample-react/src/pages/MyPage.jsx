@@ -4,10 +4,16 @@ import {
   Left,
   Imagine,
   InfoBox,
-  LeftButton,
+  RightButton,
   Right,
   RightInfo,
   SetButton,
+  DivRowt,
+  LeftDiv,
+  Information,
+  Body,
+  Img,
+  DivRow,
 } from "../components/MyPageComp";
 import { StyledButton } from "../globalStyle/StyledButton";
 import MyPageID from "../components/MyPageID";
@@ -15,13 +21,12 @@ import MyPagePW from "../components/MyPagePW";
 import MyPageDELETE from "../components/MyPageDelete";
 import MyPageCash from "../components/MyPageCash";
 import MyPageName from "../components/MyPageName";
-import AxiosApi from "../api/MyPageAxiosApi";
 import ProfileImage from "../components/MyPageProfile";
 import { useUser } from "../contexts/Context";
 import Footer from "../components/mainPageComp/Footer";
 import { useNavigate } from "react-router-dom";
-import { StyledTop } from "../globalStyle/StyledTop";
 import Modal from "../utils/LoginModal";
+import MyPageAxiosApi from "../api/MyPageAxiosApi";
 
 // 입력받은 정보를 객체로 저장하는 함수 reducer
 
@@ -43,26 +48,26 @@ export const reducer = (data, action) => {
 const MyPage = () => {
   const navigate = useNavigate();
   // 로그인 정보를 받아오는 context
-  const { checkLoginStatus, isLoggedin, user } = useUser();
+  const { checkLoginStatus, isLoggedin, user, token } = useUser();
   // 회원정보 조회
   const [memberInformation, setMemberInfo] = useState("");
   const [modal, setModal] = useState(false);
   const closeModal = () => {
     setModal(false);
     navigate("/");
-  }
-
+  };
   useEffect(() => {
-    checkLoginStatus();
-    if (isLoggedin !== true) {
-      setModal(true);
-    }
-  }, [isLoggedin]);
+    checkLoginStatus(() => {
+      if (!token) {
+        setModal(true);
+      }
+    });
+  }, [token]);
 
   useEffect(() => {
     const memberInfo = async () => {
       if (isLoggedin && user) {
-        const rsp = await AxiosApi.memberGet(user.id);
+        const rsp = await MyPageAxiosApi.memberGet(user.id);
         if (rsp.status === 200) {
           console.log(rsp.data[0].profileUrl);
           console.log(user.id);
@@ -74,10 +79,10 @@ const MyPage = () => {
     if (user && user.id) {
       memberInfo();
     }
-  }, [user, isLoggedin]); // 의존성 배열에 user 추가
+  }, [user, token]); // 의존성 배열에 user 추가
 
   // 초기 상태 설정
-  const [rightIdInfo, setRightIdInfo] = useState(false);
+  const [rightIdInfo, setRightIdInfo] = useState(true);
   const [rightPwInfo, setRightPwInfo] = useState(false);
   const [rightCash, setRightCash] = useState(false);
   const [rightMember, setRightMember] = useState(false);
@@ -87,8 +92,6 @@ const MyPage = () => {
   const onClckCloseRight = () => {
     setIsRightVisible(!isRightVisible);
   };
-
- ;
 
   const handleButtonClick = (isId, isPw, isCash, isMember, isName) => {
     setIsRightVisible(true);
@@ -102,49 +105,59 @@ const MyPage = () => {
   // ID 변경 버튼 클릭
   const onClickId = () => {
     handleButtonClick(true, false, false, false, false);
-
   };
 
   // Pw 변경 버튼 클릭
   const onClickPw = () => {
     handleButtonClick(false, true, false, false, false);
-
   };
 
   // Cash 충전 버튼 클릭
   const onClickCash = () => {
     handleButtonClick(false, false, true, false, false);
-
   };
 
   // 회원 탈퇴 버튼 클릭
   const onClickMember = () => {
     handleButtonClick(false, false, false, true, false);
-
   };
 
   // 회원 탈퇴 버튼 클릭
   const onClickName = () => {
     handleButtonClick(false, false, false, false, true);
-
   };
 
-  
-
   return (
-    <>
-    <Modal open={modal} close={closeModal}>로그인 상태가 아닙니다! </Modal>
-    <StyledTop></StyledTop>
+    <Body>
+      <Modal open={modal} close={closeModal}>
+        로그인 상태가 아닙니다!
+      </Modal>
       <Container>
         <Left>
-        {memberInformation.profileUrl}
-          <Imagine src = {memberInformation.profileUrl}>
-
+          {/* {memberInformation.profileUrl} */}
+          <Imagine>
+            <Img src={memberInformation.profileUrl} alt="이미지 사진" />
             <ProfileImage />
           </Imagine>
-         
-          <LeftButton>
-          <StyledButton
+          <InfoBox>
+            <DivRow>
+              <p>NAME.</p> <p>{memberInformation.name}</p>
+            </DivRow>
+            <DivRowt>
+              <Information>EMAIL.</Information>{" "}
+              <Information>{memberInformation.email}</Information>
+            </DivRowt>
+            <DivRowt>
+              <Information>TEL.</Information>{" "}
+              <Information>{memberInformation.tel}</Information>
+            </DivRowt>
+            <DivRow>
+              <p>CASH.</p>
+              <p>{memberInformation.cash}</p>
+            </DivRow>
+          </InfoBox>
+          <LeftDiv>
+            <StyledButton
               value="이름 변경"
               width="80%"
               height="20%"
@@ -174,31 +187,10 @@ const MyPage = () => {
               height="20%"
               onClick={onClickMember}
             ></StyledButton>
-            
-          </LeftButton>
+          </LeftDiv>
         </Left>
 
-        <Right isvisible={isRightVisible}>
-        <InfoBox>
-           
-            
-           <table>
-             <thead>
-               <tr>
-                 <th>NAME.</th>
-                 <th>EMAIL.</th>
-                 <th>TEL.</th>
-                 <th>CASH.</th>
-               </tr>
-             </thead>
-             <tbody>
-               <td>{memberInformation.name}</td>
-               <td>{memberInformation.email}</td>
-               <td>{memberInformation.tel}</td>
-               <td>{memberInformation.cash}</td>
-               </tbody>
-           </table>
-                 </InfoBox>
+        <Right isVisible={isRightVisible}>
           {/* 아이디 변경 */}
           {rightIdInfo && (
             <RightInfo>
@@ -233,10 +225,42 @@ const MyPage = () => {
               <SetButton onClick={onClckCloseRight}>닫기버튼</SetButton>
             </RightInfo>
           )}
+          <RightButton>
+            <StyledButton
+              value="이름 변경"
+              width="80%"
+              height="20%"
+              onClick={onClickName}
+            ></StyledButton>
+            <StyledButton
+              value="아이디 변경"
+              width="80%"
+              height="20%"
+              onClick={onClickId}
+            ></StyledButton>
+            <StyledButton
+              value="비밀번호 변경"
+              width="80%"
+              height="20%"
+              onClick={onClickPw}
+            ></StyledButton>
+            <StyledButton
+              value="금액 충전"
+              width="80%"
+              height="20%"
+              onClick={onClickCash}
+            ></StyledButton>
+            <StyledButton
+              value="회원 탈퇴"
+              width="80%"
+              height="20%"
+              onClick={onClickMember}
+            ></StyledButton>
+          </RightButton>
         </Right>
       </Container>
       <Footer></Footer>
-    </>
+    </Body>
   );
 };
 

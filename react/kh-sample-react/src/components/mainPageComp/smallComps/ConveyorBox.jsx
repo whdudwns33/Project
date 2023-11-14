@@ -6,6 +6,11 @@ import styled from "styled-components";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+const ButtonWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  margin-top: 20px;
+`;
 // SliderWrapper 스타일링
 const SliderWrapper = styled.div`
   width: 1920px;
@@ -14,8 +19,9 @@ const SliderWrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-right: 20px;
-    padding: 40px;
+
+    padding: 30px;
+    margin-right: 30px;
     object-fit: contain;
     will-change: transform;
 
@@ -39,6 +45,20 @@ const SliderWrapper = styled.div`
 
   .slick-track {
     display: flex;
+  }
+`;
+
+// 리렌더링 되었을때 간지나게 초밥벨트 등장
+const StyledSliderWrapper = styled(SliderWrapper)`
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeIn 1s forwards;
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 `;
 
@@ -81,132 +101,137 @@ const ToggleSlidersWrapper = styled.div`
   z-index: 10;
 `;
 
-// ToggleButton 스타일링
-const ToggleButton = styled.button`
-  padding: 10px 20px;
-  margin: 20px;
-  cursor: pointer;
-  border: none;
-  background-color: #333;
-  color: white;
-  border-radius: 5px;
+// Button 스타일링
+const Button = styled.button`
+  margin: 5px;
+  border: 1.8px solid #242424;
+  font-weight: bolder;
+  padding: 6px 16px;
+  background-color: var(--gray);
+  color: var(--black);
+  border-radius: 100px;
   font-size: 16px;
   transition: background-color 0.3s ease;
+  cursor: pointer;
 
   &:hover {
-    background-color: #555;
+    background-color: var(--black);
+    color: var(--white);
   }
 `;
 
 // ConveyorBox 컴포넌트
-const ConveyorBox = ({ images = [] }) => {
+const ConveyorBox = () => {
   const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
-  const { books, refreshBooks } = useBookInfo();
+  const { books } = useBookInfo(); // API 호출 함수 사용
 
-  useEffect(() => {
-    refreshBooks();
-  }, []);
+  // 정렬 기준을 위한 useState
+  const [sortedBooks, setSortedBooks] = useState([]);
+  // 정렬이 됐으면 리렌더링을 해야 된다더라 아오
+  const [reRender, setReRender] = useState(false);
+  const [activeSortOrder, setActiveSortOrder] = useState("");
 
-  // console.log(books);
-
-  const settings = {
-    infinite: true,
-    speed: 20000,
-    slidesToShow: 6,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 0,
-    cssEase: "linear",
+  const sortBooks = (order) => {
+    if (order === activeSortOrder) {
+      // 이미 활성화된 정렬 기준이면 정렬 x , 빡세다 빡세
+      return;
+    }
+    let sorted;
+    if (order === "latest") {
+      // parseInt로 정수형으로 변경하면 , 해당 함수는 xxxx-xx-xx 인 경우 - 가 인식 되면 중단돰 , 그래서 날짜로 타입변환후 비교
+      sorted = [...books].sort(
+        (a, b) =>
+          new Date(b.publishYear).getTime() - new Date(a.publishYear).getTime()
+      );
+      // console.log(sorted);
+    } else if (order === "bestselling") {
+      sorted = [...books].sort((a, b) => b.purchaseCount - a.purchaseCount);
+      // console.log(sorted);
+    }
+    setSortedBooks(sorted);
+    setReRender((prev) => !prev);
+    setActiveSortOrder(order);
   };
 
-  const reverseSettings = {
-    ...settings,
-    rtl: true,
-  };
-
-  const handleToggle = () => {
-    setIsVisible(!isVisible);
+  const handleSortChange = (order) => {
+    sortBooks(order);
   };
 
   const handleImageClick = (id) => {
-    navigate(`/AboutBookPage/${id}`); // 'navigate' 함수에 경로를 직접 전달합니다.
+    console.log(id);
+    navigate("/PurchasePage", { state: { bookId: id } });
   };
+
+  const renderSlider = (settings) => (
+    <Slider {...settings}>
+      {sortedBooks.map((book, index) => (
+        <div key={book.id || index}>
+          <ImageSliderItem
+            src={book.imageUrl}
+            alt={"이미지"}
+            onClick={() => handleImageClick(book.id)}
+          />
+        </div>
+      ))}
+    </Slider>
+  );
+
+  useEffect(() => {
+    setSortedBooks(books);
+    // console.log(books);
+  }, [books]);
+
+  // 회전 초밥 설정
+  const settings = {
+    infinite: true,
+    speed: 20000,
+    slidesToShow: 3, // 데이터 베이스에 존재하는 책의 숫자보다 적게 설정
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 10,
+    cssEase: "linear",
+  };
+
+  const reverseSettings = { ...settings, rtl: true };
 
   return (
     <>
-      <SliderWrapper>
-        <Slider {...settings}>
-          {books.map((book, index) => (
-            <div key={book.id || index}>
-              <ImageSliderItem
-                src={book.imageUrl}
-                alt={`book-image-${index}`}
-                onClick={() => handleImageClick(book.id)}
-              />
-            </div>
-          ))}
-        </Slider>
-        <Slider {...reverseSettings}>
-          {books.map((book, index) => (
-            <div key={book.id || index}>
-              <ImageSliderItem
-                src={book.imageUrl}
-                alt={`book-image-${index}`}
-                onClick={() => handleImageClick(book.id)}
-              />
-            </div>
-          ))}
-        </Slider>
-      </SliderWrapper>
+      <ButtonWrapper>
+        <Button onClick={() => handleSortChange("latest")}>최신순</Button>
+        <Button onClick={() => handleSortChange("bestselling")}>판매순</Button>
+      </ButtonWrapper>
+      {/* reRender 상태에 따라 슬라이더 표시 */}
+      {reRender && (
+        <StyledSliderWrapper>{renderSlider(settings)}</StyledSliderWrapper>
+      )}
+      {reRender && (
+        <StyledSliderWrapper>
+          {renderSlider(reverseSettings)}
+        </StyledSliderWrapper>
+      )}
+      <SliderWrapper>{renderSlider(settings)}</SliderWrapper>
+      <SliderWrapper>{renderSlider(reverseSettings)}</SliderWrapper>
 
       {isVisible && (
         <ToggleSlidersWrapper $isVisible={isVisible}>
-          <SliderWrapper>
-            <Slider {...settings}>
-              {books.map((book, index) => (
-                <div key={book.id || index}>
-                  <ImageSliderItem
-                    src={book.imageUrl}
-                    alt={`book-image-${index}`}
-                    onClick={() => handleImageClick(book.id)}
-                  />
-                </div>
-              ))}
-            </Slider>
-          </SliderWrapper>
-          <SliderWrapper>
-            <Slider {...reverseSettings}>
-              {books.map((book, index) => (
-                <div key={book.id || index}>
-                  <ImageSliderItem
-                    src={book.imageUrl}
-                    alt={`book-image-${index}`}
-                    onClick={() => handleImageClick(book.id)}
-                  />
-                </div>
-              ))}
-            </Slider>
-          </SliderWrapper>
-          <SliderWrapper>
-            <Slider {...settings}>
-              {books.map((book, index) => (
-                <div key={book.id || index}>
-                  <ImageSliderItem
-                    src={book.imageUrl}
-                    alt={`book-image-${index}`}
-                    onClick={() => handleImageClick(book.id)}
-                  />
-                </div>
-              ))}
-            </Slider>
-          </SliderWrapper>
+          <SliderWrapper>{renderSlider(settings)}</SliderWrapper>
+          <SliderWrapper>{renderSlider(reverseSettings)}</SliderWrapper>
+          <SliderWrapper>{renderSlider(settings)}</SliderWrapper>
+          {/* reRender 상태에 따라 슬라이더 표시 */}
+          {reRender && (
+            <StyledSliderWrapper>{renderSlider(settings)}</StyledSliderWrapper>
+          )}
+          {reRender && (
+            <StyledSliderWrapper>
+              {renderSlider(reverseSettings)}
+            </StyledSliderWrapper>
+          )}
         </ToggleSlidersWrapper>
       )}
-
-      <ToggleButton onClick={handleToggle}>
-        {isVisible ? "Hide Sliders" : "Show Sliders"}
-      </ToggleButton>
+      <Button onClick={() => setIsVisible(!isVisible)}>
+        {isVisible ? "숨기기" : "더보기"}
+      </Button>
     </>
   );
 };

@@ -1,4 +1,5 @@
 // https://dev.to/mfts/building-a-beautiful-document-viewer-with-react-pdf-666?utm_source=oneoneone
+// 미사용
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
