@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useUser } from "../../contexts/Context";
 import styled from "styled-components";
-import appLogo from "../../assets/images/appLogo.png";
+import appLogo from "../../assets/images/loginLogo/appLogo.png";
 import AxiosApi from "../../api/AxiosApi";
 
 // Styled Components 정의
@@ -109,23 +109,23 @@ function Header() {
       <NavigationMenu>
         {isLoggedin ? (
           <>
+            <MenuItem onClick={() => navigate("/WhatIBoughtPage")}>
+              <h3>&nbsp;나의 서재&nbsp;</h3>
+            </MenuItem>
             <MenuItem onClick={() => navigate("/CartPage")}>
-              <h3>장바구니</h3>
+              <h3>&nbsp;장바구니&nbsp;</h3>
             </MenuItem>
             <MenuItem onClick={() => navigate("/mypage")}>
-              <h3>마이페이지</h3>
+              <h3>&nbsp;개인 정보&nbsp;</h3>
             </MenuItem>
             <MenuItem onClick={handleLogout}>
-              <h3>로그아웃</h3>
+              <h3>&nbsp;로그아웃&nbsp;</h3>
             </MenuItem>
           </>
         ) : (
           <>
-            <MenuItem onClick={() => navigate("/signup")}>
-              <h3>회원가입</h3>
-            </MenuItem>
             <MenuItem onClick={() => navigate("/login")}>
-              <h3>로그인</h3>
+              <h3>로그인 / 회원가입</h3>
             </MenuItem>
           </>
         )}

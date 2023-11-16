@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import AxiosApi from "../api/AxiosApi";
 import { useLocation } from "react-router-dom";
 import { BookAxiosApi } from "../api/BookAxiosApi";
+import Footer from "../components/mainPageComp/Footer";
 
 const BuyReviewPg = () => {
   const location = useLocation();
@@ -77,8 +78,8 @@ const BuyReviewPg = () => {
       if (response.status === 201 || response.status === 200) {
         // 성공적으로 데이터가 전송되었으면, 리뷰 목록에 새 리뷰 추가
         setReviews([...reviews, reviewData]);
-
         closeReviewModal();
+        window.location.reload();
       } else {
         // 서버에서 응답이 오지 않거나, 응답의 상태 코드가 200이 아닌 경우 에러 처리
         console.error("서버 응답 실패");
@@ -209,6 +210,7 @@ const BuyReviewPg = () => {
         closeModal={closeReviewModal}
       />
       <ReviewSection openReviewModal={openReviewModal} bookInfo={bookInfo} />
+      <Footer></Footer>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import axios from "axios";
-const DOMAIN = "http://localhost:8111";
+const DOMAIN = "http://192.168.10.8:8111";
 
 const AxiosApi = {
   // 로그인
@@ -30,11 +30,11 @@ const AxiosApi = {
   },
 
   // 회원가입
-  memberSignup: async (id, password, email, phone) => {
+  memberSignup: async (id, password, email, phone, name) => {
     const signupData = {
       id: id,
       password: password,
-      name: "user",
+      name: name,
       email: email,
       tel: phone,
       cash: "0",

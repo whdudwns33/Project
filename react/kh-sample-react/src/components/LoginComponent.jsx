@@ -1,8 +1,7 @@
 import styled, { css, keyframes } from "styled-components";
-import KakaoColorImg from "../assets/images/kakao_color.png";
-import KakaoImg from "../assets/images/kakao_white.png";
+import KakaoImg from "../assets/images/loginLogo/kakao.png";
 import backgroundImage from "../assets/images/theme/bookInTheForest.jpg";
-import logo from "../assets/images/logoPhrase.png";
+import logo from "../assets/images/loginLogo/logoPhrase.png";
 
 const fadeIn = keyframes`
   from {
@@ -108,15 +107,15 @@ const SignupForm = styled(Form)`
   z-index: ${(props) => (props.$isRightPanelActive ? 1 : -1)};
 `;
 const Logo = styled.div`
-  width: 100px; // 원하는 로고의 크기로 조정
-  height: 100px;
+  width: 200px; // 원하는 로고의 크기로 조정
+  height: 200px;
   background: url(${logo}) no-repeat center/cover;
   margin-bottom: 20px; // 로고와 폼 사이의 간격 조정
 `;
 const Input = styled.input`
   background: #eee;
   padding: 16px;
-  margin: 8px 0;
+  margin-top: 10px;
   width: 100%;
   border: 0;
   outline: none;
@@ -124,11 +123,59 @@ const Input = styled.input`
   box-shadow: inset 7px 2px 10px #babebc, inset -5px -5px 12px #fff;
 `;
 
+const SocialLinks = styled.div`
+  margin: 20px 0;
+  display: flex;
+`;
+
+const SocialLink = styled.div`
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-image: url(${KakaoImg});
+  background-size: cover;
+  transition: background-image 0.5s ease-in-out;
+  &:hover {
+    transform: scale(1.2);
+  }
+
+  &:active {
+    box-shadow: inset 1px 1px 2px #babebc, inset -1px -1px 2px #fff;
+  }
+`;
+
 const Button = styled.button`
+  background-color: black;
+  color: white;
   border-radius: 20px;
+  font-size: 30px;
   border: none;
   outline: none;
-  font-size: 12px;
+  font-weight: bold;
+  padding: 15px 45px;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 80ms ease-in;
+  box-shadow: -5px -5px 10px #fff, 5px 5px 8px #babebc;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
+
+const OverlayButton = styled.button`
+  background-color: white;
+  color: black;
+  border-radius: 20px;
+  font-size: 18px;
+  border: none;
+  outline: none;
   font-weight: bold;
   padding: 15px 45px;
   margin: 14px;
@@ -138,53 +185,8 @@ const Button = styled.button`
   transition: transform 80ms ease-in;
   box-shadow: -5px -5px 10px #fff, 5px 5px 8px #babebc;
 
-  &:active {
-    box-shadow: inset 1px 1px 2px #babebc, inset -1px -1px 2px #fff;
-  }
-`;
-const SocialLinks = styled.div`
-  margin: 20px 0;
-  display: flex;
-`;
-
-const SocialLink = styled.div`
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 5px;
-  border-radius: 50%;
-  box-shadow: -5px -5px 10px #fff, 5px 5px 8px #babebc;
-  cursor: pointer;
-  background-image: url(${KakaoImg});
-  background-size: cover;
-  transition: background-image 0.5s ease-in-out;
-
   &:hover {
-    background-image: url(${KakaoColorImg});
-  }
-
-  &:active {
-    box-shadow: inset 1px 1px 2px #babebc, inset -1px -1px 2px #fff;
-  }
-`;
-
-const OverlayButton = styled.button`
-  background-color: #ff4b2b;
-  color: #fff;
-  border-radius: 20px;
-  border: none;
-  outline: none;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 15px 45px;
-  margin-top: 30px;
-  cursor: pointer;
-  transition: transform 80ms ease-in;
-  box-shadow: -5px -5px 10px #ff6b3f, 5px 5px 8px #bf4b2b;
-  &:active {
-    box-shadow: inset 1px 1px 2px #bf4b2b, inset -1px -1px 2px #ff6b3f;
+    transform: scale(1.1);
   }
 `;
 

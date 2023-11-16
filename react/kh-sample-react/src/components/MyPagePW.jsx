@@ -245,12 +245,7 @@ const MyPagePW = () => {
               />
               <p>{msg}</p>
               {checkTrue && (
-                <StyledButton
-                  value="비밀 번호 변경"
-                  width="40%"
-                  height="7%"
-                  onClick={onClickModifyPw}
-                ></StyledButton>
+                <MyPageButton onClick={onClickModifyPw}>정보 변경</MyPageButton>
               )}
               <Modal open={rst} close={closeModal}>
                 비밀번호가 변경되었습니다.

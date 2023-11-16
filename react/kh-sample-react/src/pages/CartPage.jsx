@@ -3,18 +3,14 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import AxiosApi from "../api/AxiosApi";
 import { useUser } from "../contexts/Context";
+import Footer from "../components/mainPageComp/Footer";
+import { MiddleOrderBox } from "../globalStyle/MiddleOrderBox";
+import { StyledTitle } from "../globalStyle/StyledTitle";
+import cartImg from "../assets/images/loginLogo/cart.png";
 
 const CartPageContainer = styled.div`
-  padding: 0 30px 70px 30px;
-
-  h2 {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 15px;
-    padding: 10px 0 8px 0;
-    border-bottom: 2px solid #7d8e9e;
-  }
+  margin: 20px;
+  width: 60vw;
 `;
 
 const BookCard = styled.div`
@@ -25,7 +21,7 @@ const BookCard = styled.div`
   align-items: center;
 
   .book-image {
-    width: 160px;
+    width: 150px;
     height: 200px;
     margin-right: 10px;
   }
@@ -79,9 +75,14 @@ const CartPage = ({}) => {
       console.log(response); // 서버로부터의 응답 출력
       if (response.status === 200 && response.data) {
         fetchCartItems(); // 책을 구매한 후 장바구니 아이템 목록을 다시 불러옴
-        setCheckedItems([]); // 체크된 아이템 초기화
+        if (response.data) {
+          // 서버에서 성공적으로 처리했다는 메시지를 받았을 때만 체크된 아이템 초기화
+          setCheckedItems([]);
+        } else {
+          alert("구매가능하지 않습니다");
+        }
       } else {
-        console.error("책 구매 실패");
+        alert("책을 구매할수 없습니다.");
       }
     } catch (error) {
       console.error("에러 확인", error);
@@ -106,12 +107,15 @@ const CartPage = ({}) => {
         setCartItems(cartItemsWithBookInfo);
         console.log(cartItems); // 상태 업데이트 후의 cartItems 출력
       } else {
-        console.error("짱바구니 가져오기 실패");
+        console.error("장바구니 가져오기 실패");
       }
     } catch (error) {
       console.error("에러 확인", error);
     }
   };
+
+  /* 
+  // 모든 책 구매
   const purchaseAll = async () => {
     try {
       const bookIds = cartItems.map((item) => item.bookId); // 장바구니에 있는 모든 책의 ID를 가져옴
@@ -126,6 +130,8 @@ const CartPage = ({}) => {
       console.error("에러 확인", error);
     }
   };
+*/
+
   const removeFromCart = async (bookId) => {
     try {
       const response = await AxiosApi.removeFromCart(user.id, bookId);
@@ -140,35 +146,52 @@ const CartPage = ({}) => {
     }
   };
   return (
-    <CartPageContainer>
-      <h2>장바구니</h2>
-      {cartItems.map((item) => (
-        <BookCard key={item.bookId}>
-          <input
-            type="checkbox"
-            checked={isChecked(item.bookId)}
-            onChange={() => checkboxChange(item.bookId)}
-          />
-          <img
-            className="book-image"
-            src={item.bookInfo.image_url}
-            alt={item.bookInfo.title}
-          />
-          <div className="book-info">
-            <p className="book-title">{item.bookInfo.title}</p>
-            <p className="book-author">{item.bookInfo.author}</p>
-            <p className="book-price">{item.bookInfo.price}원</p>
-          </div>
-          <button
-            className="remove-button"
-            onClick={() => removeFromCart(item.bookId)}
-          >
-            제거
-          </button>
-        </BookCard>
-      ))}
-      <button onClick={purchaseSelected}>선택 구매</button>
-    </CartPageContainer>
+    <>
+      <MiddleOrderBox>
+        <CartPageContainer>
+          <StyledTitle>
+            <img src={cartImg} alt="장바구니" style={{ width: "4vw" }}></img>
+            &nbsp;장바구니
+          </StyledTitle>
+          {cartItems.map((item) => (
+            <BookCard key={item.bookId}>
+              <input
+                type="checkbox"
+                checked={isChecked(item.bookId)}
+                onChange={() => checkboxChange(item.bookId)}
+                style={{ margin: "20px", transform: "scale(2)" }}
+              />
+              <img
+                className="book-image"
+                src={item.bookInfo.imageUrl}
+                alt="책 표지 이미지"
+                style={{
+                  transform: "rotate(5deg)", // 이미지를 약간 기울임
+                  boxShadow: "2px 2px 1px 0px rgba(0,0,0,0.75)", // 그림자 효과 추가
+                  borderRadius: "5%", // 둥근 테두리 적용
+                  border: "none", // 테두리 보이지 않게 설정
+                }}
+              />
+
+              <div className="book-info">
+                <p className="book-title">{item.bookInfo.title}</p>
+                <p className="book-author">{item.bookInfo.author}</p>
+                <p className="book-price">{item.bookInfo.price}원</p>
+              </div>
+              <button
+                className="remove-button"
+                onClick={() => removeFromCart(item.bookId)}
+              >
+                제거
+              </button>
+            </BookCard>
+          ))}
+          <button onClick={purchaseSelected}>선택 구매</button>
+          {/* <button onClick={purchaseAll}>모두 구매</button> */}
+        </CartPageContainer>
+      </MiddleOrderBox>
+      <Footer></Footer>
+    </>
   );
 };
 

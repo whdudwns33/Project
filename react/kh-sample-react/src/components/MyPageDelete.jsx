@@ -227,12 +227,7 @@ const MyPageDELETE = () => {
               />
               <p>{msg}</p>
               {checkTrue && (
-                <StyledButton
-                  value="비밀 번호 변경"
-                  width="40%"
-                  height="7%"
-                  onClick={onClickDeleteId}
-                ></StyledButton>
+                <MyPageButton onClick={onClickDeleteId}>회원 탈퇴</MyPageButton>
               )}
               <Modal open={rst} close={closeModal}>
                 회원을 탈퇴하셨습니다..

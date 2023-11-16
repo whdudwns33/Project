@@ -6,21 +6,62 @@ import LoginLogoutButton from "../components/LoginLogoutButtonComponent";
 import { useUser } from "../contexts/Context";
 import { useNavigate } from "react-router-dom";
 import AxiosApi from "../api/AxiosApi";
+import styled from "styled-components";
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+`;
+
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 2rem;
+  @media (max-width: 960px) {
+    flex-direction: column;
+    align-items: center;
+  }
+`;
+
+const ReviewSectionContainer = styled.div`
+  flex: 1;
+`;
+
+const BookPurchaseBlock = styled.div`
+  flex: 1;
+`;
 
 const BuyReviewPg = () => {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [reviews, setReviews] = useState([]); // 리뷰 데이터를 관리하는 상태
-  const { isLoggedin, checkLoginStatus, user, login } = useUser();
-  const navigate = useNavigate();
+  const { isLoggedin, checkLoginStatus, user } = useUser();
   const [bookInfo, setBookInfo] = useState(null);
+  const [isInCart, setIsInCart] = useState(false);
+  // 책이 구매되었는지 상태 관리
+  const [isPurchased, setIsPurchased] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     checkLoginStatus();
   }, [isLoggedin]);
-
   useEffect(() => {
     fetchBookInfo();
   }, []);
+  useEffect(() => {
+    if (user && bookInfo) {
+      checkIfBookInCart();
+      checkIfBookPurchased();
+    }
+  }, [user, bookInfo]);
   const openReviewModal = () => {
     if (isLoggedin) {
       // 로그인 상태 확인
@@ -60,6 +101,7 @@ const BuyReviewPg = () => {
       console.error("submit review 데이터에러 :", error);
     }
   };
+  // 책 정보 받아오는 함수
   const fetchBookInfo = async () => {
     try {
       const response = await AxiosApi.getBookInfo(21);
@@ -80,55 +122,122 @@ const BuyReviewPg = () => {
     }
   };
 
-  // 책 구매 여부 (예: true - 이미 구매한 책, false - 아직 구매하지 않은 책)
-  const isPurchased = false; // 또는 true
+  // 장바구니에 해당 책이 있는지 확인하는 함수
+  const checkIfBookInCart = async () => {
+    try {
+      const response = await AxiosApi.getCartItems(user.id);
+      if (response.status === 200) {
+        setIsInCart(response.data.some((item) => item.bookId === bookInfo.id));
+      } else {
+        console.error("장바구니 아이템 목록 가져오기 실패");
+      }
+    } catch (error) {
+      console.error("장바구니 아이템 확인 중 에러 발생", error);
+    }
+  };
 
   const addToCart = async () => {
     if (user) {
-      // user 객체가 있을 때만 실행
-      try {
-        const response = await AxiosApi.addToCart(user.id, bookInfo.id);
-        if (response.status === 200) {
-          // ...
-          navigate("/cart");
-        } else {
-          console.error("장바구니 담기기 에러");
+      if (isInCart) {
+        try {
+          const response = await AxiosApi.removeFromCart(user.id, bookInfo.id);
+          if (response.status === 200) {
+            setIsInCart(false);
+            alert("장바구니에서 제거되었습니다.");
+          } else {
+            console.error("장바구니에서 제거 실패");
+          }
+        } catch (error) {
+          console.error("장바구니에서 제거 중 에러 발생", error);
         }
-      } catch (error) {
-        console.error("에러 확인", error);
+      } else {
+        try {
+          const response = await AxiosApi.addToCart(user.id, bookInfo.id);
+          if (response.status === 200) {
+            setIsInCart(true);
+            alert("장바구니에 추가되었습니다.");
+            navigate("/CartPage");
+          } else {
+            console.error("장바구니에 추가 실패");
+          }
+        } catch (error) {
+          console.error("장바구니에 추가 중 에러 발생", error);
+        }
       }
     } else {
       alert("로그인이 필요합니다.");
     }
   };
-
+  // 사용자가 책을 구매했는지 확인하는 기능을 추가합니다.
+  const checkIfBookPurchased = async () => {
+    try {
+      if (user) {
+        const response = await AxiosApi.checkPurchase(user.id, bookInfo.id);
+        if (response.status === 200) {
+          setIsPurchased(response.data);
+        } else {
+          console.error("구매 확인 실패");
+        }
+      }
+    } catch (error) {
+      console.error("구매 확인 중 에러 발생", error);
+    }
+  };
   // 책 구매 함수
-  const purchaseBook = () => {};
+  const purchaseBook = async () => {
+    if (user.cash >= bookInfo.price && user) {
+      try {
+        const response = await AxiosApi.purchaseBook(user.id, bookInfo.id);
+        if (response.status === 200) {
+          alert("구매가 완료되었습니다.");
+          checkIfBookPurchased(); // 구매 후 구매 상태를 다시 확인합니다.
+        } else {
+          console.error("구매 실패");
+        }
+      } catch (error) {
+        console.error("구매 중 에러 발생", error);
+      }
+    } else {
+      alert("잔액이 부족합니다.");
+    }
+  };
 
   // 미리보기 함수
   const viewPreview = () => {};
 
   return (
-    <div>
-      <LoginLogoutButton />
-      {bookInfo && (
-        <BookPurchase
-          info={bookInfo}
-          isLoggedIn={isLoggedin}
-          isPurchased={isPurchased}
-          onAddToCart={addToCart}
-          onPurchase={purchaseBook}
-          onPreview={viewPreview}
-        />
-      )}
+    <>
+      <Container>
+        <LoginLogoutButton />
+        {bookInfo && (
+          <ContentWrapper>
+            <BookPurchaseBlock>
+              <BookPurchase
+                info={bookInfo}
+                isLoggedIn={isLoggedin}
+                isInCart={isInCart}
+                isPurchased={isPurchased}
+                onAddToCart={addToCart}
+                onPurchase={purchaseBook}
+                onPreview={viewPreview}
+              />
+            </BookPurchaseBlock>
+            <ReviewSectionContainer>
+              <ReviewSection
+                openReviewModal={openReviewModal}
+                bookInfo={bookInfo}
+              />
+            </ReviewSectionContainer>
+          </ContentWrapper>
+        )}
 
-      <ReviewModal
-        isOpen={isReviewModalOpen}
-        closeModal={closeReviewModal}
-        onSubmit={reviewSubmit}
-      />
-      <ReviewSection openReviewModal={openReviewModal} bookInfo={bookInfo} />
-    </div>
+        <ReviewModal
+          isOpen={isReviewModalOpen}
+          onSubmit={reviewSubmit}
+          closeModal={closeReviewModal}
+        />
+      </Container>
+    </>
   );
 };
 

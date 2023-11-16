@@ -1,5 +1,5 @@
 import axios from "axios";
-const KH_DOMAIN = "http://localhost:8111";
+const KH_DOMAIN = "http://192.168.10.8:8111";
 
 const MyPageAxiosApi = {
   //회원정보 조회

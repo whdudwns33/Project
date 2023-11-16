@@ -1,30 +1,12 @@
 package com.book.gpt.dao;
 
-import com.book.gpt.JWT.JwtAuthorizationFilter;
 import com.book.gpt.common.Common;
 import com.book.gpt.dto.MemberDTO;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 
-import javax.crypto.SecretKey;
-import javax.servlet.http.HttpServletRequest;
-import javax.sql.DataSource;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Repository
@@ -35,10 +17,12 @@ public class MemberDAO {
     private ResultSet rs = null;
     private PreparedStatement pStmt = null;
 
-    // 조영준
     // 정보 조회
     public List<MemberDTO> memberInfo(String getId) {
         List<MemberDTO> list = new ArrayList<>();
+        if (getId == null) {
+            return list;  // getId가 null일 경우 빈 리스트 반환
+        }
         String sql = "SELECT * FROM MEMBER WHERE ID = ?";
         try (Connection conn = Common.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -55,14 +39,14 @@ public class MemberDAO {
                     System.out.println("DAO" + profileUrl);
 
                     MemberDTO dto = new MemberDTO();
-                    dto.setId(id);
-                    dto.setPassword(pw);
-                    dto.setName(name);
-                    dto.setEmail(email);
-                    dto.setTel(tel);
+                    dto.setId(id != null ? id : "");  // 필드값이 null이면 빈 문자열 할당
+                    dto.setPassword(pw != null ? pw : "");
+                    dto.setName(maskName(name)); // 마스킹 되는 경우 해당 예외 처리가 이미 발생된 상황
+                    dto.setEmail(email != null ? email : "");
+                    dto.setTel(maskTel(tel));
                     dto.setCash(cash);
                     dto.setRole("ROLE_USER");
-                    dto.setProfileUrl(profileUrl);
+                    dto.setProfileUrl(profileUrl != null ? profileUrl : "");
                     list.add(dto);
                 }
             }
@@ -71,6 +55,22 @@ public class MemberDAO {
         }
         return list;
     }
+    // 이름, 전화번호, 이메일 마스킹
+    // 이름
+    private String maskName(String name) {
+        if (name != null && name.length() > 1) {
+            return name.substring(0, 1) + "*".repeat(name.length() - 1);
+        }
+        return name;
+    }
+    // 전화번호
+    private String maskTel(String tel) {
+        if (tel != null && tel.length() >= 12) {
+            return tel.substring(0, 8) + "****" + tel.substring(12);
+        }
+        return tel;
+    }
+
 
     // 이름~이메일 입력시 존재하는 지 체크
     public boolean memberCheck(String name, String id, String pw, String email) {
@@ -95,7 +95,7 @@ public class MemberDAO {
             }
 
             System.out.println("이름, 이메일, 아이디, 비번 :  2 : " + isChecked);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         Common.close(rs);
@@ -106,12 +106,11 @@ public class MemberDAO {
     }
 
 
-
     // 아이디 변경을 위해 중복 체크
     public boolean isIdcheck(String newId) {
         boolean isDuplicate = false;
-        System.out.println("아이디 체크: 1 "+isDuplicate);
-        System.out.println("아이디 체크: 새로운 아이디 : "+newId);
+        System.out.println("아이디 체크: 1 " + isDuplicate);
+        System.out.println("아이디 체크: 새로운 아이디 : " + newId);
 
         try {
             conn = Common.getConnection();
@@ -132,9 +131,9 @@ public class MemberDAO {
     }
 
 
-    public boolean modifyId( String currentId, String newId) {
+    public boolean modifyId(String currentId, String newId) {
         boolean isData = false;
-        System.out.println("아이디 수정: 1 "+isData);
+        System.out.println("아이디 수정: 1 " + isData);
         System.out.println("아이디 수정: 현제 아이디 " + currentId);
         System.out.println("아이디 수정: 새로운 아이디 " + newId);
         try {
@@ -190,7 +189,7 @@ public class MemberDAO {
         return isDup;
     }
 
-    public boolean modifyPw( String currentPw, String newPw) {
+    public boolean modifyPw(String currentPw, String newPw) {
         boolean isData = false;
         try {
             conn = Common.getConnection();
@@ -218,7 +217,7 @@ public class MemberDAO {
         return isData;
     }
 
-    public boolean modifyName( String currentName, String newName) {
+    public boolean modifyName(String currentName, String newName) {
         boolean isData = false;
         try {
             conn = Common.getConnection();
@@ -252,15 +251,14 @@ public class MemberDAO {
         boolean isData = false;
         int rowsUpdated = 0;
         try {
+            // Member 삭제 후에 관련된 Cart와 Buy 데이터도 삭제
+            deleteCart(memberId);
+            deleteBuy(memberId);
             conn = Common.getConnection();
             String sql = "DELETE FROM MEMBER WHERE ID = ?";
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1, memberId);
             rowsUpdated = pStmt.executeUpdate();
-
-            // Member 삭제 후에 관련된 Cart와 Buy 데이터도 삭제
-            deleteCart(memberId);
-            deleteBuy(memberId);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -275,6 +273,7 @@ public class MemberDAO {
         }
         return isData;
     }
+
     // 카트 삭제
     public void deleteCart(String memberId) {
         try {
@@ -290,6 +289,7 @@ public class MemberDAO {
             Common.close(conn);
         }
     }
+
     // 구매 삭제
     public void deleteBuy(String memberId) {
         try {
@@ -307,7 +307,7 @@ public class MemberDAO {
     }
 
 
-    public boolean chargingCash (String getId, int getCash) {
+    public boolean chargingCash(String getId, int getCash) {
         boolean isData = false;
         int rowsUpdated = 0;
         try {
@@ -334,7 +334,7 @@ public class MemberDAO {
 
 
     // 이미지 url 저장
-    public boolean setImageUrl (String getId, String getUrl) {
+    public boolean setImageUrl(String getId, String getUrl) {
         boolean isData = false;
         int rowsUpdated = 0;
         try {

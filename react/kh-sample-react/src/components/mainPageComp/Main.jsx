@@ -7,7 +7,7 @@ import QuestionAnswer from "./smallComps/QuestionAnswer";
 import { useBookInfo } from "../../contexts/BookInfoContext";
 import { useLocalPhrase } from "../../contexts/LocalImageContext";
 import { useInView } from "react-intersection-observer";
-import { StyledSearch } from "../../globalStyle/StyledSearch";
+
 
 const fadeIn = `
   opacity: 1;
@@ -59,7 +59,7 @@ const Main = () => {
         inView={conveyorInView}
         style={{ backgroundColor: "var(--gray)", paddingTop: "20px" }}
       >
-         <StyledSearch></StyledSearch>
+         
         <ConveyorBox images={bookImages} isVisible={conveyorInView} />
       </SectionContainer>
       <SectionContainer ref={sliderRef} inView={sliderInView}>

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BACK_DOMAIN = "http://localhost:8111";
+const BACK_DOMAIN = "http://192.168.10.8:8111";
 
 export const MemberAdminApi = {
   // 회원 전체 목록 가져오기

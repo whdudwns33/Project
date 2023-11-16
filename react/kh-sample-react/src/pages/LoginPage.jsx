@@ -227,7 +227,8 @@ const Login = () => {
         signUpData.id,
         signUpData.password,
         verifiedEmail,
-        signUpData.phone
+        signUpData.phone,
+        signUpData.name
       );
 
       if (res.data) {
@@ -241,40 +242,11 @@ const Login = () => {
   };
 
   return (
-    <Wrapper>
-      <Container>
-        <LoginForm $isRightPanelActive={isRightPanelActive}>
-          <Logo></Logo>
-          <>
-            <h1>Login</h1>
-            <SocialLinks>
-              <SocialLink>
-                <KakaoLogin
-                  token="a7940b21b9348984d28207e9a32452d9"
-                  onSuccess={onKakaoLoginSuccess}
-                  onFailure={onKakaoLoginFailure}
-                  getProfile={true}
-                  style={{ backgroundImage: "none", border: "none" }}
-                  render={({ onClick }) => {
-                    return (
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          onClick();
-                        }}
-                        style={{
-                          background: "none",
-                          border: "none",
-                          width: "100%",
-                          height: "100%",
-                        }}
-                      ></button>
-                    );
-                  }}
-                />
-              </SocialLink>
-            </SocialLinks>
-            <span>or use your account</span>
+    <>
+      <Wrapper>
+        <Container>
+          <LoginForm $isRightPanelActive={isRightPanelActive}>
+            <Logo></Logo>
             <Input
               type="text"
               placeholder="ID"
@@ -303,79 +275,116 @@ const Login = () => {
             >
               {isRightPanelActive ? "Login" : "Sign Up"}
             </OverlayButton>
-          </>
-        </LoginForm>
-        <SignupForm $isRightPanelActive={isRightPanelActive}>
-          <h1>Create Account</h1>
-          <Input
-            type="text"
-            name="id"
-            placeholder="Name"
-            value={signUpData.id}
-            onChange={(e) => {
-              textChange(e);
-              validateId();
-            }}
-            onBlur={(e) => {
-              validateId();
-              onBlurDuplicate(e);
-            }}
-            onFocus={validateId}
-          />
-          {dataErrors.id && <ErrorText>{dataErrors.id}</ErrorText>}
-          <Input
-            type="password"
-            name="password"
-            placeholder="Password"
-            autoComplete="current-password"
-            value={signUpData.password}
-            onChange={(e) => {
-              textChange(e);
-              validatePassword();
-            }}
-            onBlur={validatePassword}
-            onFocus={validatePassword}
-          />
-          {dataErrors.password && <ErrorText>{dataErrors.password}</ErrorText>}
-          <Input
-            type="text"
-            name="phone"
-            placeholder="Phone"
-            value={signUpData.phone}
-            onChange={(e) => {
-              textChange(e);
-              validatePhone();
-            }}
-            onBlur={(e) => {
-              validatePhone();
-              onBlurDuplicate(e);
-            }}
-            onFocus={validatePhone}
-          />
-          {dataErrors.phone && <ErrorText>{dataErrors.phone}</ErrorText>}
-          <EmailVerificationComponent
-            onVerification={setIsVerified}
-            onVerifiedEmail={setVerifiedEmail}
-          />
-          <Button disabled={isSubmitDisabled} onClick={signupSubmit}>
-            Sign Up
-          </Button>
-          <Modal open={loginModalOpen} close={closeModal} header="error">
-            회원가입 완료되었습니다!
-          </Modal>
-          <OverlayButton
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              toggleRightPanel();
-            }}
-          >
-            {isRightPanelActive ? "Login" : "Sign Up"}
-          </OverlayButton>
-        </SignupForm>
-        <BackgroundImage />
-      </Container>
-    </Wrapper>
+            <SocialLinks>
+              <SocialLink>
+                <KakaoLogin
+                  token="a7940b21b9348984d28207e9a32452d9"
+                  onSuccess={onKakaoLoginSuccess}
+                  onFailure={onKakaoLoginFailure}
+                  getProfile={true}
+                  style={{ backgroundImage: "none", border: "none" }}
+                  render={({ onClick }) => {
+                    return (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          onClick();
+                        }}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          width: "100%",
+                          height: "100%",
+                        }}
+                      ></button>
+                    );
+                  }}
+                />
+              </SocialLink>
+            </SocialLinks>
+          </LoginForm>
+          <SignupForm $isRightPanelActive={isRightPanelActive}>
+            <Input
+              type="text"
+              name="id"
+              placeholder="ID"
+              value={signUpData.id}
+              onChange={(e) => {
+                textChange(e);
+                validateId();
+              }}
+              onBlur={(e) => {
+                validateId();
+                onBlurDuplicate(e);
+              }}
+              onFocus={validateId}
+            />
+            {dataErrors.id && <ErrorText>{dataErrors.id}</ErrorText>}
+            <Input
+              type="password"
+              name="password"
+              placeholder="Password"
+              autoComplete="current-password"
+              value={signUpData.password}
+              onChange={(e) => {
+                textChange(e);
+                validatePassword();
+              }}
+              onBlur={validatePassword}
+              onFocus={validatePassword}
+            />
+            {dataErrors.password && (
+              <ErrorText>{dataErrors.password}</ErrorText>
+            )}
+            <Input
+              type="text"
+              name="name"
+              placeholder="Name"
+              value={signUpData.name}
+              onChange={(e) => {
+                textChange(e);
+              }}
+            />
+            <Input
+              type="text"
+              name="phone"
+              placeholder="Phone"
+              value={signUpData.phone}
+              onChange={(e) => {
+                textChange(e);
+                validatePhone();
+              }}
+              onBlur={(e) => {
+                validatePhone();
+                onBlurDuplicate(e);
+              }}
+              onFocus={validatePhone}
+            />
+            {dataErrors.phone && <ErrorText>{dataErrors.phone}</ErrorText>}
+            <EmailVerificationComponent
+              onVerification={setIsVerified}
+              onVerifiedEmail={setVerifiedEmail}
+            />
+            <Button disabled={isSubmitDisabled} onClick={signupSubmit}>
+              Sign Up
+            </Button>
+            <Modal open={loginModalOpen} close={closeModal} header="error">
+              회원가입 완료되었습니다!
+            </Modal>
+            <OverlayButton
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleRightPanel();
+              }}
+            >
+              {isRightPanelActive ? "Login" : "Sign Up"}
+            </OverlayButton>
+          </SignupForm>
+          <BackgroundImage />
+        </Container>
+      </Wrapper>
+    </>
   );
 };
 

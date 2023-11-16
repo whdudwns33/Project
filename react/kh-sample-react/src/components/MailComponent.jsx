@@ -61,7 +61,7 @@ const EmailVerificationComponent = ({ onVerification, onVerifiedEmail }) => {
   return (
     <div>
       {isEmailSent ? (
-        <div>
+        <div style={{ textAlign: "center" }}>
           <Input
             disabled={isVerified}
             type="text"
@@ -69,20 +69,37 @@ const EmailVerificationComponent = ({ onVerification, onVerifiedEmail }) => {
             value={verificationCode}
             onChange={(e) => setVerificationCode(e.target.value)}
           />
-          <Button disabled={isVerified} type="button" onClick={verifyEmail}>
+          <Button
+            style={{
+              fontSize: "15px",
+              backgroundColor: "rgb(241,241,241)",
+              color: "black",
+            }}
+            disabled={isVerified}
+            type="button"
+            onClick={verifyEmail}
+          >
             인증 완료
           </Button>
         </div>
       ) : (
-        <div>
+        <div style={{ textAlign: "center" }}>
           <Input
             type="email"
-            placeholder="이메일 입력"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <Button type="button" onClick={() => sendVerificationEmail()}>
-            이메일로 인증 코드 받기
+          <Button
+            type="button"
+            onClick={() => sendVerificationEmail()}
+            style={{
+              fontSize: "15px",
+              backgroundColor: "rgb(241,241,241)",
+              color: "black",
+            }}
+          >
+            Send
           </Button>
         </div>
       )}

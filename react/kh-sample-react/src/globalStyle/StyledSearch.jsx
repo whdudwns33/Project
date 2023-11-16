@@ -6,7 +6,6 @@ import axios from "axios";
 
 // 이미지
 import { FaSearch, FaMicrophone } from "react-icons/fa";
-import logoPhrase from "../assets/images/logoPhrase.png";
 
 // 검색바
 const SearchBox = styled.div`
@@ -16,47 +15,43 @@ const SearchBox = styled.div`
   justify-content: center;
 `;
 
-// const SearchLogo = styled.img`
-//   z-index: 15;
-//   width: 15vh;
-//   cursor: pointer;
-//   &:hover {
-//     transform: scale(1.1);
-//   }
-// `;
-
 const SearchMode = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  width: 45%;
+  width: 70%;
   height: 40px;
-  margin: 20px 20px;
+  margin: 20px;
   border: 1.5px solid #c9cacc;
   border-radius: 24px;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  z-index: 10;
+  background: white; // 배경색을 흰색으로 설정
 
+  @media (max-width: 600px) {
+    height: 30px;
+  }
 `;
 
 const Input = styled.input`
-  flex-grow: 1;
+  width: 100%;
+  height: 100%;
   border: none;
   outline: none;
-  height: 100%;
-  width: 100%;
-  
-  /* padding: 0 10px; */
   font-size: 16px;
-  border-radius: 24px;
+
+  padding: 0 10px; // 아이콘과 겹치지 않는 적절한 패딩을 설정
+  background: white; // 배경색을 흰색으로 설정
+
+  @media (max-width: 600px) {
+    font-size: 12px;
+  }
 `;
 
 const SearchIcon = styled.div`
   margin-left: 3%;
   cursor: pointer;
   svg {
-    color: var(--gray);
+    color: #757575;
     transition: all 0.3s ease-in-out;
     &:hover {
       transform: scale(1.2);
@@ -69,7 +64,7 @@ const MicIcon = styled.div`
   margin-right: 3%;
   cursor: pointer;
   svg {
-    color: var(--gray);
+    color: #757575;
     transition: all 0.3s ease-in-out;
     &:hover {
       transform: scale(1.2);
@@ -124,7 +119,7 @@ export const StyledSearch = () => {
           </SearchIcon>
           <Input
             type="text"
-            placeholder="Search any book!"
+            placeholder="원하는 책을 입력해 주세요"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={handleKeyPress}
@@ -135,10 +130,12 @@ export const StyledSearch = () => {
         </SearchMode>
         <StyledButton
           onClick={searchBook}
-          value="Search!"
-          width="100px"
-          height="50px"
-        ></StyledButton>
+          value="검색"
+          width="80px"
+          height="40px"
+          smallWidth="60px"
+          smallHeight="30px"
+          breakpoint="600px"></StyledButton>
       </SearchBox>
     </>
   );

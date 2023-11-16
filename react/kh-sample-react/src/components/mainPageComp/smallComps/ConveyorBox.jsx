@@ -5,25 +5,67 @@ import Slider from "react-slick";
 import styled from "styled-components";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { StyledSearch } from "../../../globalStyle/StyledSearch";
+
+const HorizontalLayout = styled.div`
+  display: flex;
+  justify-content: space-between; // 컴포넌트들을 양쪽 끝으로 정렬합니다.
+  align-items: center; // 컴포넌트들을 수직 중앙에 정렬합니다.
+  width: 100%;
+`;
+
+const SearchWrapper = styled.div`
+  flex-grow: 1; // 남은 공간을 모두 사용합니다.
+  display: flex;
+  align-items: center; // 검색창을 수직 중앙에 정렬합니다.
+`;
+// SliderWrapper 스타일링
 
 const ButtonWrapper = styled.div`
   display: flex;
-  width: 100%;
-  margin-top: 20px;
+  align-items: center; // 버튼들을 수직 중앙에 정렬합니다.
+<<<<<<< Updated upstream
+=======
+  
+  @media (max-width: 600px) {
+    display: flex;
+    flex-direction: column;
+  }
+>>>>>>> Stashed changes
 `;
-// SliderWrapper 스타일링
+
 const SliderWrapper = styled.div`
-  width: 1920px;
+  width: 100vw;
 
   .slick-slide {
     display: flex;
     justify-content: center;
     align-items: center;
 
-    padding: 30px;
-    margin-right: 30px;
+    padding: 30px 20px;
+    margin-right: auto;
     object-fit: contain;
     will-change: transform;
+
+    @media (max-width: 1600px) {
+      padding: 30px;
+      margin-right: 20px;
+    }
+
+    @media (max-width: 1024px) {
+      padding: 30px;
+      margin-right: 40px;
+    }
+
+    @media (max-width: 850px) {
+      padding: 20px;
+      margin-right: 50px;
+    }
+
+    @media (max-width: 480px) {
+      padding: 10px;
+      margin-right: 10px;
+    }
 
     &:hover {
       img {
@@ -64,8 +106,9 @@ const StyledSliderWrapper = styled(SliderWrapper)`
 
 // ImageSliderItem 스타일링
 const ImageSliderItem = styled.img`
-  width: 300px;
+  width: 300px; // 기본 이미지 크기
   height: 350px;
+
   max-width: 350px;
   max-height: 350px;
   border-radius: 10px;
@@ -77,24 +120,36 @@ const ImageSliderItem = styled.img`
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
   }
 
-  @media (max-width: 1450px) {
-    width: 200px;
+  @media (max-width: 1680px) {
+    width: 225px; // 더 작은 화면에서 이미지 크기 조정
+    height: 300px;
+  }
+
+  @media (max-width: 1300px) {
+    width: 200px; // 더 작은 화면에서 이미지 크기 조정
     height: 250px;
   }
 
-  @media (max-width: 480px) {
-    width: 150px;
+  @media (max-width: 1100px) {
+    width: 180px; // 더 작은 화면에서 이미지 크기 조정
+    height: 225px;
+  }
+
+  @media (max-width: 768px) {
+    width: 160px;
     height: 200px;
+  }
+
+  @media (max-width: 480px) {
+    width: 100px;
+    height: 130px;
   }
 `;
 
 // ToggleSlidersWrapper 스타일링
 const ToggleSlidersWrapper = styled.div`
-  transition: opacity 2s, max-height 2s; // visibility 속성을 제거했습니다.
-  max-height: ${(props) =>
-    props.$isVisible
-      ? "auto"
-      : "0px"}; // 'auto' 대신 실제 높이 예상치를 입력하세요.
+  transition: opacity 2s, max-height 2s;
+  max-height: ${(props) => (props.$isVisible ? "auto" : "0px")};
   opacity: ${(props) => (props.$isVisible ? "1" : "0")};
   overflow: hidden;
   position: relative;
@@ -112,12 +167,21 @@ const Button = styled.button`
   border-radius: 100px;
   font-size: 16px;
   transition: background-color 0.3s ease;
+  white-space: nowrap;
   cursor: pointer;
 
   &:hover {
     background-color: var(--black);
     color: var(--white);
   }
+
+  @media (max-width: 600px) {
+    font-size: 12px;
+  }
+`;
+
+const StyledSearchAdjusted = styled(StyledSearch)`
+  height: 40px; // 버튼의 높이에 맞게 조정합니다.
 `;
 
 // ConveyorBox 컴포넌트
@@ -186,21 +250,52 @@ const ConveyorBox = () => {
   const settings = {
     infinite: true,
     speed: 20000,
-    slidesToShow: 3, // 데이터 베이스에 존재하는 책의 숫자보다 적게 설정
+    slidesToShow: 5,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 10,
+    autoplaySpeed: 100,
     cssEase: "linear",
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 5,
+          slidesToScroll: 1,
+          infinite: true,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 1,
+        },
+      },
+      // {
+      //   breakpoint: 480,
+      //   settings: {
+      //     slidesToShow: 5,
+      //     slidesToScroll: 1
+      //   }
+      // }
+    ],
   };
 
   const reverseSettings = { ...settings, rtl: true };
 
   return (
     <>
-      <ButtonWrapper>
-        <Button onClick={() => handleSortChange("latest")}>최신순</Button>
-        <Button onClick={() => handleSortChange("bestselling")}>판매순</Button>
-      </ButtonWrapper>
+      <HorizontalLayout>
+        <ButtonWrapper>
+          <Button onClick={() => handleSortChange("latest")}>최신순</Button>
+          <Button onClick={() => handleSortChange("bestselling")}>
+            판매순
+          </Button>
+        </ButtonWrapper>
+        <SearchWrapper>
+          <StyledSearchAdjusted /* props를 여기에 전달 */ />
+        </SearchWrapper>
+      </HorizontalLayout>
       {/* reRender 상태에 따라 슬라이더 표시 */}
       {reRender && (
         <StyledSliderWrapper>{renderSlider(settings)}</StyledSliderWrapper>

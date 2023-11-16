@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFacebook } from "@fortawesome/free-brands-svg-icons";
 import KakaoColorImg from "../images/kakao_color.png";
 import KakaoImg from "../images/kakao_white.png";
 import {

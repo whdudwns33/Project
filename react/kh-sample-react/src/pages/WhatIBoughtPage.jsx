@@ -6,6 +6,7 @@ import { Th } from "../globalStyle/StyledTable";
 import { Td } from "../globalStyle/StyledTable";
 import { MiddleOrderBox } from "../globalStyle/MiddleOrderBox";
 import { StyledTitle } from "../globalStyle/StyledTitle";
+import Footer from "../components/mainPageComp/Footer";
 
 export const WhatIBoughtPage = () => {
   const [boughtBooks, setBoughtBooks] = useState([]);
@@ -64,6 +65,7 @@ export const WhatIBoughtPage = () => {
               {/* <th>회원 ID</th> */}
               <Th>책 ID</Th>
               <Th>책 제목</Th>
+              <Th>표지</Th>
               <Th>저자</Th>
               <Th>클릭</Th>
             </tr>
@@ -75,6 +77,14 @@ export const WhatIBoughtPage = () => {
                 {/* <td>{book.memberId}</td> */}
                 <Td>{book.bookId}</Td>
                 <Td>{book.title}</Td>
+                <Td>
+                  <img
+                    src={book.imageUrl}
+                    alt="표지"
+                    width="200px"
+                    height="250px"
+                  ></img>
+                </Td>
                 <Td>{book.author}</Td>
                 <Td
                   onClick={(e) => {
@@ -89,6 +99,7 @@ export const WhatIBoughtPage = () => {
           </tbody>
         </Table>
       </MiddleOrderBox>
+      <Footer></Footer>
     </>
   );
 };

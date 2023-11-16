@@ -14,8 +14,8 @@ import {
   Body,
   Img,
   DivRow,
+  CloseButton,
 } from "../components/MyPageComp";
-import { StyledButton } from "../globalStyle/StyledButton";
 import MyPageID from "../components/MyPageID";
 import MyPagePW from "../components/MyPagePW";
 import MyPageDELETE from "../components/MyPageDelete";
@@ -157,36 +157,11 @@ const MyPage = () => {
             </DivRow>
           </InfoBox>
           <LeftDiv>
-            <StyledButton
-              value="이름 변경"
-              width="80%"
-              height="20%"
-              onClick={onClickName}
-            ></StyledButton>
-            <StyledButton
-              value="아이디 변경"
-              width="80%"
-              height="20%"
-              onClick={onClickId}
-            ></StyledButton>
-            <StyledButton
-              value="비밀번호 변경"
-              width="80%"
-              height="20%"
-              onClick={onClickPw}
-            ></StyledButton>
-            <StyledButton
-              value="금액 충전"
-              width="80%"
-              height="20%"
-              onClick={onClickCash}
-            ></StyledButton>
-            <StyledButton
-              value="회원 탈퇴"
-              width="80%"
-              height="20%"
-              onClick={onClickMember}
-            ></StyledButton>
+            <SetButton onClick={onClickName}>이름 변경</SetButton>
+            <SetButton onClick={onClickId}>아이디 변경</SetButton>
+            <SetButton onClick={onClickPw}>비밀번호 변경</SetButton>
+            <SetButton onClick={onClickCash}>현금 충전</SetButton>
+            <SetButton onClick={onClickMember}>회원 탈퇴</SetButton>
           </LeftDiv>
         </Left>
 
@@ -195,67 +170,70 @@ const MyPage = () => {
           {rightIdInfo && (
             <RightInfo>
               <MyPageID />
-              <SetButton onClick={onClckCloseRight}>닫기버튼</SetButton>
+              <CloseButton onClick={onClckCloseRight}>X</CloseButton>
             </RightInfo>
           )}
           {/* 패스워드 변경 */}
           {rightPwInfo && (
             <RightInfo>
               <MyPagePW />
-              <SetButton onClick={onClckCloseRight}>닫기버튼</SetButton>
+              <CloseButton
+                width="20%"
+                height="20%"
+                value="X"
+                onClick={onClckCloseRight}
+              >
+                X
+              </CloseButton>
             </RightInfo>
           )}
 
           {rightCash && (
             <RightInfo>
               <MyPageCash />
-              <SetButton onClick={onClckCloseRight}>닫기버튼</SetButton>
+              <CloseButton
+                width="20%"
+                height="20%"
+                value="X"
+                onClick={onClckCloseRight}
+              >
+                X
+              </CloseButton>
             </RightInfo>
           )}
 
           {rightMember && (
             <RightInfo>
               <MyPageDELETE />
-              <SetButton onClick={onClckCloseRight}>닫기버튼</SetButton>
+              <CloseButton
+                width="20%"
+                height="20%"
+                value="X"
+                onClick={onClckCloseRight}
+              >
+                X
+              </CloseButton>
             </RightInfo>
           )}
           {rightName && (
             <RightInfo>
+              <CloseButton
+                width="20%"
+                height="20%"
+                value="X"
+                onClick={onClckCloseRight}
+              >
+                X
+              </CloseButton>
               <MyPageName />
-              <SetButton onClick={onClckCloseRight}>닫기버튼</SetButton>
             </RightInfo>
           )}
           <RightButton>
-            <StyledButton
-              value="이름 변경"
-              width="80%"
-              height="20%"
-              onClick={onClickName}
-            ></StyledButton>
-            <StyledButton
-              value="아이디 변경"
-              width="80%"
-              height="20%"
-              onClick={onClickId}
-            ></StyledButton>
-            <StyledButton
-              value="비밀번호 변경"
-              width="80%"
-              height="20%"
-              onClick={onClickPw}
-            ></StyledButton>
-            <StyledButton
-              value="금액 충전"
-              width="80%"
-              height="20%"
-              onClick={onClickCash}
-            ></StyledButton>
-            <StyledButton
-              value="회원 탈퇴"
-              width="80%"
-              height="20%"
-              onClick={onClickMember}
-            ></StyledButton>
+            <SetButton onClick={onClickName}>이름 변경</SetButton>
+            <SetButton onClick={onClickId}>아이디 변경</SetButton>
+            <SetButton onClick={onClickPw}>비밀번호 변경</SetButton>
+            <SetButton onClick={onClickCash}>금액 충전</SetButton>
+            <SetButton onClick={onClickMember}>회원 탈퇴</SetButton>
           </RightButton>
         </Right>
       </Container>

@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { SearchResultPageComp } from "../components/SearchResultPageComp";
 import styled from "styled-components";
 import { StyledButton } from "../globalStyle/StyledButton";
-import { MiddleOrderBox } from "../globalStyle/MiddleOrderBox";
+import { MiddleOrderBoxRow } from "../globalStyle/MiddleOrderBox";
 import { StyledSearch } from "../globalStyle/StyledSearch";
+import Footer from "../components/mainPageComp/Footer";
 
 const Container = styled.div`
   width: 65%;
@@ -54,7 +55,7 @@ export const SearchResultPage = () => {
           book={bookData.slice(startIndex, startIndex + 10)}
         />
       </Container>
-      <MiddleOrderBox>
+      <MiddleOrderBoxRow>
         <StyledButton
           onClick={prevPage}
           value="이전"
@@ -68,7 +69,8 @@ export const SearchResultPage = () => {
           width="50px"
           height="50px"
         ></StyledButton>
-      </MiddleOrderBox>
+      </MiddleOrderBoxRow>
+      <Footer></Footer>
     </>
   );
 };

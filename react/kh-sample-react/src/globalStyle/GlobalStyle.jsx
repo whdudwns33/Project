@@ -10,6 +10,19 @@ const GlobalStyle = createGlobalStyle`
     --radius : 10px;
   }
 
+  @font-face {
+  font-family: 'Peace-Bold';
+  src: url('../assets/fonts/PyeongChangPeace-Bold.ttf') format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Peace-Light';
+  src: url('../assets/fonts/PyeongChangPeace-Light.ttf') format('truetype');
+  font-weight: normal;
+}
+
+
   * {
     box-sizing: border-box;
     --scrollWidth: 10px;
@@ -20,9 +33,7 @@ const GlobalStyle = createGlobalStyle`
     color: #000;
     font: 400 14px/24px 'Noto-regional,Noto-latin,TCCC-UnityText';
     letter-spacing: 0;
-    margin: 0;
-  padding: 0;
-  height: 100%;
+    margin-block: 0 12px;
   }
   html, body, div, span, applet, object, iframe,
   h1, h2, h3, h4, h5, h6, p, blockquote, pre,

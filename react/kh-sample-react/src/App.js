@@ -7,7 +7,6 @@ import { MainPage } from "./pages/MainPage";
 import { UserProvider } from "./contexts/Context";
 import { MemberAdminPage } from "./pages/MemberAdminPage";
 import BuyReviewPg from "./pages/BuyReviewPage";
-import AboutBookPage from "./pages/AboutBookPage";
 import CartPage from "./pages/CartPage";
 import MyPage from "./pages/MyPage";
 import { BooksProvider } from "./contexts/BookInfoContext";
@@ -17,6 +16,7 @@ import { ViewerPageTxt } from "./pages/ViewerPageTxt";
 import DoNotShowInLogIn from "./components/mainPageComp/smallComps/DoNotShowInLogIn";
 import GlobalStyle from "./globalStyle/GlobalStyle";
 import { WhatIBoughtPage } from "./pages/WhatIBoughtPage";
+
 
 function App() {
   return (
@@ -29,10 +29,6 @@ function App() {
             <Routes>
               <Route path="/" element={<MainPage />} />
               <Route path="/login" element={<Login />} />
-              <Route
-                path="/AboutBookPage/:id"
-                element={<AboutBookPage></AboutBookPage>}
-              ></Route>
               <Route
                 path="/ViewerPage"
                 element={<ViewerPageEpub></ViewerPageEpub>}

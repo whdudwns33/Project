@@ -12,6 +12,7 @@ import { MemberAdminApi } from "../api/MemberAdminApi";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { StyledTitle } from "../globalStyle/StyledTitle";
+import Footer from "../components/mainPageComp/Footer";
 
 export const MemberAdminPage = () => {
   // 사용자 권한 정보 가져오기
@@ -300,6 +301,7 @@ export const MemberAdminPage = () => {
       </form>
       <br />
       <br />
+      <Footer></Footer>
     </>
   );
 };

@@ -16,7 +16,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
@@ -109,7 +108,6 @@ public class MemberController {
         memberDTO.setPassword(dao.hashPassword(plainPassword)); // 해싱된 비밀번호를 저장
 
         // 회원 가입을 수행
-        memberDTO.setName("user");
         memberDTO.setCash(0);
         memberDTO.setProfileUrl("https://firebasestorage.googleapis.com/v0/b/mini-project-gpt.appspot.com/o/%EC%9D%B4%EB%AF%B8%EC%A7%80%EC%97%86%EC%9D%8C?alt=media&token=c51e4498-e899-4206-99af-0817bdb38f92");
         boolean regResult = dao.signup(memberDTO);
@@ -246,6 +244,7 @@ public class MemberController {
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
     // 입력 받은 이름, 아이디, 비밀번호, 이메일로 정보 조회
     @GetMapping("/checkInfo")
     public ResponseEntity<Boolean> memberCheck(@RequestParam String name,@RequestParam String id,@RequestParam String pw,@RequestParam String email) {
@@ -311,5 +310,18 @@ public class MemberController {
         boolean isTrue = dao.setImageUrl(getId, getUrl);
         System.out.println(isTrue);
         return new ResponseEntity<>(isTrue, HttpStatus.OK);
+    }
+
+    @PostMapping("/loginAuthCheck")
+    public ResponseEntity<String> loginAuthCheck(@RequestBody Map<String, String> user) {
+        String id = user.get("id");
+        String password = user.get("password");
+        String role = dao.getRoleByIdAndPassword(id, password);
+
+        if (role != null) {
+            return new ResponseEntity<>(role, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

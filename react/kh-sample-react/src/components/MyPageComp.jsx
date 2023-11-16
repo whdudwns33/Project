@@ -22,18 +22,17 @@ export const Container = styled.div.attrs({
   className: "MyPageContanier-container",
 })`
   width: 60vw;
-  height: 100vh;
+  height: 80vh;
   display: flex;
   justify-content: space-evenly;
   background-color: rgba(245, 245, 245, 0.9);
-  /* min-width: 800px; */
-  min-height: 800px;
-  /* min-height:  */
+  min-width: 900px;
+  min-height: 600px;
   @media (max-width: 450px) {
     width: 100vw;
     height: 100vh;
-    /* min-width: 300px;
-    min-height: 60vh; */
+    min-width: 450px;
+    min-height: 60vh;
   }
 `;
 
@@ -45,14 +44,11 @@ export const Left = styled.div`
   width: 45%;
   box-shadow: 0 0 20px rgba(33, 33, 33, 0.2);
   flex-direction: column;
-  /* min-width: 400px;
-  min-height: 800px; */
   align-items: center;
   background-color: white;
+  min-width: 450px;
   @media (max-width: 450px) {
     width: 100%;
-    /* min-height: 300px;
-    min-width: 300px; */
   }
 `;
 
@@ -61,13 +57,12 @@ export const Left = styled.div`
 export const Imagine = styled.div`
   display: flex;
   flex-direction: column;
-  /* border: 3px solid green; */
   align-items: center;
+  justify-content: center;
   width: 80%;
-  height: 40%;
-  margin-bottom: 5%;
+  height: 450px;
   @media (max-width: 450px) {
-    width: 50%;
+    width: 60%;
     height: 30%;
   }
 `;
@@ -79,19 +74,21 @@ export const Img = styled.div`
   width: 60%;
   height: 70%;
   border-radius: 10px;
+  margin-bottom: 10px;
   @media (max-width: 450px) {
+    border: 1px solid grey;
     margin-top: 30px;
     width: 100%;
     height: 100%;
-    /* min-height: 150px; */
+    background-position: center 10%;
   }
 `;
 
 // 이미지 나누기 구역
 export const ImageSection = styled.div`
-  border: 3px solid gray;
   display: flex;
-  width: 100%;
+  white-space: nowrap;
+  width: 60%;
   @media (max-width: 450px) {
     display: none;
   }
@@ -131,6 +128,7 @@ export const LeftDiv = styled.div`
     align-items: center;
     flex-direction: column;
     width: 60%;
+    height: 20%;
   }
 `;
 
@@ -138,15 +136,12 @@ export const LeftDiv = styled.div`
 // 우측 레이어, 모바일시 어퍼 레이어
 // 우측 실제로 정보를 변경하는 레이어
 export const Right = styled.div`
-  border: 3px solid red;
   color: black;
   width: 45%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* min-width: 400px;
-  min-height: 800px; */
   @media (max-width: 450px) {
     width: 100%;
     display: ${(props) => (props.isVisible ? "true" : "none")};
@@ -158,13 +153,14 @@ export const Right = styled.div`
 export const RightInfo = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   color: black;
   animation-name: Info-animation;
   animation-duration: 0.3s;
   width: 80%;
-  height: 40%;
-  border: 3px solid red;
+  height: 450px;
   @media (max-width: 450px) {
+    justify-content: center;
     border: 2px solid black;
     border-radius: 10px;
     margin-bottom: 300px;
@@ -191,20 +187,20 @@ export const InputTag = styled.div`
   flex-direction: column;
   font-weight: bolder;
   border-radius: 10px;
-  border: 3px solid black;
   width: ${(props) => props.width || "100%"};
   height: ${(props) => props.height || "80%"};
   @media (max-width: 450px) {
+    z-index: 100;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 40vh;
+    opacity: 1;
     border: none;
   }
 `;
 
 export const InpuTitle = styled.div`
-  border: 3px solid red;
   display: flex;
   width: 70%;
   justify-content: center;
@@ -233,7 +229,6 @@ export const InputBox = styled.input`
 
 // 우측 하단 버튼들의 레이어
 export const RightButton = styled.div`
-  margin-top: 5%;
   width: 80%;
   height: 30%;
   display: flex;
@@ -241,12 +236,10 @@ export const RightButton = styled.div`
   justify-content: space-evenly;
   align-items: center;
   border-radius: 10px;
-
   @media (max-width: 450px) {
-    width: 60%;
+    width: 80%;
     height: 30%;
     display: flex;
-    border: 3px solid orange;
     flex-wrap: wrap;
     display: ${(props) => (props.isvisible ? "flex" : "none")};
     z-index: 50;
@@ -254,7 +247,6 @@ export const RightButton = styled.div`
 `;
 
 // 체크
-
 export const DivRow = styled.div`
   display: flex;
   justify-content: space-between;
@@ -274,30 +266,37 @@ export const DivRowt = styled.div`
 `;
 
 export const SetButton = styled.button`
-  display: none;
+  width: ${(props) => props.width || "80%"};
+  height: ${(props) => props.height || "20%"};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 0;
+  border: 2px solid #888888;
+  outline: none;
+  background-color: white;
+  border-radius: 10px;
+  transition: 0.13s ease-in-out;
+  cursor: pointer;
   @media (max-width: 450px) {
-    width: 20%;
-    height: 5%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    padding: 0;
-    border: 2px solid #888888;
-    outline: none;
-    background-color: #f4f5f6;
-    border-radius: 10px;
-
-    transition: 0.13s ease-in-out;
-    cursor: pointer;
+    width: 100%;
+    height: 50%;
   }
 `;
 
 export const MyPageButton = styled.button`
-  border: 3px solid red;
+  width: 80px;
+  height: 40px;
   padding: 3px;
-  background-color: ${(props) => (props.isTrue ? "gray" : "white")};
-  /* cursor: ${(props) => (props.isTrue ? "pointer" : "not-allowed")}; */
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 0;
+  border: 2px solid #888888;
+  outline: none;
+  background-color: white;
+  cursor: pointer;
 `;
 
 export const Information = styled.p`
@@ -307,13 +306,11 @@ export const Information = styled.p`
 `;
 
 export const CashTag = styled.div`
-  border: 3px solid orange;
   height: 100%;
   width: 100%;
 `;
 
 export const Bank = styled.div`
-  border: 3px solid yellow;
   display: flex;
   width: 100%;
   height: 30%;
@@ -322,6 +319,14 @@ export const Bank = styled.div`
 export const BankButton = styled.button`
   width: 30%;
   height: 80%;
+  outline: none;
+  border: 1px solid white;
+  border-radius: 10px;
+  background-image: url(${(props) => props.src});
+  background-color: ${(props) => props.backgroundColor || "white"};
+  background-size: ${(props) => props.backgroundSize || "contain"};
+  background-repeat: no-repeat;
+  background-position: center;
 `;
 
 export const CashCharge = styled.div`
@@ -330,6 +335,27 @@ export const CashCharge = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 3px solid blue;
   width: 100%;
+`;
+
+export const CloseButton = styled.button`
+  display: none;
+  @media (max-width: 450px) {
+    position: absolute;
+    margin-left: 92%;
+    margin-top: -110%;
+    width: 7%;
+    height: 7%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    border: 2px solid #888888;
+    outline: none;
+    border-radius: 20%;
+    background-color: white;
+    transition: 0.13s ease-in-out;
+    cursor: pointer;
+    z-index: 4000;
+  }
 `;

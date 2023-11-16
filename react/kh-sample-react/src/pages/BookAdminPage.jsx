@@ -10,6 +10,7 @@ import { StyledTd } from "../globalStyle/StyledTable";
 import { StyledButton } from "../globalStyle/StyledButton";
 import { BookAxiosApi } from "../api/BookAxiosApi";
 import { StyledTitle } from "../globalStyle/StyledTitle";
+import Footer from "../components/mainPageComp/Footer";
 
 export const BookAdminPage = () => {
   const [bookList, setBookList] = useState([]);
@@ -205,7 +206,7 @@ export const BookAdminPage = () => {
                   <Th>IMAGE_URL</Th>
                   <Th>CONTENT_URL</Th>
                   <Th>SUMMARY</Th>
-                  <Th>PRICE</Th>
+                  <Th>&nbsp;&nbsp;PRICE&nbsp;&nbsp;&nbsp;</Th>
                   <Th>PUBLISH_YEAR</Th>
                   <Th>ENTRY_TIME</Th>
                   <Th>PURCHASE_COUNT</Th>
@@ -238,7 +239,7 @@ export const BookAdminPage = () => {
                       type="text"
                       name="id"
                       disabled={true}
-                      placeholder="자동 입력"
+                      placeholder="-"
                     />
                   </StyledTd>
 
@@ -336,7 +337,7 @@ export const BookAdminPage = () => {
                       type="text"
                       name="entryTime"
                       disabled={true}
-                      placeholder="자동 입력"
+                      placeholder="-"
                     />
                   </StyledTd>
 
@@ -345,7 +346,7 @@ export const BookAdminPage = () => {
                       type="text"
                       name="purchaseCount"
                       disabled={true}
-                      placeholder="자동 입력"
+                      placeholder="-"
                     />
                   </StyledTd>
                 </tr>
@@ -372,6 +373,7 @@ export const BookAdminPage = () => {
       </form>
       <br />
       <br />
+      <Footer></Footer>
     </>
   );
 };

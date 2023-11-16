@@ -10,7 +10,7 @@ const ModalStyle = styled.div`
     bottom: 0;
     left: 0;
     z-index: 99; // 다른 모달 보다 위에 위치하도록 함
-    background-color: rgba(0, 0, 0, 0.6); // 배경색을 검정으로 하고 투명도 조절
+    background-color: rgba(0, 0, 0, 0); // 배경색을 검정으로 하고 투명도 조절
   }
   .openModal {
     display: flex; // 모달이 보이도록 함
@@ -24,8 +24,9 @@ const ModalStyle = styled.div`
     margin-right: 10px;
     border: 0;
   }
+  // 전체
   section {
-    width: 90%;
+    width: 100%;
     max-width: 450px;
     margin: 0 auto;
     border-radius: 0.3rem;
@@ -33,12 +34,15 @@ const ModalStyle = styled.div`
     /* 팝업이 열릴때 스르륵 열리는 효과 */
     animation: modal-show 0.3s;
     overflow: hidden;
+    text-align: c;
   }
+  // error
   section > header {
     position: relative;
     padding: 16px 64px 16px 16px;
-    background-color: #f1f1f1;
-    font-weight: 700;
+    /* background-color: #f1f1f1; */
+    font-weight: 0;
+    opacity: 0;
   }
 
   section > header button {
@@ -46,7 +50,7 @@ const ModalStyle = styled.div`
     top: 15px;
     right: 15px;
     width: 30px;
-    font-size: 21px;
+    font-size: 20px;
     font-weight: 700;
     text-align: center;
     color: #999;
@@ -56,18 +60,25 @@ const ModalStyle = styled.div`
     padding: 16px;
     border-bottom: 1px solid #dee2e6;
     border-top: 1px solid #dee2e6;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
   }
   section > footer {
     padding: 12px 16px;
-    text-align: right;
+    text-align: center;
   }
+
+  // 확인
   section > footer button {
     padding: 6px 12px;
     color: #fff;
     background-color: #6c757d;
     border-radius: 5px;
-    font-size: 13px;
+    font-size: 20px;
+    margin-top: 20px;
   }
+
   @keyframes modal-show {
     from {
       opacity: 0;
@@ -104,7 +115,7 @@ const Modal = (props) => {
             <main>{children}</main>
             <footer>
               {type && <button onClick={confirm}>확인</button>}
-              <button onClick={close}>취소</button>
+              <button onClick={close}>확인</button>
             </footer>
           </section>
         )}

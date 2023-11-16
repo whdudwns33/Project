@@ -237,12 +237,9 @@ const MyPagePW = () => {
               />
               <p>{msg}</p>
               {checkTrue && (
-                <StyledButton
-                  value="회원 이름 변경"
-                  width="40%"
-                  height="7%"
-                  onClick={onClickModifyName}
-                ></StyledButton>
+                <MyPageButton onClick={onClickModifyName}>
+                  정보 변경
+                </MyPageButton>
               )}
               <Modal open={rst} close={closeModal}>
                 회원 이름이 변경되었습니다.

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import styled, { createGlobalStyle } from 'styled-components';
+import React, { useState, useEffect, useRef } from "react";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
+import styled, { createGlobalStyle } from "styled-components";
 
 // 전역 스타일을 정의합니다. 슬라이더 애니메이션을 위한 클래스가 여기 포함됩니다.
 const GlobalStyle = createGlobalStyle`
@@ -40,11 +40,25 @@ const ImageSliderContainer = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  width: 70vh;
-  height: 50vh;
+  width: 70vh; // 뷰포트 높이의 70%
+  height: 50vh; // 뷰포트 높이의 50%
   overflow: hidden;
   position: relative;
-  
+
+  @media (max-width: 1024px) {
+    width: 60vw; // 뷰포트 폭의 60%
+    height: 40vw; // 뷰포트 폭의 40%
+  }
+
+  @media (max-width: 768px) {
+    width: 80vw; // 뷰포트 폭의 80%
+    height: 60vw; // 뷰포트 폭의 60%
+  }
+
+  @media (max-width: 480px) {
+    width: 90vw; // 뷰포트 폭의 90%
+    height: 70vw; // 뷰포트 폭의 70%
+  }
 `;
 
 // 각 이미지 스타일을 정의합니다.
@@ -56,7 +70,6 @@ const SliderImage = styled.img`
   top: 0;
   left: 0;
 `;
-
 
 // 슬라이더 버튼의 기본 스타일을 정의합니다.
 const SliderButton = styled.button`
@@ -122,7 +135,9 @@ const ImageSlider = ({ images = [] }) => {
   const prevImage = () => {
     if (transitioning) return; // 이미 전환 중이면 아무것도 하지 않음
     setTransitioning(true); // 전환 상태를 true로 설정
-    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length); // 이전 인덱스로 업데이트
+    setCurrentImageIndex(
+      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+    ); // 이전 인덱스로 업데이트
   };
 
   // 자동 슬라이드를 위한 커스텀 훅 사용
@@ -146,19 +161,16 @@ const ImageSlider = ({ images = [] }) => {
             classNames="flip"
             timeout={3000}
             onEntered={onTransitionEnd}
-            onExited={onTransitionEnd}>
+            onExited={onTransitionEnd}
+          >
             <SliderImage
               src={images[currentImageIndex]}
               alt={`Slide ${currentImageIndex}`}
             />
           </CSSTransition>
         </TransitionGroup>
-        <LeftButton onClick={prevImage}>
-          {"<"}
-        </LeftButton>
-        <RightButton onClick={nextImage}>
-          {">"}
-        </RightButton>
+        <LeftButton onClick={prevImage}>{"<"}</LeftButton>
+        <RightButton onClick={nextImage}>{">"}</RightButton>
       </ImageSliderContainer>
     </>
   );

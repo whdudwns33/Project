@@ -24,8 +24,11 @@ export const Button = styled.button`
       }
     }
   }
-  &:hover {
+  @media (max-width: ${props => props.breakpoint || '600px'}) {
+    width: ${props => props.smallWidth || '60px'};
+    height: ${props => props.smallHeight || '30px'};
   }
+
 `;
 
 const ButtonContent = styled.div`
@@ -65,13 +68,18 @@ const ButtonText = styled.p`
 `;
 
 export const StyledButton = (props) => {
-  const { onClick, width, height, value, margin } = props;
+  const { onClick, width, height, value, margin, breakpoint, smallWidth, smallHeight } = props;
 
   return (
-    <Button style={{ width, height, margin }} onClick={onClick}>
+    <Button
+      style={{ width, height, margin, smallHeight, smallWidth, breakpoint }}
+      onClick={onClick}
+    >
       <ButtonContent>
         <ButtonText>{value}</ButtonText>
       </ButtonContent>
     </Button>
   );
 };
+
+export const BlackButton = styled.button``;

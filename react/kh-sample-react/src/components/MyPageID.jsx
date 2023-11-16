@@ -224,12 +224,7 @@ const MyPageID = () => {
               />
               <p>{msg}</p>
               {checkTrue && (
-                <StyledButton
-                  value="아이디 변경"
-                  width="40%"
-                  height="7%"
-                  onClick={onClickModifyId}
-                ></StyledButton>
+                <MyPageButton onClick={onClickModifyId}>정보 변경</MyPageButton>
               )}
               <Modal open={rst} close={closeModal}>
                 회원정보가 변경되었습니다.

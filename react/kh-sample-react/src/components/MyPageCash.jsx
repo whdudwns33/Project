@@ -10,6 +10,12 @@ import {
 import MyPageAxiosApi from "../api/MyPageAxiosApi";
 import { useUser } from "../contexts/Context";
 import Modal from "../utils/LoginModal";
+import KAKAO from "../assets/images/loginLogo/kakao.png";
+import NAVER from "../assets/images/loginLogo/naver.png";
+import KB from "../assets/images/loginLogo/kb.png";
+import NH from "../assets/images/loginLogo/nh.png";
+import SH from "../assets/images/loginLogo/sh.png";
+import WOORI from "../assets/images/loginLogo/woori.png";
 
 const MyPageCash = () => {
   const { user } = useUser();
@@ -52,7 +58,7 @@ const MyPageCash = () => {
         <CashCharge>
           <h1
             style={{
-              border: "bold",
+              fontWeight: "bold",
               fontSize: "1.5rem",
             }}
           >
@@ -62,47 +68,42 @@ const MyPageCash = () => {
             <BankButton
               className="chooseBank"
               name="카카오"
+              src={KAKAO}
               onClick={onClickCashBtn}
-            >
-              <img src="" alt="카카오" />
-            </BankButton>
+            />
             <BankButton
               className="chooseBank"
               name="네이버"
+              src={NAVER}
               onClick={onClickCashBtn}
-            >
-              <img src="" alt="네이버" />
-            </BankButton>
+            />
             <BankButton
               className="chooseBank"
-              name="은행"
+              name="KB"
+              src={KB}
               onClick={onClickCashBtn}
-            >
-              <img src="" alt="은행" />
-            </BankButton>
+            />
           </Bank>
           <Bank>
             <BankButton
               className="chooseBank"
-              name="카카오"
+              name="신한"
+              src={SH}
               onClick={onClickCashBtn}
-            >
-              <img src="" alt="카카오" />
-            </BankButton>
+            />
             <BankButton
               className="chooseBank"
-              name="네이버"
+              name="우리"
+              scr={WOORI}
+              backgroundSize="cover"
               onClick={onClickCashBtn}
-            >
-              <img src="" alt="네이버" />
-            </BankButton>
+            />
             <BankButton
               className="chooseBank"
-              name="은행"
+              name="농협"
+              scr={NH}
               onClick={onClickCashBtn}
-            >
-              <img src="" alt="은행" />
-            </BankButton>
+            />
           </Bank>
           <p>{clickName}</p>
           <InputBox
